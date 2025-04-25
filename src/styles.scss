@@ -1,1 +1,37 @@
 /* You can add global styles to this file, and also import other style files */
+@use "./_globals.scss";
+@use "./_utilities.scss";
+@use "./mixins";
+
+:root {
+  // Fonts
+  --font_primary: "Montserrat", sans-serif;
+  --font_secondary: "Lato", sans-serif;
+
+  // Media Queries
+  --phone: 480px;
+  --tablet: 768px;
+  --desktop: 1024px;
+
+  // Colors
+  --primary_orange: #f68b18;
+  --primary_blue: #1b72e9;
+  --secondary: #edf6f9;
+
+  --letter: #415a77;
+  --title: #092648;
+  --background: #faf7f6;
+  --gray: #adb5bd;
+  --black: #000;
+  --text: #80858b;
+  --white: #fff;
+  --light: #ced4da;
+  --red: #c1121f;
+  --green: #0ca678;
+
+  // Letter space
+  --letter_space: 0.2rem;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

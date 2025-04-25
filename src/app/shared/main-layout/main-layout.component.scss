@@ -1,0 +1,96 @@
+// Globals
+.main_menu_open {
+  left: 0 !important;
+}
+.main_content_marging_left {
+  padding-left: 21rem;
+}
+// End Globals
+
+.main {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+// MENU
+.main_menu {
+  background-color: var(--secondary);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); // Right shadow
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 0.4rem;
+  position: absolute;
+  top: 0;
+  left: -24rem;
+  width: 21rem;
+  z-index: 11;
+  transition: left 0.3s ease-in-out;
+
+  .main_menu_title {
+    margin-top: 2rem;
+    margin-left: 2rem;
+  }
+}
+
+.main_menu_list {
+  display: flex;
+  flex-direction: column;
+  z-index: 12;
+
+  .main_menu_list_link {
+    cursor: pointer;
+    border-radius: 1.5rem;
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+
+    &:hover {
+      background-color: var(--light);
+    }
+  }
+}
+// End menu
+
+.main_content {
+  display: flex;
+  flex-direction: column;
+  transition: padding-left 0.3s ease-in-out;
+}
+
+// Top bar
+.main_content_header {
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); // Right shadow
+  background-color: var(--secondary);
+  display: flex;
+  align-items: center;
+  padding: 1.4rem;
+
+  .main_content_header_title {
+    margin-bottom: 0;
+  }
+
+  .main_content_spacer {
+    flex: 1 auto;
+  }
+}
+
+// Router outlet
+.content {
+  padding: 1rem;
+
+  @media (min-width: 768px) {
+    padding: 2rem;
+  }
+}
+
+// Main content spacer
+.main_content_spacer {
+  flex: 1 auto;
+}
+
+// Footer
+.footer {
+  margin-left: 1rem;
+}
