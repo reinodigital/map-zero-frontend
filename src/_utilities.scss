@@ -52,7 +52,7 @@
 // Transparent badges
 .bg-label-primary {
   background-color: #c4e7fe !important;
-  color: var(--secondary) !important;
+  color: var(--primary_blue) !important;
 }
 .bg-label-success {
   background-color: #ddface !important;
@@ -66,9 +66,9 @@
   background-color: #f1d11a !important;
   color: var(--black) !important;
 }
-.bg-label-info {
-  background-color: #8fc5f4 !important;
-  color: var(--secondary) !important;
+.bg-label-light {
+  background-color: #7b8b98 !important;
+  color: var(--white) !important;
 }
 // END Transparent badges
 
@@ -137,7 +137,7 @@
 // FOR TOAST NOTIFICATION
 .toast_fixed {
   position: fixed;
-  top: 1rem;
+  top: 7rem;
   right: 2rem;
   border-radius: 8px;
   width: 40rem;

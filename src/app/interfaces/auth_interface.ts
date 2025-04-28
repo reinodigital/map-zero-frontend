@@ -23,9 +23,9 @@ export interface IAuthToSignUp {
 
 export interface IAuthToUpdate {
   name: string;
-  email: string;
   mobile: string;
-  isActive: boolean;
+  email: string;
+  password: string;
   roles: string[];
 }
 

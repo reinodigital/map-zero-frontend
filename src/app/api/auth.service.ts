@@ -113,7 +113,7 @@ export class AuthService {
   }
 
   // FETCH ONE
-  fetchOneUser(uid: number): Observable<IAuth> {
+  fetchOne(uid: number): Observable<IAuth> {
     const url = `${this._baseUrl}/auth/${uid}`;
 
     return this.http.get<IAuth>(url, { headers: this.getToken }).pipe(

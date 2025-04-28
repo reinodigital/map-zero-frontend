@@ -18,7 +18,7 @@ export class ListEmployeesService {
         roleClass = 'badge bg-label-success';
         break;
       case SecurityRoles.ACCOUNTANT:
-        roleClass = 'badge bg-label-warning';
+        roleClass = 'badge bg-label-light';
         break;
       case SecurityRoles.ADMINISTRATIVE_ASSISTANT:
         roleClass = 'badge bg-label-warning';

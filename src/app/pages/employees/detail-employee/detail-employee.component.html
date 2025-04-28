@@ -1,0 +1,114 @@
+<div class="main_content">
+  <div class="box">
+    <div class="d-flex justify-content-between">
+      <h3 class="">Detalle usuario</h3>
+      <h4 class="cp" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+      <!-- Pills -->
+      <ul class="nav nav-pills mb-4 div_pills" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="pills-info-tab"
+            data-bs-toggle="pill"
+            type="button"
+            data-bs-target="#pills-info"
+            role="tab"
+            aria-controls="pills-info"
+            aria-selected="true"
+          >
+            Información
+          </button>
+          <!-- <button
+            class="nav-link"
+            id="pills-address-tab"
+            data-bs-toggle="pill"
+            type="button"
+            data-bs-target="#pills-address"
+            role="tab"
+            aria-controls="pills-address"
+            aria-selected="false"
+          >
+            Address
+          </button> -->
+        </li>
+      </ul>
+      <!-- End Pills -->
+
+      <div class="hstack gap-3">
+        <a
+          role="button"
+          class="btn btn-success btn_detail"
+          [routerLink]="'/edit-employee/' + employeeId"
+          title="Actualizar"
+        >
+          <i class="fa-solid fa-pen-to-square action_icon_edit"></i>
+          Editar
+        </a>
+        <!-- <a
+          role="button"
+          class="btn btn-danger btn_detail"
+          (click)="dataUserService.inactivateUser(this.client()!)"
+          title="Remover"
+          data-toggle="tooltip"
+          data-original-title="Delete"
+        >
+          <i class="fa-solid fa-trash-can action_icon_trash"></i>
+          <span> Desactivar</span>
+        </a> -->
+      </div>
+    </div>
+
+    <!-- Data Pills -->
+    <div class="tab-content" id="pills-tabContent">
+      <!-- Info Employee -->
+      <div
+        class="tab-pane fade active show"
+        id="pills-info"
+        role="tabpanel"
+        aria-labelledby="pills-info-tab"
+        tabindex="0"
+      >
+        @if (employee()) {
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-secondary">
+            <span class="fw-bold">Nombre </span>
+            <span class="ms-4">{{ employee()!.name }}</span>
+          </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Teléfono </span>
+            <span class="ms-4">{{ employee()!.mobile }}</span>
+          </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Correo electrónico </span>
+            <span class="ms-4">{{ employee()!.email ?? "_" }}</span>
+          </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Rol </span>
+            <span class="ms-4">
+              @for (role of employee()!.roles; track $index) { {{ role }} }
+            </span>
+          </li>
+        </ul>
+        }
+      </div>
+      <!-- End Info Employee -->
+
+      <!-- Tickets -->
+      <!-- <div
+        class="tab-pane fade"
+        id="pills-address"
+        role="tabpanel"
+        aria-labelledby="pills-address-tab"
+        tabindex="0"
+      >
+        Second Pill -->
+      <!-- END Second Pill -->
+    </div>
+    <!-- End Data Pills -->
+  </div>
+</div>

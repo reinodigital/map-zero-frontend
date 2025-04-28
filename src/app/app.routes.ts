@@ -35,6 +35,20 @@ export const routes: Routes = [
     canActivate: [AdminGuard],
     canLoad: [AdminGuard],
   },
+  {
+    path: 'edit-employee/:id',
+    loadComponent: () =>
+      import('./pages/employees/edit-employee/edit-employee.component'),
+    canActivate: [AdminGuard],
+    canLoad: [AdminGuard],
+  },
+  {
+    path: 'detail-employee/:id',
+    loadComponent: () =>
+      import('./pages/employees/detail-employee/detail-employee.component'),
+    canActivate: [AdminGuard],
+    canLoad: [AdminGuard],
+  },
 
   {
     path: 'products',

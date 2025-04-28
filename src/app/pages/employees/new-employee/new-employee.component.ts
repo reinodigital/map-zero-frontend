@@ -74,7 +74,7 @@ export default class NewEmployeeComponent {
 
   // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.isBrowser) {
       this.checkBackUrl()
         ? window.history.go(-1)
         : this.router.navigateByUrl('/employees');
