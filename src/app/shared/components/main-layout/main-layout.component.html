@@ -1,10 +1,18 @@
 <div class="main">
   <aside class="main_menu" [class.main_menu_open]="isMenuOpen()">
-    <h2 class="main_menu_title">MENU</h2>
+    <h3 class="main_menu_title">MENU</h3>
     <nav class="main_menu_list">
       <a class="main_menu_list_link" routerLink="/" routerLinkActive="active">
         <i class="fa-brands fa-slack me-2"></i>
         <span>Dashboard</span>
+      </a>
+      <a
+        class="main_menu_list_link"
+        routerLink="/employees"
+        routerLinkActive="active"
+      >
+        <i class="fa-brands fa-slack me-2"></i>
+        <span>Employees</span>
       </a>
       <a
         class="main_menu_list_link"
@@ -30,15 +38,16 @@
       <div (click)="openCloseMenu()">
         <i class="fa-solid fa-bars fs-1 me-3"></i>
       </div>
-      <h1 class="main_content_header_title">Map Zero</h1>
+      <h2 class="main_content_header_title">Map Zero</h2>
       <span class="main_content_spacer"></span>
-      <div class="user">
-        <i class="fa-solid fa-user"></i>
-        <span>Username</span>
-      </div>
+      <!-- Authenticated User -->
+      <current-user></current-user>
+      <!-- End Authenticated User -->
     </header>
 
+    <!-- SYSTEM -->
     <main class="content">
+      <custom-toast></custom-toast>
       <router-outlet></router-outlet>
     </main>
 

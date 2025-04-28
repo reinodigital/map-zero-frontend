@@ -1,5 +1,5 @@
 html {
-  font-size: 62.5%;
+  font-size: 82.5%;
   box-sizing: border-box;
 }
 
@@ -12,12 +12,12 @@ html {
 body {
   background-color: var(--background);
   font-family: var(--font_primary);
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   margin: 0;
   padding: 0;
 
   @media (min-width: 768px) {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 }
 
@@ -34,6 +34,36 @@ p {
     max-width: 140rem;
   }
 }
+
+// FORM Elements
+input {
+  width: 100%;
+}
+textarea {
+  background-color: var(--gray);
+}
+label {
+  color: var(--letter);
+  font-size: 1.4rem;
+  margin-top: 1.6rem;
+  width: 100%;
+}
+select {
+  height: 2.6rem;
+  width: 100%;
+}
+small {
+  font-size: 1.1rem;
+}
+.asterisk {
+  color: var(--red);
+  font-size: 1.8rem;
+}
+.muted {
+  color: #adb5bd;
+  font-size: 1rem;
+}
+// END FORM Elements
 
 a {
   border-bottom: none;
@@ -59,22 +89,4 @@ ul {
 }
 li {
   list-style: none;
-}
-
-// BUTTONS
-.button {
-  background-color: unset;
-  border: 3px solid var(--primary_orange);
-  border-radius: 3rem;
-  color: var(--black);
-  cursor: pointer;
-  font-size: 1.6rem;
-  padding: 0.9rem 2.6rem;
-  text-transform: uppercase;
-  letter-spacing: 0.2rem;
-  min-width: fit-content;
-
-  &:hover {
-    background-color: var(--white);
-  }
 }

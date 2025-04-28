@@ -1,0 +1,192 @@
+<div class="main_content">
+  <div class="filters mb-4">
+    <div class="box">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mb-0">Filtrar empleados</h3>
+        @if (filtersOpen()) {
+        <i
+          class="fa-solid fa-window-minimize"
+          (click)="openCloseFilters()"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+        >
+        </i>
+        } @else {
+        <i
+          class="fa-solid fa-window-maximize"
+          (click)="openCloseFilters()"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+        >
+        </i>
+        }
+      </div>
+      <div class="collapse" id="collapseFilters">
+        <div class="card card-body">
+          <form
+            class="search_form"
+            [formGroup]="searchForm()"
+            autocomplete="off"
+            (ngSubmit)="searchFormSubmit()"
+          >
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="name">Nombre</label>
+                <input type="text" formControlName="name" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="mobile">Celular</label>
+                <input type="text" formControlName="mobile" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="identity">Teléfono</label>
+                <input type="text" formControlName="identity" />
+              </div>
+
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="email">Correo electrónico</label>
+                <input type="text" formControlName="email" />
+              </div>
+              <!-- <div class="col-12 col-sm-6 col-lg-4">
+                <label for="initDate">Fecha desde</label>
+                <input type="date" formControlName="initDate" />
+              </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="initDate">Fecha hasta</label>
+                <input type="date" formControlName="endDate" />
+              </div> -->
+              <div class="col-12 col-sm-6 col-lg-4">
+                <div class="d-flex flex-column">
+                  <label for="rol">Rol</label>
+                  <select formControlName="role">
+                    <option value="{{ null }}">--Seleccione--</option>
+                    @for (rol of allowedFilteredRoles; track $index) {
+                    <option [value]="rol">
+                      {{ rol }}
+                    </option>
+                    }
+                  </select>
+                </div>
+              </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <div class="d-flex flex-column">
+                  <label for="rol">Estado</label>
+                  <select formControlName="status">
+                    <option value="{{ null }}">--Seleccione--</option>
+                    <option value="active">Activo</option>
+                    <option value="inactive">No activo</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-start mt-4">
+              <button class="btn btn-success" type="submit">Filtrar</button>
+              <button
+                class="btn btn-light ms-2"
+                type="button"
+                (click)="restartFilters()"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="row animate__animated animate__fadeIn">
+    <div class="col-12">
+      <div class="alert alert-info text-center" role="alert">
+        <h4 class="alert-heading">Loading</h4>
+        <i class="fa fa-spin fa-refresh fa-2x"></i>
+        <p class="mb-o">Cargando...</p>
+      </div>
+    </div>
+  </div>
+  }
+
+  <button class="btn btn-primary mb-2" routerLink="/new-employee">
+    + Nuevo empleado
+  </button>
+
+  @if (!isLoading()) {
+  <div class="table_clients">
+    <div class="box">
+      <div class="row">
+        <div class="d-flex justify-content-between mb-3">
+          <h3>Listado usuarios</h3>
+          <span>Cantidad usuarios ({{ total() }})</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Rol</th>
+              </tr>
+            </thead>
+            <tbody class="animate__animated animate__fadeIn">
+              @for (user of users(); track user.uid) {
+              <tr
+                class="admin_tr"
+                [routerLink]="'/detail-employee/' + user.uid"
+              >
+                <td>{{ user.name }}</td>
+                <td>{{ user.mobile }}</td>
+                <td>{{ user.email ?? "_" }}</td>
+                <td>
+                  <span
+                    [class]="
+                      listEmployeesService.getClassForUserRole(user.roles[0])
+                    "
+                  >
+                    {{ user.roles[0] }}
+                  </span>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <div class="w-100 d-flex justify-content-start">
+                  <div class="alert alert-warning">
+                    {{
+                      isActiveFilters()
+                        ? "Sin resultados para esa búsqueda"
+                        : "No existen empleados por el momento en el sistema"
+                    }}
+                  </div>
+                </div>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- END TABLE -->
+      </div>
+      <!-- END ROW -->
+    </div>
+    <!-- End BOX -->
+  </div>
+  }
+
+  <!-- Pagination -->
+  @if (total()) {
+  <div class="d-flex justify-content-center w_100 mt-4">
+    <app-pagination
+      [total]="total()"
+      [factor]="limit"
+      [initialOffset]="offset()"
+      (offsetEmitter)="detectChangeOffset($event)"
+    ></app-pagination>
+  </div>
+  }
+</div>

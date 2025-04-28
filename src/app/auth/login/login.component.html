@@ -1,0 +1,47 @@
+<div class="login container">
+  <h1>Iniciar sesión</h1>
+
+  <div class="login_content">
+    <form
+      class="login_form"
+      autocomplete="off"
+      [formGroup]="loginForm()"
+      (ngSubmit)="login()"
+    >
+      <div class="row">
+        <div class="col-12">
+          <label class="login_label" for="email">
+            Correo <span class="asterisk">*</span>
+          </label>
+          <input
+            class="form-control"
+            type="email"
+            formControlName="email"
+            placeholder="su correo"
+          />
+          @if (validField('email')) {
+          <small class="text-danger"> formato de correo inválido </small>
+          }
+        </div>
+        <div class="col-12">
+          <label class="login_label" for="password">
+            Contraseña <span class="asterisk">*</span>
+          </label>
+          <input
+            class="form-control"
+            type="password"
+            formControlName="password"
+            placeholder="su contraseña"
+          />
+          @if (validField('password')) {
+          <small class="text-danger"> contraseña inválida </small>
+          }
+        </div>
+      </div>
+
+      <button class="btn btn-primary mt-4 w-100" type="submit">
+        Iniciar Sesión
+      </button>
+    </form>
+  </div>
+</div>

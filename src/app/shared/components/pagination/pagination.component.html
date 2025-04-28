@@ -1,0 +1,14 @@
+<div class="pagination">
+  <div class="pagination_nav">
+    @for (i of arrPages(); track $index) { @if (i !== -1) {
+    <div
+      [class]="activePage() === i ? 'square active_page' : 'square'"
+      (click)="changePage(i)"
+    >
+      {{ i }}
+    </div>
+    } @else {
+    <div class="square disabled">. . .</div>
+    } }
+  </div>
+</div>

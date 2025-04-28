@@ -1,0 +1,121 @@
+<div class="profile container">
+  <div class="div_selects_pills">
+    @for (pill of arrPills; track $index) {
+    <div
+      class="square_pill"
+      (click)="selectPill($index)"
+      [style.backgroundColor]="
+        $index === currentPillSelected() ? 'var(--primary)' : 'unset'
+      "
+    >
+      <div class="d-flex justify-content-center">
+        {{ pill }}
+      </div>
+    </div>
+    }
+  </div>
+
+  <!-- Pills -->
+  <ul
+    style="display: none"
+    class="nav nav-pills mb-3 div_pills"
+    id="pills-tab"
+    role="tablist"
+  >
+    <li class="nav-item" role="presentation">
+      <button
+        class="nav-link active"
+        id="pills-profile-tab"
+        data-bs-toggle="pill"
+        type="button"
+        data-bs-target="#pills-profile"
+        role="tab"
+        aria-controls="pills-profile"
+        aria-selected="true"
+      >
+        Mi perfil
+      </button>
+      <button
+        class="nav-link"
+        id="pills-maintenance-tab"
+        data-bs-toggle="pill"
+        type="button"
+        data-bs-target="#pills-maintenance"
+        role="tab"
+        aria-controls="pills-maintenance"
+        aria-selected="false"
+      >
+        Mantenimientos
+      </button>
+    </li>
+  </ul>
+  <!-- End Pills -->
+
+  <!-- Data Pills -->
+  <div class="tab-content" id="pills-tabContent">
+    <!-- My Profile -->
+    <div
+      class="tab-pane fade active show"
+      id="pills-profile"
+      role="tabpanel"
+      aria-labelledby="pills-profile-tab"
+      tabindex="0"
+    >
+      <div class="profile_content">
+        <div class="box">
+          <div class="header">
+            <h2 class="mb-4">Perfil</h2>
+          </div>
+
+          <section class="info_user">
+            <div class="single_info">
+              <p class="mb-3">
+                Bienvenido
+                <span class="user_name">{{ currentUser()?.name }}</span>
+              </p>
+            </div>
+            <div class="single_info">
+              <i class="fa-solid fa-mobile-button me-3"></i>
+              <p class="mb-0 text_light">{{ currentUser()?.mobile }}</p>
+            </div>
+            <div class="single_info">
+              <i class="fa-solid fa-envelope-circle-check me-2"></i>
+              <p class="mb-0 text_light">
+                {{ currentUser()?.email ?? "sin correo electrónico" }}
+              </p>
+            </div>
+            <div class="single_info">
+              <i class="fa-solid fa-dice-five me-3"></i>
+              <p class="mb-0 text_light">
+                ROLE::{{ currentUser()!.roles[0] || currentUser()!.roles[1] }}
+              </p>
+            </div>
+          </section>
+
+          <section class="info_actions mt-4 mb-4">
+            <a class="go_out" (click)="logout()" title="logout">
+              Cerrar sesión
+            </a>
+            <!-- <a class="add_address_link" title="direcciones"
+                            role="button" routerLink="/address"
+                        >Agregar dirección <span><i class="fa-solid fa-truck-fast"></i></span></a>      -->
+          </section>
+        </div>
+      </div>
+    </div>
+    <!-- End My Profile -->
+
+    <!-- Second Pill -->
+    <div
+      class="tab-pane fade"
+      id="pills-maintenance"
+      role="tabpanel"
+      aria-labelledby="pills-maintenance-tab"
+      tabindex="0"
+    >
+      <!-- Second pill content -->
+    </div>
+    <!-- End Second Pill -->
+  </div>
+  <!-- End Data Pills -->
+</div>

@@ -1,0 +1,11 @@
+@for (toast of toastService.toasts(); track $index) {
+<div
+  class="toast_square mb-2"
+  [style.backgroundColor]="
+    toast.type === 'success' ? 'var(--primary_green)' : 'var(--primary_red)'
+  "
+>
+  <p class="toast_square_text">{{ toast.message }}</p>
+  <small class="toast_square_remove" (click)="removeToast($index)">X</small>
+</div>
+}

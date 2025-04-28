@@ -1,0 +1,69 @@
+<div class="main_content">
+  <div class="box">
+    <div class="d-flex justify-content-between">
+      <h3 class="">Nuevo empleado</h3>
+      <h4 class="go_back" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    <form class="form" [formGroup]="newEmployeeForm()" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="name">Nombre <span class="asterisk">*</span></label>
+          <input type="text" formControlName="name" />
+          @if (validField('name')) {
+          <small class="text-danger">
+            nombre debe tener más de 2 caracteres
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="mobile">Teléfono <span class="asterisk">*</span></label>
+          <input type="text" formControlName="mobile" />
+          @if (validField('mobile')) {
+          <small class="text-danger">
+            teléfono debe ser un número de 8 dígitos
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="email">
+            Correo electrónico <span class="asterisk">*</span>
+          </label>
+          <input type="text" formControlName="email" />
+          @if (validField('email')) {
+          <small class="text-danger"> formato incorrecto de correo </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="password">
+            Contraseña temporal <span class="asterisk">*</span>
+          </label>
+          <input type="text" formControlName="password" />
+          @if (validField('password')) {
+          <small class="text-danger">
+            contraseña debe tener al menos 6 caracteres
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="rol">Rol <span class="asterisk">*</span></label>
+          <select formControlName="rol">
+            @for (rol of allowedRoles; track $index) {
+            <option [value]="rol">
+              {{ rol }}
+            </option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="d-flex flex-column justify-content-center align-items-center mt-5"
+      >
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>
