@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { SellerGuard } from './guards/seller.guard';
 
 export const routes: Routes = [
   {
@@ -49,15 +50,27 @@ export const routes: Routes = [
     canActivate: [AdminGuard],
     canLoad: [AdminGuard],
   },
+  // EMPLOYEES
+
+  // CLIENTS
+  {
+    path: 'list-clients',
+    loadComponent: () =>
+      import('./pages/clients/list-clients/list-clients.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  {
+    path: 'detail-client/:id',
+    loadComponent: () =>
+      import('./pages/clients/detail-client/detail-client.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  // END CLIENTS
 
   {
     path: 'products',
     loadComponent: () => import('./pages/products/products.component'),
-  },
-  {
-    path: 'clients',
-    loadComponent: () => import('./pages/clients/clients.component'),
-    canActivate: [AuthGuard],
-    canLoad: [AuthGuard],
   },
 ];

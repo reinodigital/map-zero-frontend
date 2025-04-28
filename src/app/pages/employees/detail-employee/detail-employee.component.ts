@@ -43,16 +43,6 @@ export default class DetailEmployeeComponent {
   }
 
   // --------- HELPERS ----------
-
-  public hideModal(): void {
-    if (this.isBrowser) {
-      const btnCloseModal = document.querySelector('.btn-close');
-      if (btnCloseModal) {
-        (btnCloseModal as HTMLElement).click();
-      }
-    }
-  }
-
   // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {
     if (this.isBrowser) {

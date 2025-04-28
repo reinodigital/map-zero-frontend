@@ -2,7 +2,7 @@
   <div class="filters mb-4">
     <div class="box">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="mb-0">Filtrar empleados</h3>
+        <h3 class="mb-0">Filtrar clientes</h3>
         @if (filtersOpen()) {
         <i
           class="fa-solid fa-window-minimize"
@@ -39,35 +39,18 @@
                 <input type="text" formControlName="name" />
               </div>
               <div class="col-12 col-sm-6 col-lg-4">
-                <label for="mobile">Teléfono</label>
-                <input type="text" formControlName="mobile" />
+                <label for="identity">Cédula</label>
+                <input type="text" formControlName="identity" />
               </div>
               <div class="col-12 col-sm-6 col-lg-4">
                 <label for="email">Correo electrónico</label>
                 <input type="text" formControlName="email" />
               </div>
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="mobile">Teléfono</label>
+                <input type="text" formControlName="mobile" />
+              </div>
               <!-- <div class="col-12 col-sm-6 col-lg-4">
-                <label for="initDate">Fecha desde</label>
-                <input type="date" formControlName="initDate" />
-              </div>
-              <div class="col-12 col-sm-6 col-lg-4">
-                <label for="initDate">Fecha hasta</label>
-                <input type="date" formControlName="endDate" />
-              </div> -->
-              <div class="col-12 col-sm-6 col-lg-4">
-                <div class="d-flex flex-column">
-                  <label for="rol">Rol</label>
-                  <select formControlName="role">
-                    <option value="{{ null }}">--Seleccione--</option>
-                    @for (rol of allowedFilteredRoles; track $index) {
-                    <option [value]="rol">
-                      {{ rol }}
-                    </option>
-                    }
-                  </select>
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-lg-4">
                 <div class="d-flex flex-column">
                   <label for="rol">Estado</label>
                   <select formControlName="status">
@@ -76,7 +59,7 @@
                     <option value="inactive">No activo</option>
                   </select>
                 </div>
-              </div>
+              </div> -->
             </div>
 
             <div class="d-flex justify-content-start mt-4">
@@ -107,8 +90,8 @@
   </div>
   }
 
-  <button class="btn btn-primary mb-2" routerLink="/new-employee">
-    + Nuevo empleado
+  <button class="btn btn-primary mb-2" routerLink="/new-client">
+    + Nuevo cliente
   </button>
 
   @if (!isLoading()) {
@@ -116,8 +99,8 @@
     <div class="box">
       <div class="row">
         <div class="d-flex justify-content-between mb-3">
-          <h3>Listado empleados</h3>
-          <span>Cantidad empleados ({{ total() }})</span>
+          <h3>Listado clientes</h3>
+          <span>Cantidad clientes ({{ total() }})</span>
         </div>
 
         <div class="table-responsive">
@@ -125,29 +108,18 @@
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Teléfono</th>
+                <th>Cédula</th>
                 <th>Correo</th>
-                <th>Rol</th>
+                <th>Teléfono</th>
               </tr>
             </thead>
             <tbody class="animate__animated animate__fadeIn">
-              @for (user of users(); track user.uid) {
-              <tr
-                class="admin_tr"
-                [routerLink]="'/detail-employee/' + user.uid"
-              >
-                <td>{{ user.name }}</td>
-                <td>{{ user.mobile }}</td>
-                <td>{{ user.email ?? "_" }}</td>
-                <td>
-                  <span
-                    [class]="
-                      listEmployeesService.getClassForUserRole(user.roles[0])
-                    "
-                  >
-                    {{ user.roles[0] }}
-                  </span>
-                </td>
+              @for (client of clients(); track client.id) {
+              <tr class="admin_tr" [routerLink]="'/detail-client/' + client.id">
+                <td>{{ client.name }}</td>
+                <td>{{ client.identity }}</td>
+                <td>{{ client.email }}</td>
+                <td>{{ client.mobile }}</td>
               </tr>
               } @empty {
               <tr>
@@ -156,7 +128,7 @@
                     {{
                       isActiveFilters()
                         ? "Sin resultados para esa búsqueda"
-                        : "No existen empleados por el momento en el sistema"
+                        : "No existen clientes por el momento en el sistema"
                     }}
                   </div>
                 </div>

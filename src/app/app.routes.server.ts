@@ -27,12 +27,20 @@ export const serverRoutes: ServerRoute[] = [
     path: 'detail-employee/:id',
     renderMode: RenderMode.Client,
   },
+  // END EMPLOYEES
+
+  // CLIENTS
   {
-    path: 'products',
+    path: 'list-clients',
     renderMode: RenderMode.Prerender,
   },
   {
-    path: 'clients',
+    path: 'detail-client/:id',
+    renderMode: RenderMode.Client,
+  },
+  // END CLIENTS
+  {
+    path: 'products',
     renderMode: RenderMode.Prerender,
   },
   {

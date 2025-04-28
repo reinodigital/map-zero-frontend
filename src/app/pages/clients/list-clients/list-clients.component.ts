@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,33 +8,32 @@ import {
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 
-import { AuthService } from '../../../api';
-import { ListEmployeesService } from '../list-employees.service';
-
+import { ClientService } from '../../../api';
+import { ListClientsService } from '../list-clients.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
-import { IAuth } from '../../../interfaces';
-import { SecurityRoles } from '../../../enums';
+
+import { IClient } from '../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'list-employees',
   standalone: true,
-  imports: [CommonModule, RouterLink, PaginationComponent, ReactiveFormsModule],
-  templateUrl: './list-employees.component.html',
-  styleUrl: './list-employees.component.scss',
+  selector: 'list-clients',
+  imports: [ReactiveFormsModule, RouterLink, PaginationComponent],
+  templateUrl: './list-clients.component.html',
+  styleUrl: './list-clients.component.scss',
 })
-export default class ListEmployeesComponent {
+export default class ListClientsComponent {
   private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  public listEmployeesService = inject(ListEmployeesService);
+  private clientService = inject(ClientService);
+  public listClientsService = inject(ListClientsService);
 
-  // USERS
-  public users = signal<IAuth[]>([]);
+  // CLIENTS
+  public clients = signal<IClient[]>([]);
 
   // PAGINATION
   public limit: number = 5;
   public offset = computed<number>(() =>
-    this.listEmployeesService.lastOffsetEmployeesList()
+    this.listClientsService.lastOffsetListClients()
   );
   public total = signal<number>(0);
   public isLoading = signal<boolean>(true);
@@ -47,34 +45,25 @@ export default class ListEmployeesComponent {
   public searchForm = signal<FormGroup>(
     this.fb.group({
       name: ['', []],
-      mobile: ['', []],
+      identity: ['', []],
       email: ['', []],
-      role: ['', []],
-      status: ['', []],
+      mobile: ['', []],
       // initDate: ['', []],
       // endDate: ['', []],
     })
   );
 
-  public allowedFilteredRoles: string[] = [
-    SecurityRoles.ADMINISTRATIVE_ASSISTANT,
-    SecurityRoles.ADMIN,
-    SecurityRoles.SELLER,
-    SecurityRoles.ACCOUNTANT,
-  ];
-
   ngOnInit(): void {
-    this.fetchAllUsers();
+    this.fetchAllClients();
   }
 
-  // FETCH ALL USERS CLIENTS
-  fetchAllUsers(): void {
-    this.authService
-      .fetchAllByAdmin(this.limit, this.offset(), this.filters())
+  fetchAllClients(): void {
+    this.clientService
+      .fetchAll(this.limit, this.offset(), this.filters())
       .subscribe((resp) => {
         if (resp && resp.count >= 0) {
           this.total.set(resp.count);
-          this.users.set(resp.users);
+          this.clients.set(resp.clients);
         }
 
         this.isLoading.set(false);
@@ -90,25 +79,25 @@ export default class ListEmployeesComponent {
     this.filters.set(this.searchForm().value);
 
     // Set offset to 0 to allow pagination by filters
-    this.listEmployeesService.lastOffsetEmployeesList.set(0);
+    this.listClientsService.lastOffsetListClients.set(0);
     this.isActiveFilters.set(true);
-    this.fetchAllUsers();
+    this.fetchAllClients();
   }
 
   restartFilters(): void {
     // Set offset to 0 to allow pagination by filters
-    this.listEmployeesService.lastOffsetEmployeesList.set(0);
+    this.listClientsService.lastOffsetListClients.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
     this.searchForm().reset();
-    this.fetchAllUsers();
+    this.fetchAllClients();
   }
 
   // DETECT PAGE
   detectChangeOffset(offset: number) {
     this.isLoading.set(true);
-    this.listEmployeesService.lastOffsetEmployeesList.set(offset);
+    this.listClientsService.lastOffsetListClients.set(offset);
 
-    this.fetchAllUsers();
+    this.fetchAllClients();
   }
 }
