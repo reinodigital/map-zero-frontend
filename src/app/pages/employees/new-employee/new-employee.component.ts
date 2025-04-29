@@ -77,7 +77,7 @@ export default class NewEmployeeComponent {
     if (this.isBrowser) {
       this.checkBackUrl()
         ? window.history.go(-1)
-        : this.router.navigateByUrl('/employees');
+        : this.router.navigateByUrl('/list-employees');
     }
   }
 
@@ -111,7 +111,7 @@ export default class NewEmployeeComponent {
           type: TypeMessageToast.SUCCESS,
           duration: 5000,
         });
-        this.router.navigateByUrl('/employees');
+        this.router.navigateByUrl('/list-employees');
       } else {
         this.customToastService.add({
           message: resp.message,

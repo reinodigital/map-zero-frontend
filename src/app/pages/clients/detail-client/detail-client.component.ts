@@ -9,6 +9,7 @@ import {
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ClientService } from '../../../api';
 import { IClient } from '../../../interfaces';
+import { ListClientsService } from '../list-clients.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +23,7 @@ export default class DetailClientComponent {
   private platformId = inject(PLATFORM_ID);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
+  public listClientsService = inject(ListClientsService);
 
   private location = inject(Location);
   private clientService = inject(ClientService);
@@ -57,7 +59,7 @@ export default class DetailClientComponent {
     if (this.isBrowser) {
       this.checkBackUrl()
         ? window.history.go(-1)
-        : this.router.navigateByUrl('/clients');
+        : this.router.navigateByUrl('/list-clients');
     }
   }
 

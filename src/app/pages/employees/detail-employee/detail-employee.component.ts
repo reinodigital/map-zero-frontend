@@ -48,7 +48,7 @@ export default class DetailEmployeeComponent {
     if (this.isBrowser) {
       this.checkBackUrl()
         ? window.history.go(-1)
-        : this.router.navigateByUrl('/employees');
+        : this.router.navigateByUrl('/list-employees');
     }
   }
 

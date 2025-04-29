@@ -85,7 +85,9 @@
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Tipo cédula </span>
-            <span class="ms-4">{{ client()!.identityType }}</span>
+            <span class="ms-4">{{
+              listClientsService.getIdentityType(client()!.identityType)
+            }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Teléfono </span>
@@ -95,6 +97,21 @@
             <span class="fw-bold">Correo electrónico </span>
             <span class="ms-4">{{ client()!.email }}</span>
           </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Moneda </span>
+            <span class="ms-4">{{ client()!.currency }}</span>
+          </li>
+          @if (client()!.notes) {
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Notas </span>
+            <span class="ms-4">{{ client()!.notes }}</span>
+          </li>
+          } @if (client()?.defaultSeller) {
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Vendedor/a </span>
+            <span class="ms-4">{{ client()!.defaultSeller }}</span>
+          </li>
+          }
         </ul>
         }
       </div>

@@ -11,6 +11,7 @@ import {
   IAuthAndCount,
   IAuthToUpdate,
   IMessage,
+  ShortAuth,
 } from '../interfaces/index';
 import { isPlatformBrowser } from '@angular/common';
 import { LS, SecurityRoles } from '../enums';
@@ -173,5 +174,14 @@ export class AuthService {
         map((resp) => resp),
         catchError((err) => of(err.error))
       );
+  }
+
+  fetchAllSellers(): Observable<ShortAuth[]> {
+    const url = `${this._baseUrl}/auth/all-sellers`;
+
+    return this.http.get<ShortAuth[]>(url, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
   }
 }

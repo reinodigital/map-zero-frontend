@@ -16,7 +16,7 @@ export const serverRoutes: ServerRoute[] = [
 
   // EMPLOYEES
   {
-    path: 'employees',
+    path: 'list-employees',
     renderMode: RenderMode.Prerender,
   },
   {
@@ -36,6 +36,14 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'detail-client/:id',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'new-client',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'edit-client/:id',
     renderMode: RenderMode.Client,
   },
   // END CLIENTS

@@ -1,1 +1,95 @@
-<p>new-client works!</p>
+<div class="main_content">
+  <div class="box">
+    <div class="d-flex justify-content-between">
+      <h3 class="">Nuevo cliente</h3>
+      <h4 class="cp" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    <form class="form" [formGroup]="newClientForm()" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="name">Nombre <span class="asterisk">*</span></label>
+          <input type="text" formControlName="name" />
+          @if (validField('name')) {
+          <small class="text-danger">
+            nombre debe tener más de 2 caracteres
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="mobile">Teléfono <span class="asterisk">*</span></label>
+          <input type="text" formControlName="mobile" />
+          @if (validField('mobile')) {
+          <small class="text-danger">
+            teléfono debe ser un número de 8 dígitos
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="email">
+            Correo electrónico <span class="asterisk">*</span>
+          </label>
+          <input type="text" formControlName="email" />
+          @if (validField('email')) {
+          <small class="text-danger"> formato incorrecto de correo </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="identity"> Cédula <span class="asterisk">*</span> </label>
+          <input type="text" formControlName="identity" />
+          @if (validField('identity')) {
+          <small class="text-danger">
+            cédula debe tener enter 9 a 12 caracteres
+          </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="identityType">
+            Tipo Cédula <span class="asterisk">*</span>
+          </label>
+          <select formControlName="identityType" class="w-100">
+            <option value="01">Física</option>
+            <option value="02">Jurídica</option>
+            <option value="03">DIMEX</option>
+            <option value="04">NITE</option>
+          </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="currency"> Moneda <span class="asterisk">*</span> </label>
+          <select formControlName="currency" class="w-100">
+            <option value="USD">USD</option>
+            <option value="CRC">CRC</option>
+          </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="defaultSeller">
+            Vendedor <span class="muted">opcional</span>
+          </label>
+          <ng-select
+            [items]="sellers()"
+            bindLabel="name"
+            placeholder="--Seleccione--"
+            formControlName="defaultSeller"
+            [searchable]="true"
+          >
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <label for="notes"> Notas <span class="muted">opcional</span> </label>
+          <textarea formControlName="notes" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div
+        class="d-flex flex-column justify-content-center align-items-center mt-5"
+      >
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+  </div>
+</div>

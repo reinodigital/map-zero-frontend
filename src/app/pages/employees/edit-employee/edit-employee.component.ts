@@ -98,15 +98,6 @@ export default class EditEmployeeComponent {
     );
   }
 
-  // Redirect to list, but if filters applies then keep them
-  comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/employees');
-    }
-  }
-
   onSubmit(): void {
     if (this.editEmployeeForm()?.invalid) {
       this.formErrorService.throwFormErrors(this.editEmployeeForm()!);
@@ -137,7 +128,7 @@ export default class EditEmployeeComponent {
           type: TypeMessageToast.SUCCESS,
           duration: 23000,
         });
-        this.router.navigateByUrl('/employees');
+        this.router.navigateByUrl('/list-employees');
       } else {
         this.customToastService.add({
           message: resp.message,
@@ -149,11 +140,18 @@ export default class EditEmployeeComponent {
   }
 
   // --------- HELPERS ----------
+  // Redirect to list, but if filters applies then keep them
+  comeBackToList(): void {
+    if (this.isBrowser) {
+      this.checkBackUrl()
+        ? window.history.go(-1)
+        : this.router.navigateByUrl('/list-employees');
+    }
+  }
+
   private checkBackUrl(): boolean {
     const backUrl: any = this.location.getState();
 
     return backUrl && backUrl.navigationId > 1;
-    // return true => There is a back URL
-    // return false => There is no back URL or it's the initial navigation
   }
 }

@@ -23,7 +23,7 @@ export const routes: Routes = [
 
   // EMPLOYEES
   {
-    path: 'employees',
+    path: 'list-employees',
     loadComponent: () =>
       import('./pages/employees/list-employees/list-employees.component'),
     canActivate: [AdminGuard],
@@ -64,6 +64,20 @@ export const routes: Routes = [
     path: 'detail-client/:id',
     loadComponent: () =>
       import('./pages/clients/detail-client/detail-client.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  {
+    path: 'new-client',
+    loadComponent: () =>
+      import('./pages/clients/new-client/new-client.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  {
+    path: 'edit-client/:id',
+    loadComponent: () =>
+      import('./pages/clients/edit-client/edit-client.component'),
     canActivate: [SellerGuard],
     canLoad: [SellerGuard],
   },
