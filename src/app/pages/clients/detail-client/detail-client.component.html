@@ -23,7 +23,7 @@
           >
             Información
           </button>
-          <!-- <button
+          <button
             class="nav-link"
             id="pills-address-tab"
             data-bs-toggle="pill"
@@ -33,13 +33,23 @@
             aria-controls="pills-address"
             aria-selected="false"
           >
-            Address
-          </button> -->
+            Direcciones
+          </button>
         </li>
       </ul>
       <!-- End Pills -->
 
       <div class="hstack gap-3">
+        <a
+          role="button"
+          class="btn btn-warning"
+          title="Agregar dirección"
+          (click)="addNewAddress()"
+          data-bs-toggle="addressModal"
+          data-bs-target="#addressModal"
+        >
+          <i class="fa-solid fa-location-dot"></i> Agregar dirección
+        </a>
         <a
           role="button"
           class="btn btn-success btn_detail"
@@ -117,17 +127,53 @@
       </div>
       <!-- End Info Employee -->
 
-      <!-- Tickets -->
-      <!-- <div
+      <!-- Addresses -->
+      <div
         class="tab-pane fade"
         id="pills-address"
         role="tabpanel"
         aria-labelledby="pills-address-tab"
         tabindex="0"
       >
-        Second Pill -->
-      <!-- END Second Pill -->
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col"><i class="fa-solid fa-location-dot"></i></th>
+              <th scope="col">Provincia</th>
+              <th scope="col">Canton</th>
+              <th scope="col">Distrito</th>
+              <th scope="col">Dirección exacta</th>
+              <th scope="col">Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (address of client()?.addresses || []; track $index) {
+            <tr>
+              <td>{{ $index + 1 }}</td>
+              <td>{{ address.provinceName }}</td>
+              <td>{{ address.cantonName }}</td>
+              <td>{{ address.districtName }}</td>
+              <td>{{ address.exactAddress ? address.exactAddress : "_" }}</td>
+              <td>
+                <div (click)="removeAddress(address.id)">
+                  <i class="fa-solid fa-trash icon_trash" title="Eliminar"></i>
+                </div>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <div class="d-flex justify-content-start">
+                <div class="alert alert-warning">
+                  Sin direcciones por el momento.
+                </div>
+              </div>
+            </tr>
+            }
+          </tbody>
+        </table>
+        <!-- END Addresses -->
+      </div>
+      <!-- End Data Pills -->
     </div>
-    <!-- End Data Pills -->
   </div>
 </div>

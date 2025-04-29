@@ -8,6 +8,7 @@ export interface IClient {
   identityType: string;
   isActive: boolean;
   currency: string;
+  addresses: IClientAddress[];
   notes?: string;
   defaultSeller?: string;
 }
@@ -26,4 +27,25 @@ export interface IClientToUpdate {
   currency: string;
   notes?: string;
   defaultSeller?: string;
+}
+
+// ======= Client address ========
+export interface IClientAddress {
+  id: number;
+  provinceCode: string;
+  provinceName: string;
+  cantonCode: string;
+  cantonName: string;
+  districtCode: string;
+  districtName: string;
+  exactAddress: string | null;
+}
+export interface IDataToCreateNewClientAddress {
+  provinceName: string;
+  provinceCode: string;
+  cantonName: string;
+  cantonCode: string;
+  districtName: string;
+  districtCode: string;
+  exactAddress: string | null;
 }

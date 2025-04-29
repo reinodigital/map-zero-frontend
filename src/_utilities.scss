@@ -49,6 +49,12 @@
   }
 }
 
+// Icons
+.icon_trash {
+  color: var(--red);
+}
+// End Icons
+
 // Transparent badges
 .bg-label-primary {
   background-color: #c4e7fe !important;
@@ -143,3 +149,10 @@
   width: 40rem;
   z-index: 1001; // z-index of material dialog has 1000
 }
+
+// Pills
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+// End Pills

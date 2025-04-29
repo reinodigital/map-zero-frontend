@@ -1,0 +1,28 @@
+@if (data()) {
+<div class="square">
+  <div class="d-flex justify-content-between align-items-start">
+    <h3>Acción irreversible</h3>
+    <i
+      (click)="closePopUp('cancel')"
+      class="fa-solid fa-circle-xmark btn_close"
+    >
+    </i>
+  </div>
+  <div class="info">
+    <div class="info_content">
+      <div class="message">
+        <p class="message_text">{{ data() }}</p>
+      </div>
+
+      <div class="hstack gap-3 buttons">
+        <button (click)="closePopUp('cancel')" class="btn btn-light">
+          Cancelar
+        </button>
+        <button (click)="closePopUp('continue')" class="btn btn-danger ms-2">
+          Continuar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

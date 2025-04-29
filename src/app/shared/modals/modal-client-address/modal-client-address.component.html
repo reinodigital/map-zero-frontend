@@ -1,0 +1,92 @@
+<form
+  class="form container"
+  autocomplete="off"
+  [formGroup]="addressForm()"
+  (ngSubmit)="saveAddress()"
+>
+  <div class="header_form">
+    <h3>Agregar dirección</h3>
+    <i class="fa-solid fa-xmark icon_close" (click)="closePopUp()"></i>
+  </div>
+  <div class="form_content">
+    <div class="col-12">
+      <label>Provincia <span class="asterisk">*</span></label>
+      <select formControlName="province" class="w-100">
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (province of provinces(); track province.id) {
+        <option [ngValue]="province">
+          {{ province.name }}
+        </option>
+        }
+      </select>
+
+      @if (validField('province')) {
+      <small class="form-text text-danger">
+        seleccione una provincia por favor
+      </small>
+      }
+    </div>
+
+    <div class="col-12">
+      <label>Cantón <span class="asterisk">*</span></label>
+      <select formControlName="canton" class="w-100">
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (canton of cantons(); track canton.id) {
+        <option [ngValue]="canton">
+          {{ canton.name }}
+        </option>
+        }
+      </select>
+      @if (validField('canton')) {
+      <small class="form-text text-danger">
+        seleccione un cantón por favor
+      </small>
+      }
+    </div>
+
+    <div class="col-12">
+      <label>Distrito <span class="asterisk">*</span></label>
+      <select formControlName="district" class="w-100">
+        <option [ngValue]="null">-- Seleccione --</option>
+        @for (district of districts(); track district.id) {
+        <option [ngValue]="district">
+          {{ district.name }}
+        </option>
+        }
+      </select>
+      @if (validField('district')) {
+      <small class="form-text text-danger">
+        seleccione un distrito por favor
+      </small>
+      }
+    </div>
+
+    <div class="col-12">
+      <div class="d-flex flex-column">
+        <label>Dirección exacta <span class="muted">opcional</span></label>
+        <textarea formControlName="exactAddress" rows="2"></textarea>
+      </div>
+      @if (validField('exactAddress')) {
+      <small class="form-text text-danger">
+        Longitud de texto debe ser entre 8 a 120 letras.
+      </small>
+      }
+    </div>
+
+    @if (errMsg()) {
+    <div class="d-flex justify-content-center mt-3">
+      <div class="alert alert-danger">
+        {{ errMsg() }}
+      </div>
+    </div>
+    }
+
+    <button
+      class="btn btn-success mt-4 mb-4 w-100"
+      [disabled]="addressForm().invalid"
+      type="submit"
+    >
+      Agregar
+    </button>
+  </div>
+</form>
