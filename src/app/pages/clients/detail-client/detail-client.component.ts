@@ -79,6 +79,16 @@ export default class DetailClientComponent {
   }
   // END REMOVE ADDRESS
 
+  // CONTACT
+  addNewContact(): void {
+    this.detailClientService.addNewContact(this.clientId);
+  }
+
+  removeContact(contactId: number): void {
+    this.detailClientService.removeContact(contactId);
+  }
+  // END REMOVE CONTACT
+
   // --------- HELPERS ----------
 
   // Redirect to list, but if filters applies then keep them

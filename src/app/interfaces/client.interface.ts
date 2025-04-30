@@ -9,6 +9,7 @@ export interface IClient {
   isActive: boolean;
   currency: string;
   addresses: IClientAddress[];
+  contacts: IClientContact[];
   notes?: string;
   defaultSeller?: string;
 }
@@ -49,3 +50,20 @@ export interface IDataToCreateNewClientAddress {
   districtCode: string;
   exactAddress: string | null;
 }
+// ========= Client address
+
+// ========= Client contact
+export interface IClientContact {
+  id: number;
+  name: string;
+  lastName?: string;
+  email?: string;
+  mobile?: string;
+}
+export interface IDataToCreateNewClientContact {
+  name: string;
+  lastName: string | null;
+  email: string | null;
+  mobile: string | null;
+}
+// ========= Client contact

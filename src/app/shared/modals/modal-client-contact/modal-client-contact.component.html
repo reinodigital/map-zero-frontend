@@ -1,0 +1,42 @@
+<form
+  class="form container"
+  autocomplete="off"
+  [formGroup]="contactForm()"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="header_form">
+    <h3>Agregar contacto</h3>
+    <i class="fa-solid fa-xmark icon_close" (click)="closePopUp()"></i>
+  </div>
+  <div class="form_content">
+    <div class="col-12">
+      <label>Nombre <span class="asterisk">*</span></label>
+      <input formControlName="name" />
+      @if (validField('name')) {
+      <small class="form-text text-danger">
+        nombre debe tener al menos 2 caracteres
+      </small>
+      }
+    </div>
+    <div class="col-12">
+      <label>Apellidos <span class="muted">opcional</span></label>
+      <input formControlName="lastName" />
+    </div>
+    <div class="col-12">
+      <label>Correo <span class="muted">opcional</span></label>
+      <input formControlName="email" />
+    </div>
+    <div class="col-12">
+      <label>Teléfono <span class="muted">opcional</span></label>
+      <input formControlName="mobile" />
+    </div>
+  </div>
+
+  <button
+    class="btn btn-success mt-4 mb-4 w-100"
+    [disabled]="contactForm().invalid"
+    type="submit"
+  >
+    Agregar
+  </button>
+</form>

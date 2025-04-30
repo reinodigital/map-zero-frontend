@@ -6,16 +6,16 @@ import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 import { LS } from '../enums';
-import { IDataToCreateNewClientAddress, IMessage } from '../interfaces';
+import { IDataToCreateNewClientContact, IMessage } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ClientAddressService {
+export class ClientContactService {
   private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
   private _baseUrl = environment.baseUrl;
-  private url = `${this._baseUrl}/client-address`;
+  private url = `${this._baseUrl}/client-contact`;
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -32,30 +32,20 @@ export class ClientAddressService {
 
   create(
     clientId: number,
-    dataAddress: IDataToCreateNewClientAddress
+    data: IDataToCreateNewClientContact
   ): Observable<IMessage | any> {
     const finalUrl = `${this.url}/new-one/${clientId}`;
 
     return this.http
-      .post<IMessage>(finalUrl, dataAddress, { headers: this.getToken })
+      .post<IMessage>(finalUrl, data, { headers: this.getToken })
       .pipe(
         map((resp) => resp),
         catchError((err) => of(err.error))
       );
   }
 
-  // PUBLIC - ENDPOINT
-  // getAllByClientUID(clientUid: number): Observable<IAuthAddress[]> {
-  //   const finalUrl = `${this.url}/${clientUid}`;
-
-  //   return this.http.get<IAuthAddress[]>(finalUrl).pipe(
-  //     map((resp) => resp),
-  //     catchError((err) => of(err.error))
-  //   );
-  // }
-
-  removeOne(addressId: number): Observable<IMessage | any> {
-    const finalUrl = `${this.url}/${addressId}`;
+  removeOne(contactId: number): Observable<IMessage | any> {
+    const finalUrl = `${this.url}/${contactId}`;
 
     return this.http.delete<IMessage>(finalUrl).pipe(
       map((resp) => resp),

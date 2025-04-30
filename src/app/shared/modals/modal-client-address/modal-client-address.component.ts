@@ -22,7 +22,7 @@ import { IDataToCreateNewClientAddress, ITerritory } from '../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-modal-client-address',
+  selector: 'modal-client-address',
   templateUrl: './modal-client-address.component.html',
   styleUrls: ['./modal-client-address.component.scss'],
   imports: [ReactiveFormsModule],
