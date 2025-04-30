@@ -9,27 +9,22 @@
       (ngSubmit)="login()"
     >
       <div class="row">
-        <div class="col-12">
-          <label class="login_label" for="email">
-            Correo <span class="asterisk">*</span>
-          </label>
-          <input
-            class="form-control"
-            type="email"
-            formControlName="email"
-            placeholder="su correo"
-          />
+        <div class="col-12 col-lg-5">
+          <label for="email"> Correo <span class="asterisk">*</span> </label>
+          <input type="email" formControlName="email" placeholder="su correo" />
           @if (validField('email')) {
           <small class="text-danger"> formato de correo inválido </small>
           }
         </div>
-        <div class="col-12">
-          <label class="login_label" for="password">
-            Contraseña <span class="asterisk">*</span>
+      </div>
+      <div class="row">
+        <div class="col-12 col-lg-5">
+          <label class="label_password" for="password">
+            <div>Contraseña <span class="asterisk">*</span></div>
+            <i class="fa-solid fa-eye" (click)="displayPassword()"></i>
           </label>
           <input
-            class="form-control"
-            type="password"
+            [type]="passwordType()"
             formControlName="password"
             placeholder="su contraseña"
           />
@@ -39,9 +34,7 @@
         </div>
       </div>
 
-      <button class="btn btn-primary mt-4 w-100" type="submit">
-        Iniciar Sesión
-      </button>
+      <button class="btn btn-primary mt-4" type="submit">Iniciar Sesión</button>
     </form>
   </div>
 </div>

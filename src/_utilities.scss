@@ -49,6 +49,12 @@
   }
 }
 
+.line_divider {
+  background-color: var(--primary_orange);
+  height: 0.1rem;
+  width: 100%;
+}
+
 // Icons
 .icon_trash {
   color: var(--red);

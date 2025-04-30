@@ -1,5 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
 import { inject, Injectable, PLATFORM_ID, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -13,7 +15,6 @@ import {
   IMessage,
   ShortAuth,
 } from '../interfaces/index';
-import { isPlatformBrowser } from '@angular/common';
 import { LS, SecurityRoles } from '../enums';
 
 @Injectable({
@@ -21,6 +22,7 @@ import { LS, SecurityRoles } from '../enums';
 })
 export class AuthService {
   private platformId = inject(PLATFORM_ID);
+  private router = inject(Router);
   private http = inject(HttpClient);
   private _baseUrl = environment.baseUrl;
   public _user = signal<IAuth | null>(null);
@@ -141,9 +143,10 @@ export class AuthService {
 
     return this.http.get<any>(url, { headers: this.getToken }).pipe(
       tap((resp) => {
-        if (resp.ok) {
+        if (resp.ok && this.isBrowser) {
           localStorage.removeItem(LS.LS_TOKEN_SYSTEM);
           this._user.set(null);
+          this.router.navigateByUrl('/login');
         }
       }),
       map((resp) => resp),

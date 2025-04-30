@@ -1,0 +1,39 @@
+.user {
+  position: relative;
+}
+
+.user_icon {
+  border-radius: 50%;
+  background-color: var(--white);
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+}
+
+.user_info {
+  border-radius: var(--border_radius);
+  background-color: var(--white);
+  position: fixed;
+  padding: 2rem;
+  top: 4.5rem;
+  right: -30rem;
+  opacity: 0;
+  z-index: 999;
+
+  transition: opacity 0.3s ease-in-out;
+
+  .user_info_li {
+    color: var(--text);
+    font-family: var(--font_secondary);
+    font-size: 1.4rem;
+
+    i {
+      color: var(--primary_orange);
+      font-size: 1.3rem;
+    }
+  }
+}
+
+.appearance {
+  right: 1rem;
+  opacity: 1;
+}

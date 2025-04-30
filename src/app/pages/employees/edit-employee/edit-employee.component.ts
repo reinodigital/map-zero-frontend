@@ -126,14 +126,14 @@ export default class EditEmployeeComponent {
         this.customToastService.add({
           message: resp.msg,
           type: TypeMessageToast.SUCCESS,
-          duration: 23000,
+          duration: 10000,
         });
         this.router.navigateByUrl('/list-employees');
       } else {
         this.customToastService.add({
           message: resp.message,
           type: TypeMessageToast.ERROR,
-          duration: 5000,
+          duration: 10000,
         });
       }
     });
