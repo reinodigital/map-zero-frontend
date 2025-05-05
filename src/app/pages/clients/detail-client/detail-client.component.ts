@@ -69,7 +69,6 @@ export default class DetailClientComponent {
       });
   }
 
-  // ADDRESS
   addNewAddress(): void {
     this.detailClientService.addNewAddress(this.clientId);
   }
@@ -77,9 +76,7 @@ export default class DetailClientComponent {
   removeAddress(addressId: number): void {
     this.detailClientService.removeAddress(addressId);
   }
-  // END REMOVE ADDRESS
 
-  // CONTACT
   addNewContact(): void {
     this.detailClientService.addNewContact(this.clientId);
   }
@@ -87,9 +84,6 @@ export default class DetailClientComponent {
   removeContact(contactId: number): void {
     this.detailClientService.removeContact(contactId);
   }
-  // END REMOVE CONTACT
-
-  // --------- HELPERS ----------
 
   // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {

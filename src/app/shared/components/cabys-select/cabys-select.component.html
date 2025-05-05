@@ -1,0 +1,72 @@
+<form>
+  <div class="row">
+    <label class="w_100">Buscar cabys </label>
+    <input
+      type="text"
+      class="w_100 input_search"
+      [formControl]="inputSearch()"
+      placeholder="por su código o su descripción"
+    />
+  </div>
+</form>
+
+<div class="mt-5">
+  <h4>
+    Cabys seleccionado:
+    <span class="badge bg-success">{{ selectedCabys() ?? "_" }}</span>
+  </h4>
+</div>
+
+@if (isLoading()) {
+<div class="row animate__animated animate__fadeIn">
+  <div class="col-12">
+    <div class="alert alert-info text-center" role="alert">
+      <h4 class="alert-heading">Loading</h4>
+      <i class="fa fa-spin fa-refresh fa-2x"></i>
+      <p class="mb-o">Cargando...</p>
+    </div>
+  </div>
+</div>
+} @else {
+<div class="table-responsive mt-5">
+  <table class="table table-bordered">
+    <thead>
+      <th></th>
+      <th>Cabys</th>
+      <th>Descripción</th>
+      <th>Impuesto</th>
+    </thead>
+    <tbody>
+      @for (cabys of cabysSuggestions(); track cabys.code) {
+      <tr class="row_cabys" (click)="selectOneCabys(cabys.code)">
+        <td>
+          <span
+            class="row_cabys_square"
+            [class.cabysSelected]="selectedCabys() === cabys.code"
+            >_</span
+          >
+        </td>
+        <td>{{ cabys.code }}</td>
+        <td>{{ cabys.description }}</td>
+        <td>{{ cabys.tax }}</td>
+      </tr>
+      } @empty {
+      <tr>
+        <td>{{ searchMessage() }}</td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+}
+
+<!-- Pagination -->
+@if (total()) {
+<div class="d-flex justify-content-center w_100 mt-4">
+  <app-pagination
+    [total]="total()"
+    [factor]="limit"
+    (offsetEmitter)="detectChangeOffset($event)"
+  ></app-pagination>
+</div>
+}

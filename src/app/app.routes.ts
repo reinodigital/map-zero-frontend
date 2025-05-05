@@ -83,8 +83,32 @@ export const routes: Routes = [
   },
   // END CLIENTS
 
+  // ITEMS
   {
-    path: 'products',
-    loadComponent: () => import('./pages/products/products.component'),
+    path: 'list-items',
+    loadComponent: () =>
+      import('./pages/items/list-items/list-items.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
+  {
+    path: 'new-item',
+    loadComponent: () => import('./pages/items/new-item/new-item.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'detail-item/:id',
+    loadComponent: () =>
+      import('./pages/items/detail-item/detail-item.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'edit-item/:id',
+    loadComponent: () => import('./pages/items/edit-item/edit-item.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  // END ITEMS
 ];

@@ -47,10 +47,26 @@ export const serverRoutes: ServerRoute[] = [
     renderMode: RenderMode.Client,
   },
   // END CLIENTS
+
+  // ITEMS
   {
-    path: 'products',
+    path: 'list-items',
     renderMode: RenderMode.Prerender,
   },
+  {
+    path: 'new-item',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'edit-item/:id',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'detail-item/:id',
+    renderMode: RenderMode.Client,
+  },
+  // END ITEMS
+
   {
     path: '**',
     renderMode: RenderMode.Prerender,
