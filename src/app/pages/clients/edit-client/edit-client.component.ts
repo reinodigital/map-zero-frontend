@@ -21,6 +21,7 @@ import { CustomToastService } from '../../../shared/services/custom-toast.servic
 
 import { TypeMessageToast } from '../../../enums';
 import { IClient, IClientToUpdate, ShortAuth } from '../../../interfaces';
+import { formatDateToString } from '../../../shared/helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -137,6 +138,7 @@ export default class EditClientComponent {
     }
 
     let data: IClientToUpdate | any = {};
+    data.updatedAt = formatDateToString(new Date());
 
     for (const key in this.editClientForm()?.value) {
       if (this.editClientForm()?.value.hasOwnProperty(key)) {

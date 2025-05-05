@@ -1,3 +1,5 @@
+import { ITracking } from './tracking.interface';
+
 export interface IClient {
   id: number;
   name: string;
@@ -12,6 +14,7 @@ export interface IClient {
   contacts: IClientContact[];
   notes?: string;
   defaultSeller?: string;
+  tracking: ITracking[];
 }
 
 export interface IClientAndCount {
@@ -20,6 +23,7 @@ export interface IClientAndCount {
 }
 
 export interface IClientToUpdate {
+  updatedAt: string;
   name: string;
   mobile: string;
   email: string;
@@ -42,6 +46,7 @@ export interface IClientAddress {
   exactAddress: string | null;
 }
 export interface IDataToCreateNewClientAddress {
+  createdAt: string;
   provinceName: string;
   provinceCode: string;
   cantonName: string;
@@ -61,6 +66,7 @@ export interface IClientContact {
   mobile?: string;
 }
 export interface IDataToCreateNewClientContact {
+  createdAt: string;
   name: string;
   lastName: string | null;
   email: string | null;

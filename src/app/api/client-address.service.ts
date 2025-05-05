@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { formatDateToString } from '../shared/helpers';
 
 import { LS } from '../enums';
 import { IDataToCreateNewClientAddress, IMessage } from '../interfaces';
@@ -57,9 +58,14 @@ export class ClientAddressService {
   removeOne(addressId: number): Observable<IMessage | any> {
     const finalUrl = `${this.url}/${addressId}`;
 
-    return this.http.delete<IMessage>(finalUrl).pipe(
-      map((resp) => resp),
-      catchError((err) => of(err.error))
-    );
+    return this.http
+      .delete<IMessage>(finalUrl, {
+        body: { removedAt: formatDateToString(new Date()) },
+        headers: this.getToken,
+      })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
   }
 }

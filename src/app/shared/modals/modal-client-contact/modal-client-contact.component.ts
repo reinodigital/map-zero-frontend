@@ -14,6 +14,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 
 import { FormErrorService } from '../../services/form-error.service';
 import { IDataToCreateNewClientContact } from '../../../interfaces';
+import { formatDateToString } from '../../helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,6 +58,7 @@ export class ModalClientContactComponent {
     }
 
     const data: IDataToCreateNewClientContact = {
+      createdAt: formatDateToString(new Date()),
       name: this.contactForm().controls['name'].value,
       lastName: this.contactForm().controls['lastName'].value
         ? this.contactForm().controls['lastName'].value

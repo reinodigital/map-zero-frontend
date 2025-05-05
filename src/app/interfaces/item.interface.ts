@@ -1,3 +1,5 @@
+import { ITracking } from './tracking.interface';
+
 export interface IItemAndCount {
   count: number;
   items: IItem[];
@@ -16,21 +18,13 @@ export interface IItem {
   saleTaxRate: string;
   saleDescription?: string;
   createdAt: Date;
-  itemHistory: IItemHistory[];
+  tracking: ITracking[];
 }
 
 export interface ICabys {
   id: number;
   code: string;
   tax: number;
-}
-
-export interface IItemHistory {
-  id: number;
-  action: string;
-  executedAt: Date;
-  executedBy?: string;
-  description: string;
 }
 
 export interface IDataToCreateItem {

@@ -19,6 +19,7 @@ import { TerritoryService } from '../../../api';
 import { FormErrorService } from '../../services/form-error.service';
 
 import { IDataToCreateNewClientAddress, ITerritory } from '../../../interfaces';
+import { formatDateToString } from '../../helpers';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -139,6 +140,7 @@ export class ModalClientAddressComponent implements OnInit {
       this.addressForm().value;
 
     const dataAddress: IDataToCreateNewClientAddress = {
+      createdAt: formatDateToString(new Date()),
       provinceName: province.name,
       provinceCode: province.code.toString(),
       cantonName: canton.name,

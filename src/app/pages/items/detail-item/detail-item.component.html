@@ -149,12 +149,12 @@
       >
         @if (item()) {
         <ul class="list-group">
-          @for (line of item()?.itemHistory; track line.id) {
+          @for (line of item()?.tracking; track line.id) {
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">
               <i class="fa-solid fa-pen-to-square action_icon_edit"></i>
             </span>
-            <span class="ms-4">{{ line.description }}.</span>
+            <span class="ms-4">{{ line.detail }}.</span>
           </li>
           }
         </ul>
