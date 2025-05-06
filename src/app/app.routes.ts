@@ -111,4 +111,20 @@ export const routes: Routes = [
     canLoad: [AuthGuard],
   },
   // END ITEMS
+
+  // QUOTES
+  {
+    path: 'list-quotes',
+    loadComponent: () =>
+      import('./pages/quotes/list-quotes/list-quotes.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  {
+    path: 'new-quote',
+    loadComponent: () => import('./pages/quotes/new-quote/new-quote.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  // END QUOTES
 ];

@@ -1,0 +1,135 @@
+<div class="main_content">
+  <div class="filters mb-4">
+    <div class="box">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h3 class="mb-0">Filtrar cotizaciones</h3>
+        @if (filtersOpen()) {
+        <i
+          class="fa-solid fa-window-minimize"
+          (click)="openCloseFilters()"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+        >
+        </i>
+        } @else {
+        <i
+          class="fa-solid fa-window-maximize"
+          (click)="openCloseFilters()"
+          data-bs-toggle="collapse"
+          data-bs-target="#collapseFilters"
+          aria-expanded="false"
+          aria-controls="collapseFilters"
+        >
+        </i>
+        }
+      </div>
+      <div class="collapse" id="collapseFilters">
+        <div class="card card-body">
+          <form
+            class="search_form"
+            [formGroup]="searchForm()"
+            autocomplete="off"
+            (ngSubmit)="searchFormSubmit()"
+          >
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="name">Nombre</label>
+                <input type="text" formControlName="name" />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-start mt-4">
+              <button class="btn btn-success" type="submit">Filtrar</button>
+              <button
+                class="btn btn-light ms-2"
+                type="button"
+                (click)="restartFilters()"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="row animate__animated animate__fadeIn">
+    <div class="col-12">
+      <div class="alert alert-info text-center" role="alert">
+        <h4 class="alert-heading">Loading</h4>
+        <i class="fa fa-spin fa-refresh fa-2x"></i>
+        <p class="mb-o">Cargando...</p>
+      </div>
+    </div>
+  </div>
+  }
+
+  <button class="btn btn-primary mb-2" routerLink="/new-quote">
+    + Nueva cotización
+  </button>
+
+  @if (!isLoading()) {
+  <div class="table_clients">
+    <div class="box">
+      <div class="row">
+        <div class="d-flex justify-content-between mb-3">
+          <h3>Listado cotizaciones</h3>
+          <span>Cantidad cotizaciones ({{ total() }})</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Fecha inicio</th>
+              </tr>
+            </thead>
+            <tbody class="animate__animated animate__fadeIn">
+              @for (quote of quotes(); track quote.id) {
+              <tr class="admin_tr" [routerLink]="'/detail-quote/' + quote.id">
+                <td>{{ quote.quoteNumber }}</td>
+                <td>{{ quote.client.name }}</td>
+                <td>{{ quote.initDate | readableDate }}</td>
+              </tr>
+              } @empty {
+              <tr>
+                <div class="w-100 d-flex justify-content-start">
+                  <div class="alert alert-warning">
+                    {{
+                      isActiveFilters()
+                        ? "Sin resultados para esa búsqueda"
+                        : "No existen cotizaciones por el momento en el sistema"
+                    }}
+                  </div>
+                </div>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- END TABLE -->
+      </div>
+      <!-- END ROW -->
+    </div>
+    <!-- End BOX -->
+  </div>
+  }
+
+  <!-- Pagination -->
+  @if (total()) {
+  <div class="d-flex justify-content-center w_100 mt-4">
+    <app-pagination
+      [total]="total()"
+      [factor]="limit"
+      [initialOffset]="offset()"
+      (offsetEmitter)="detectChangeOffset($event)"
+    ></app-pagination>
+  </div>
+  }
+</div>

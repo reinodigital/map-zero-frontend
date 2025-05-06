@@ -6,3 +6,4 @@ export * from './item.interface';
 export * from './territory.interface';
 export * from './toast.interface';
 export * from './tracking.interface';
+export * from './quote.interface';

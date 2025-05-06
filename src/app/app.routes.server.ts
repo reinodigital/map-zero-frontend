@@ -67,6 +67,17 @@ export const serverRoutes: ServerRoute[] = [
   },
   // END ITEMS
 
+  // QUOTES
+  {
+    path: 'list-quotes',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'new-quote',
+    renderMode: RenderMode.Prerender,
+  },
+  // END QUOTES
+
   {
     path: '**',
     renderMode: RenderMode.Prerender,
