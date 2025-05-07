@@ -9,6 +9,7 @@ import {
   IClientAndCount,
   IClientToUpdate,
   IClient,
+  ICommonSelect,
 } from '../interfaces/index';
 import { isPlatformBrowser } from '@angular/common';
 import { LS } from '../enums';
@@ -62,6 +63,15 @@ export class ClientService {
         map((resp) => resp),
         catchError((err) => of(err.error))
       );
+  }
+
+  fetchAllShortClients(): Observable<ICommonSelect[]> {
+    const url = `${this._baseUrl}/client/all-short`;
+
+    return this.http.get<ICommonSelect[]>(url, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
   }
 
   fetchAll(

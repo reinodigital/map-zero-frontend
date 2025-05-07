@@ -54,3 +54,13 @@ export interface IDataToUpdateItem {
   saleTaxRate: string;
   saleDescription?: string;
 }
+
+export interface IItemForSelect {
+  id: number;
+  name: string;
+  cabys: ICabys;
+  salePrice: number;
+  saleAccount: string;
+  saleTaxRate: string;
+  saleDescription?: string;
+}

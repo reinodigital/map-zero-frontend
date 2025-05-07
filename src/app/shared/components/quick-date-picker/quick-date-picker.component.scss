@@ -1,0 +1,32 @@
+.date_custom {
+  position: relative;
+}
+
+.date_picker {
+  display: flex;
+  align-items: center;
+  padding-top: 0.4rem;
+}
+
+.date_options {
+  display: block;
+  background-color: var(--light);
+  position: absolute;
+  top: 3rem;
+  width: 100%;
+
+  transition: display 0.3s ease-in-out;
+}
+
+.date_options_li {
+  cursor: pointer;
+  font-size: 1.5rem;
+
+  &:hover {
+    background-color: var(--gray);
+  }
+}
+
+.hidden {
+  display: none;
+}

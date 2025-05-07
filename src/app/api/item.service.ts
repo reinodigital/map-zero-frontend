@@ -11,6 +11,7 @@ import {
   IItem,
   IDataToUpdateItem,
   IItemAndCount,
+  IItemForSelect,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -82,6 +83,17 @@ export class ItemService {
 
     return this.http
       .get<IItemAndCount>(url, { headers: this.getToken, params })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  fetchAllForSelect(): Observable<IItemForSelect[]> {
+    const url = `${this._baseUrl}/item/all-select`;
+
+    return this.http
+      .get<IItemForSelect[]>(url, { headers: this.getToken })
       .pipe(
         map((resp) => resp),
         catchError((err) => of(err.error))

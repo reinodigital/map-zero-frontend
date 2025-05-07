@@ -1,0 +1,23 @@
+<div class="date_custom">
+  <div class="date_picker">
+    <input type="date" [formControl]="dateControl" />
+    <i
+      class="fa-regular fa-square-caret-down fs-1 ms-3"
+      (click)="toggleOptions()"
+    ></i>
+  </div>
+  <ul class="date_options" [class.hidden]="!optionsAreOpen()">
+    <li class="date_options_li" (click)="setDate(0)">
+      <span class="date_options_li_span ms-3">Hoy</span>
+    </li>
+    <li class="date_options_li" (click)="setDate(7)">
+      <span class="date_options_li_span ms-3">En 7 días</span>
+    </li>
+    <li class="date_options_li" (click)="setDate(14)">
+      <span class="date_options_li_span ms-3">En 14 días</span>
+    </li>
+    <li class="date_options_li" (click)="setDate(30)">
+      <span class="date_options_li_span ms-3">En 30 días</span>
+    </li>
+  </ul>
+</div>

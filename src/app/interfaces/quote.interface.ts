@@ -34,7 +34,6 @@ export interface IDataToCreateQuote {
   createdAt: string;
   clientId: number;
   status: string;
-  quoteNumber: string;
   initDate: string;
   expireDate?: string;
   currency: string;
