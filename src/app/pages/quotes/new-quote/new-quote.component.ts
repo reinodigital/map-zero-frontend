@@ -76,7 +76,7 @@ export default class NewQuoteComponent implements OnInit {
   public taxRates: ICodeLabel[] = taxRateArray;
   public clients = signal<ICommonSelect[]>([]);
   public newQuoteForm: FormGroup = this.fb.group({
-    client: ['', [Validators.required]],
+    client: [null, [Validators.required]],
     initDate: [this.currentDate, [Validators.required]],
     expireDate: [this.dateInSevenDay, []],
     currency: ['USD', [Validators.required]],
@@ -257,7 +257,17 @@ export default class NewQuoteComponent implements OnInit {
       this.customToastService.add({
         message: 'Uno o más items tienen error.',
         type: TypeMessageToast.ERROR,
-        duration: 8000,
+        duration: 6000,
+      });
+
+      return;
+    }
+
+    if (!this.newQuoteForm.controls['client'].value) {
+      this.customToastService.add({
+        message: 'Seleccione un cliente para continuar.',
+        type: TypeMessageToast.ERROR,
+        duration: 6000,
       });
 
       return;

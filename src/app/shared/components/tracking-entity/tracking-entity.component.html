@@ -1,0 +1,46 @@
+<ul
+  class="list-group cp mt-4"
+  data-bs-toggle="collapse"
+  data-bs-target="#collapseExample"
+  aria-expanded="false"
+  aria-controls="collapseExample"
+>
+  <li class="list-group-item list-group-item-secondary">
+    <span class="fw-bold">
+      <i class="fa-regular fa-square-caret-down fs-4 ms-3"></i>
+      Historial de cambios
+    </span>
+  </li>
+</ul>
+
+<div class="collapse" id="collapseExample">
+  <div class="card card-body">
+    <!-- Table Tracking -->
+    <div class="row mb-2">
+      <div class="col-12 col-md-6 col-lg-2">Fecha</div>
+      <div class="col-12 col-md-6 col-lg-3">Usuario</div>
+      <div class="col-12 col-md-6 col-lg-2">Acción</div>
+      <div class="col-12 col-md-6 col-lg-5">Detalle</div>
+    </div>
+    <div class="line_row_tracking"></div>
+    @for (line of tracking(); track $index) {
+    <div class="row row_tracking">
+      <div class="col-12 col-md-6 col-lg-2">
+        <span class="tracking_info">{{
+          line.executedAt | readableDateTime
+        }}</span>
+      </div>
+      <div class="col-12 col-md-6 col-lg-3">
+        <span class="tracking_info">{{ line.executedBy }}</span>
+      </div>
+      <div class="col-12 col-md-6 col-lg-2">
+        <span class="tracking_info">{{ line.action.toLocaleUpperCase() }}</span>
+      </div>
+      <div class="col-12 col-md-6 col-lg-5">
+        <span class="tracking_info">{{ line.detail }}</span>
+      </div>
+    </div>
+    <div class="line_row_tracking"></div>
+    }
+  </div>
+</div>

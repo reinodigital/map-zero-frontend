@@ -10,6 +10,7 @@ export interface IQuote {
   id: number;
   status: string;
   quoteNumber: string;
+  total: number;
   initDate?: Date;
   expireDate?: Date;
   currency: string;

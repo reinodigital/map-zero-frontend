@@ -76,6 +76,10 @@ export const serverRoutes: ServerRoute[] = [
     path: 'new-quote',
     renderMode: RenderMode.Prerender,
   },
+  {
+    path: 'detail-quote/:id',
+    renderMode: RenderMode.Client,
+  },
   // END QUOTES
 
   {

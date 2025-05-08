@@ -1,4 +1,3 @@
-import { isPlatformBrowser, Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,42 +7,50 @@ import {
   signal,
 } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ListItemsService } from '../list-items.service';
-import { ItemService } from '../../../api';
+import { QuoteService } from '../../../api';
+import { ListQuotesService } from '../list-quotes.service';
+
+import { ReadableDatePipe } from '../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../shared/components/tracking-entity/tracking-entity.component';
 
-import { IItem } from '../../../interfaces';
+import { IQuote } from '../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'detail-item',
+  selector: 'detail-quote',
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReadableDatePipe,
+    TrackingEntityComponent,
+  ],
+  templateUrl: './detail-quote.component.html',
+  styleUrl: './detail-quote.component.scss',
   standalone: true,
-  imports: [RouterLink, TrackingEntityComponent],
-  templateUrl: './detail-item.component.html',
-  styleUrl: './detail-item.component.scss',
 })
-export default class DetailItemComponent {
+export default class DetailQuoteComponent {
   private platformId = inject(PLATFORM_ID);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private destroyRef = inject(DestroyRef);
   private location = inject(Location);
 
-  private itemService = inject(ItemService);
-  public listItemsService = inject(ListItemsService);
+  private quoteService = inject(QuoteService);
+  public listQuotesService = inject(ListQuotesService);
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
 
   // DATA
-  public itemId!: number;
-  public item = signal<IItem | null>(null);
+  public quoteId!: number;
+  public quote = signal<IQuote | null>(null);
 
   constructor() {
-    this.itemId = this.activatedRoute.snapshot.params['id'];
+    this.quoteId = this.activatedRoute.snapshot.params['id'];
   }
 
   ngOnInit(): void {
@@ -51,22 +58,22 @@ export default class DetailItemComponent {
   }
 
   private fetchItem(): void {
-    this.itemService
-      .fetchOne(this.itemId)
+    this.quoteService
+      .fetchOne(this.quoteId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((resp) => {
         if (resp && resp.id) {
-          this.item.set(resp);
+          this.quote.set(resp);
         }
       });
   }
 
-  // Redirect to list, but if filters applies then keep them
+  /* redirects */
   comeBackToList(): void {
     if (this.isBrowser) {
       this.checkBackUrl()
         ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-items');
+        : this.router.navigateByUrl('/list-quotes');
     }
   }
 

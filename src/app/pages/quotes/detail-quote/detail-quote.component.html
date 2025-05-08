@@ -1,7 +1,7 @@
 <div class="main_content">
   <div class="box">
     <div class="d-flex justify-content-between">
-      <h3 class="">Detalle item</h3>
+      <h3 class="">Detalle cotización</h3>
       <h4 class="cp" (click)="comeBackToList()">
         <i class="fa-solid fa-angles-left"></i> Regresar
       </h4>
@@ -25,15 +25,15 @@
           </button>
           <button
             class="nav-link"
-            id="pills-cabys-tab"
+            id="pills-client-tab"
             data-bs-toggle="pill"
             type="button"
-            data-bs-target="#pills-cabys"
+            data-bs-target="#pills-client"
             role="tab"
-            aria-controls="pills-cabys"
+            aria-controls="pills-client"
             aria-selected="false"
           >
-            Cabys
+            Cliente
           </button>
         </li>
       </ul>
@@ -43,29 +43,18 @@
         <a
           role="button"
           class="btn btn-success btn_detail"
-          [routerLink]="'/edit-item/' + itemId"
+          [routerLink]="'/edit-quote/' + quoteId"
           title="Actualizar"
         >
           <i class="fa-solid fa-pen-to-square action_icon_edit"></i>
           Editar
         </a>
-        <!-- <a
-          role="button"
-          class="btn btn-danger btn_detail"
-          (click)="dataUserService.inactivateUser(this.client()!)"
-          title="Remover"
-          data-toggle="tooltip"
-          data-original-title="Delete"
-        >
-          <i class="fa-solid fa-trash-can action_icon_trash"></i>
-          <span> Desactivar</span>
-        </a> -->
       </div>
     </div>
 
     <!-- Data Pills -->
     <div class="tab-content" id="pills-tabContent">
-      <!-- Info Employee -->
+      <!-- Info -->
       <div
         class="tab-pane fade active show"
         id="pills-info"
@@ -73,65 +62,82 @@
         aria-labelledby="pills-info-tab"
         tabindex="0"
       >
-        @if (item()) {
+        @if (quote()) {
         <ul class="list-group">
           <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Nombre </span>
-            <span class="ms-4">{{ item()!.name }}</span>
+            <span class="fw-bold">Número cotización </span>
+            <span class="ms-4">{{ quote()!.quoteNumber }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Precio coste </span>
-            <span class="ms-4">{{ item()!.costPrice }}</span>
+            <span class="fw-bold">Total a pagar </span>
+            <span class="ms-4">{{ quote()!.total | number : "1.2-2" }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Impuesto compra </span>
-            <span class="ms-4">{{
-              listItemsService.getTariffTextIva(item()!.purchaseTaxRate)
-            }}</span>
+            <span class="fw-bold">Moneda </span>
+            <span class="ms-4">
+              {{ quote()!.currency }}
+            </span>
           </li>
           <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Precio venta </span>
-            <span class="ms-4">{{ item()!.salePrice }}</span>
+            <span class="fw-bold">Fecha inicio </span>
+            <span class="ms-4">{{ quote()!.initDate | readableDate }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Fecha expira </span>
+            <span class="ms-4">
+              {{
+                quote()!.expireDate ? (quote()!.expireDate | readableDate) : "_"
+              }}
+            </span>
+          </li>
+
+          <!-- <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Impuesto venta </span>
             <span class="ms-4">{{
               listItemsService.getTariffTextIva(item()!.saleTaxRate)
             }}</span>
-          </li>
+          </li> -->
         </ul>
         }
       </div>
       <!-- End Info -->
 
-      <!-- Cabys details-->
+      <!-- Client details-->
       <div
         class="tab-pane fade"
-        id="pills-cabys"
+        id="pills-client"
         role="tabpanel"
-        aria-labelledby="pills-cabys-tab"
+        aria-labelledby="pills-client-tab"
         tabindex="0"
       >
-        @if (item()) {
+        @if (quote()) {
         <ul class="list-group">
           <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Código </span>
-            <span class="ms-4">{{ item()!.cabys.code }}</span>
+            <span class="fw-bold">Nombre </span>
+            <span class="ms-4">{{ quote()!.client.name }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">IVA </span>
-            <span class="ms-4">{{ item()!.cabys.tax }}%</span>
+            <span class="fw-bold">Correo electrónico </span>
+            <span class="ms-4">{{ quote()!.client.email }}</span>
+          </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Teléfono </span>
+            <span class="ms-4">{{ quote()!.client.mobile }}</span>
+          </li>
+          <li class="list-group-item list-group-item-light">
+            <span class="fw-bold">Cédula </span>
+            <span class="ms-4">{{ quote()!.client.identity }}</span>
           </li>
         </ul>
         }
       </div>
-      <!-- Cabys details -->
+      <!-- Client details -->
 
-      <!-- History tracking changes-->
-      @if (item()) {
-      <tracking-entity [tracking]="item()!.tracking"></tracking-entity>
-      }
       <!-- End Data Pills -->
     </div>
+    <!-- History tracking changes-->
+    @if (quote()) {
+    <tracking-entity [tracking]="quote()!.tracking"></tracking-entity>
+    }
   </div>
 </div>

@@ -126,5 +126,12 @@ export const routes: Routes = [
     canActivate: [SellerGuard],
     canLoad: [SellerGuard],
   },
+  {
+    path: 'detail-quote/:id',
+    loadComponent: () =>
+      import('./pages/quotes/detail-quote/detail-quote.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
   // END QUOTES
 ];

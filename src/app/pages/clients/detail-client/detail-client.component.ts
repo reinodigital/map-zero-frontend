@@ -13,6 +13,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ClientService } from '../../../api';
 import { ListClientsService } from '../list-clients.service';
 import { DetailClientService } from '../detail-client.service';
+import { TrackingEntityComponent } from '../../../shared/components/tracking-entity/tracking-entity.component';
 
 import { IClient } from '../../../interfaces';
 
@@ -20,7 +21,7 @@ import { IClient } from '../../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'detail-client',
-  imports: [RouterLink],
+  imports: [RouterLink, TrackingEntityComponent],
   templateUrl: './detail-client.component.html',
   styleUrl: './detail-client.component.scss',
 })
