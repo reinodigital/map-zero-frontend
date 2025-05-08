@@ -16,9 +16,8 @@
           <ng-select
             [items]="clients()"
             bindLabel="name"
-            bindValue="id"
             placeholder="--Seleccione--"
-            formControlName="clientId"
+            formControlName="client"
             [searchable]="true"
           >
           </ng-select>
@@ -85,8 +84,12 @@
           </tr>
         </thead>
         <tbody formArrayName="quoteItems">
-          @for (item of quoteItems.controls; track $index) {
-          <tr [formGroupName]="$index" [id]="'row_' + $index">
+          <!-- @for (item of quoteItems.controls; let i = $index) { -->
+          <tr
+            *ngFor="let item of quoteItems.controls; let i = index"
+            [formGroupName]="i"
+            [id]="'row_' + i"
+          >
             <td>
               <ng-select
                 [items]="items()"
@@ -128,7 +131,7 @@
             </td>
             <td>
               <select formControlName="taxRate">
-                @for (tax of taxRates; track $index) {
+                @for (tax of taxRates; track tax.code) {
                 <option [value]="tax.code">{{ tax.label }}</option>
                 }
               </select>
@@ -137,13 +140,13 @@
               <button
                 class="btn btn-danger btn-sm"
                 type="button"
-                (click)="removeQuoteItem($index)"
+                (click)="removeQuoteItem(i)"
               >
                 <i class="fa fa-trash"></i>
               </button>
             </td>
           </tr>
-          } @empty {
+          @if (!quoteItems.value.length) {
           <tr class="no-elements">
             <td colspan="4">
               <small>
@@ -153,6 +156,16 @@
             </td>
           </tr>
           }
+          <!-- } @empty {
+          <tr class="no-elements">
+            <td colspan="4">
+              <small>
+                No se ha añadido fila, presione "Agregar fila" para incluir
+                algunos.
+              </small>
+            </td>
+          </tr>
+          } -->
         </tbody>
       </table>
       <button

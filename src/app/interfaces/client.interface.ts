@@ -34,6 +34,11 @@ export interface IClientToUpdate {
   defaultSeller?: string;
 }
 
+export interface IShortSelectClient {
+  id: number;
+  name: string;
+}
+
 // ======= Client address ========
 export interface IClientAddress {
   id: number;

@@ -6,9 +6,3 @@ export enum LS {
 export enum LimitValues {
   TEN = 10,
 }
-
-export enum FormSubmitActions {
-  SAVE = 'save',
-  SEND = 'send', // send email
-  MARK_AS_SENT = 'mark_as_sent',
-}

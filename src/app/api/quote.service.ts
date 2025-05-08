@@ -7,9 +7,9 @@ import { environment } from '../../environments/environment';
 
 import {
   IMessage,
-  IDataToCreateQuote,
   IQuote,
   IQuoteAndCount,
+  IDataToSubmitAndSendNewQuote,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -34,7 +34,7 @@ export class QuoteService {
     return new HttpHeaders().set('Authorization', `Bearer `);
   }
 
-  create(data: IDataToCreateQuote): Observable<IMessage | any> {
+  create(data: IDataToSubmitAndSendNewQuote): Observable<IQuote | any> {
     const url = `${this._baseUrl}/quote`;
 
     return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(

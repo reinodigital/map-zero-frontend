@@ -1,26 +1,33 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 
 import { QuoteService } from '../../api/quote.service';
+import { CustomToastService } from '../../shared/services/custom-toast.service';
+import { ModalSendQuoteEmailRecipientComponent } from '../../shared/modals/modal-email-recipient/modal-send-quote-email-recipient.component';
 
 import { getTaxRateValue } from '../../shared/helpers';
-import { FormSubmitActions, TypeMessageToast } from '../../enums';
-import { IDataToCreateQuote } from '../../interfaces';
-import { CustomToastService } from '../../shared/services/custom-toast.service';
+import { NewQuoteFormAction, TypeMessageToast } from '../../enums';
+import {
+  IDataToCreateQuote,
+  IDataToModalEmailSendQuote,
+  IDataToSubmitAndSendNewQuote,
+} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormQuoteService {
   private router = inject(Router);
+  private dialog = inject(MatDialog);
   private customToastService = inject(CustomToastService);
   private quoteService = inject(QuoteService);
 
   // ACTIONS
-  public saveAction = FormSubmitActions.SAVE;
-  public sendAction = FormSubmitActions.SEND;
-  public markAsSentAction = FormSubmitActions.MARK_AS_SENT;
+  public saveAction = NewQuoteFormAction.SAVE;
+  public sendAction = NewQuoteFormAction.SEND;
+  public markAsSentAction = NewQuoteFormAction.MARK_AS_SENT;
 
   // TOTALS
   public subtotal = signal<number>(0);
@@ -85,7 +92,12 @@ export class FormQuoteService {
 
   // ========= Actions Submit ============
   public onSaveAction(data: IDataToCreateQuote): void {
-    this.quoteService.create(data).subscribe((resp) => {
+    const dataBackend: IDataToSubmitAndSendNewQuote = {
+      quote: data,
+      email: null,
+    };
+
+    this.quoteService.create(dataBackend).subscribe((resp) => {
       if (resp && resp.msg) {
         this.customToastService.add({
           message: resp.msg,
@@ -102,5 +114,22 @@ export class FormQuoteService {
         });
       }
     });
+  }
+
+  // modal email data
+  public onSendAction(data: IDataToCreateQuote): void {
+    const dataModal: IDataToModalEmailSendQuote = {
+      total: this.totalAmount(),
+      quote: data,
+    };
+
+    // Mat Dialog solution
+    let dialogRef = this.dialog.open(ModalSendQuoteEmailRecipientComponent, {
+      width: '70rem',
+      autoFocus: false,
+      data: dataModal,
+    });
+
+    dialogRef.updatePosition({ top: '100px' });
   }
 }

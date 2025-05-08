@@ -34,9 +34,14 @@ import {
 import {
   TypeMessageToast,
   StatusQuote,
-  FormSubmitActions,
+  NewQuoteFormAction,
 } from '../../../enums';
-import { ICommonSelect, IItemForSelect, ICodeLabel } from '../../../interfaces';
+import {
+  ICommonSelect,
+  IItemForSelect,
+  ICodeLabel,
+  IDataToCreateQuote,
+} from '../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,7 +76,7 @@ export default class NewQuoteComponent implements OnInit {
   public taxRates: ICodeLabel[] = taxRateArray;
   public clients = signal<ICommonSelect[]>([]);
   public newQuoteForm: FormGroup = this.fb.group({
-    clientId: ['', [Validators.required]],
+    client: ['', [Validators.required]],
     initDate: [this.currentDate, [Validators.required]],
     expireDate: [this.dateInSevenDay, []],
     currency: ['USD', [Validators.required]],
@@ -82,7 +87,7 @@ export default class NewQuoteComponent implements OnInit {
         description: ['', []],
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
-        discount: ['', []],
+        discount: [0, []],
         account: ['200', [Validators.required]],
         taxRate: ['08', [Validators.required]],
       }),
@@ -91,7 +96,7 @@ export default class NewQuoteComponent implements OnInit {
         description: ['', []],
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
-        discount: ['', []],
+        discount: [0, []],
         account: ['200', [Validators.required]],
         taxRate: ['08', [Validators.required]],
       }),
@@ -178,7 +183,7 @@ export default class NewQuoteComponent implements OnInit {
       description: ['', []],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required]],
-      discount: ['', []],
+      discount: [0, []],
       account: ['200', [Validators.required]],
       taxRate: ['08', [Validators.required]],
     });
@@ -191,7 +196,6 @@ export default class NewQuoteComponent implements OnInit {
   removeQuoteItem(index: number): void {
     this.quoteItems.removeAt(index);
     this.formQuoteService.calculateTotals(this.quoteItems);
-    // TODO: fix bug when row is removed and remove always the last one
   }
 
   setupItemGroupValueChangeListener(itemGroup: FormGroup): void {
@@ -265,21 +269,24 @@ export default class NewQuoteComponent implements OnInit {
       return;
     }
 
-    const data = this.newQuoteForm.value;
+    const data: IDataToCreateQuote = this.newQuoteForm.value;
     data.createdAt = formatDateToString(new Date());
 
     switch (action) {
-      case FormSubmitActions.SAVE:
+      case NewQuoteFormAction.SAVE:
         data.status = StatusQuote.DRAFT;
+        data.action = NewQuoteFormAction.SAVE;
         this.formQuoteService.onSaveAction(data);
         break;
-      case FormSubmitActions.MARK_AS_SENT:
+      case NewQuoteFormAction.MARK_AS_SENT:
         data.status = StatusQuote.SENT;
+        data.action = NewQuoteFormAction.MARK_AS_SENT;
         this.formQuoteService.onSaveAction(data);
         break;
-      case FormSubmitActions.SEND:
+      case NewQuoteFormAction.SEND:
         data.status = StatusQuote.SENT;
-        // TODO: implement modal to have email data.
+        data.action = NewQuoteFormAction.SEND;
+        this.formQuoteService.onSendAction(data);
         break;
 
       default:

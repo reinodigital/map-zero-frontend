@@ -1,4 +1,4 @@
-import { IClient } from './client.interface';
+import { IClient, IShortSelectClient } from './client.interface';
 import { ITracking } from './tracking.interface';
 
 export interface IQuoteAndCount {
@@ -32,13 +32,15 @@ export interface IQuoteItem {
 
 export interface IDataToCreateQuote {
   createdAt: string;
-  clientId: number;
+  client: IShortSelectClient;
   status: string;
   initDate: string;
   expireDate?: string;
   currency: string;
   terms?: string;
   quoteItems: IDataToCreateQuoteItem[];
+  // reference properties
+  action: string;
 }
 
 export interface IDataToCreateQuoteItem {
@@ -49,4 +51,21 @@ export interface IDataToCreateQuoteItem {
   discount: number;
   account: string;
   taxRate: string;
+}
+
+export interface IDataToModalEmailSendQuote {
+  quote: IDataToCreateQuote;
+  total: number;
+}
+
+// DATA SUBMIT NEW QUOTE ALWAYS
+export interface IDataToSubmitAndSendNewQuote {
+  email: IDataEmailForSendQuote | null;
+  quote: IDataToCreateQuote;
+}
+
+export interface IDataEmailForSendQuote {
+  emails: string[];
+  subject?: string;
+  message?: string;
 }
