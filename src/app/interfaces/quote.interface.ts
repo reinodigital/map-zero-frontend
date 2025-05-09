@@ -1,4 +1,5 @@
 import { IClient, IShortSelectClient } from './client.interface';
+import { IItem } from './item.interface';
 import { ITracking } from './tracking.interface';
 
 export interface IQuoteAndCount {
@@ -29,6 +30,7 @@ export interface IQuoteItem {
   account?: string;
   taxRate?: string;
   amount: number;
+  item: IItem;
 }
 
 export interface IDataToCreateQuote {

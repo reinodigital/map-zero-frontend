@@ -25,6 +25,18 @@
           </button>
           <button
             class="nav-link"
+            id="pills-quote-items-tab"
+            data-bs-toggle="pill"
+            type="button"
+            data-bs-target="#pills-quote-items"
+            role="tab"
+            aria-controls="pills-quote-items"
+            aria-selected="false"
+          >
+            Items cotizados
+          </button>
+          <button
+            class="nav-link"
             id="pills-client-tab"
             data-bs-toggle="pill"
             type="button"
@@ -101,6 +113,77 @@
         }
       </div>
       <!-- End Info -->
+
+      <!-- Quote Items -->
+      <div
+        class="tab-pane fade"
+        id="pills-quote-items"
+        role="tabpanel"
+        aria-labelledby="pills-quote-items-tab"
+        tabindex="0"
+      >
+        <table class="table table-sm mb-3">
+          <thead>
+            <tr>
+              <th class="col-2">
+                <label>Item</label>
+              </th>
+              <th class="col-3">
+                <label>Descripción</label>
+              </th>
+              <th class="col-1">
+                <label> Cantidad </label>
+              </th>
+              <th class="col-1">
+                <label>Precio</label>
+              </th>
+              <th class="col-1">
+                <label>Descuento</label>
+              </th>
+              <th class="col-1">
+                <label>Cuenta</label>
+              </th>
+              <th class="col-2">
+                <label>Impuesto</label>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (quoteItem of quote()?.quoteItems; track quoteItem.id) {
+            <tr>
+              <td>
+                <span>{{ quoteItem.item.name }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.description }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.quantity }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.price }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.discount }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.account }}</span>
+              </td>
+              <td>
+                <span>{{ quoteItem.taxRate }}</span>
+              </td>
+            </tr>
+            } @empty {
+            <tr class="no-elements">
+              <td colspan="12">
+                No existen Artículos ni servicios en esta cotización.
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <!-- End Quote Items -->
 
       <!-- Client details-->
       <div

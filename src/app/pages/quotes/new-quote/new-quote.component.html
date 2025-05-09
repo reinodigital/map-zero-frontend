@@ -216,14 +216,14 @@
 
       <!-- Missing action buttons -->
       <div class="d-flex align-items-center mt-4">
-        <button
-          type="button"
-          class="btn btn-success me-3"
-          (click)="callToAction(formQuoteService.saveAction)"
-        >
-          Guardar
-        </button>
-        <div class="input-group">
+        <submit-button
+          (btnWasClicked)="onCustomSubmitBtnClicked($event)"
+          [isFormSubmitting]="isFormSubmitting()"
+          [buttonAction]="formQuoteService.saveAction"
+          primaryText="Guardar"
+          secondaryText="Guardando"
+        ></submit-button>
+        <div class="input-group ms-3">
           <button
             type="button"
             class="btn btn-outline-primary"

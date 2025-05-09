@@ -42,9 +42,13 @@
       <button (click)="closePopUp('cancel')" class="btn btn-light">
         Cancelar
       </button>
-      <button (click)="closePopUp('send')" class="btn btn-success ms-2">
-        Enviar
-      </button>
+      <submit-button
+        (btnWasClicked)="closePopUp($event)"
+        [isFormSubmitting]="isFormSubmitting()"
+        [buttonAction]="formQuoteService.sendAction"
+        primaryText="Enviar"
+        secondaryText="Enviando"
+      ></submit-button>
     </div>
   </form>
 </div>

@@ -1,0 +1,16 @@
+<button
+  [class]="attributeClass() ?? 'btn btn-success'"
+  [attr.type]="attributeType()"
+  [disabled]="isFormSubmitting()"
+  [attr.name]="attributeName()"
+  (click)="attributeType() === 'button' && onClick()"
+>
+  @if (isFormSubmitting()) {
+  <div class="d-flex align-items-center">
+    {{ secondaryText() }}
+    <div class="spinner ms-2"></div>
+  </div>
+  } @else {
+  {{ primaryText() }}
+  }
+</button>

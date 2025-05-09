@@ -7,9 +7,12 @@ import {
 } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { CustomToastService } from '../../services/custom-toast.service';
+import { FormQuoteService } from '../../../pages/quotes/form-quote.service';
 import { QuoteService } from '../../../api/index';
+import { SubmitButtonComponent } from '../../components/submit-button/submit-button.component';
 import {
   IDataToModalEmailSendQuote,
   IDataToSubmitAndSendNewQuote,
@@ -19,12 +22,13 @@ import { TypeMessageToast } from '../../../enums';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'modal-send-quote-email-recipient',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, SubmitButtonComponent],
   templateUrl: './modal-send-quote-email-recipient.component.html',
   styleUrls: ['./modal-send-quote-email-recipient.component.scss'],
   standalone: true,
 })
 export class ModalSendQuoteEmailRecipientComponent {
+  private router = inject(Router);
   private fb = inject(FormBuilder);
   private dialogRef = inject(
     MatDialogRef<ModalSendQuoteEmailRecipientComponent>
@@ -39,6 +43,8 @@ export class ModalSendQuoteEmailRecipientComponent {
   public emails = signal<string[]>([]);
 
   // FORM
+  public isFormSubmitting = signal<boolean>(false);
+  public formQuoteService = inject(FormQuoteService);
   public newSendQuoteEmailForm = signal(
     this.fb.group({
       email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
@@ -131,6 +137,7 @@ export class ModalSendQuoteEmailRecipientComponent {
       },
     };
 
+    this.isFormSubmitting.set(true);
     this.quoteService.create(dataBackend).subscribe((resp) => {
       if (resp && resp.id) {
         this.customToastService.add({
@@ -140,6 +147,7 @@ export class ModalSendQuoteEmailRecipientComponent {
         });
 
         this.dialogRef.close();
+        this.router.navigateByUrl(`/detail-quote/${resp.id}`);
       } else {
         this.customToastService.add({
           message: resp.message,
@@ -147,6 +155,8 @@ export class ModalSendQuoteEmailRecipientComponent {
           duration: 8000,
         });
       }
+
+      this.isFormSubmitting.set(true);
     });
   }
 }

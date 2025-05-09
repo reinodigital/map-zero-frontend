@@ -25,6 +25,7 @@ import { FormErrorService } from '../../../shared/services/form-error.service';
 import { FormQuoteService } from '../form-quote.service';
 import { CustomToastService } from '../../../shared/services/custom-toast.service';
 import { QuickDatePickerComponent } from '../../../shared/components/quick-date-picker/quick-date-picker.component';
+import { SubmitButtonComponent } from '../../../shared/components/submit-button/submit-button.component';
 import {
   formatDateForInput,
   formatDateToString,
@@ -52,6 +53,7 @@ import {
     ReactiveFormsModule,
     NgSelectModule,
     QuickDatePickerComponent,
+    SubmitButtonComponent,
   ],
   templateUrl: './new-quote.component.html',
   styleUrl: './new-quote.component.scss',
@@ -67,12 +69,14 @@ export default class NewQuoteComponent implements OnInit {
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
 
-  public formQuoteService = inject(FormQuoteService);
-
   // ITEMS
   public items = signal<IItemForSelect[]>([]);
 
   // FORM
+  public formQuoteService = inject(FormQuoteService);
+  public isFormSubmitting = computed(() =>
+    this.formQuoteService.isFormSubmitting()
+  );
   public taxRates: ICodeLabel[] = taxRateArray;
   public clients = signal<ICommonSelect[]>([]);
   public newQuoteForm: FormGroup = this.fb.group({
@@ -251,6 +255,9 @@ export default class NewQuoteComponent implements OnInit {
       });
   }
   // ==== END QUOTE ITEMS =====
+  onCustomSubmitBtnClicked(action: string): void {
+    this.callToAction(action);
+  }
 
   callToAction(action: string): void {
     if (!this.formQuoteService.verifyQuoteItems(this.quoteItems)) {

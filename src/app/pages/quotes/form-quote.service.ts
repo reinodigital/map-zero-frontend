@@ -24,6 +24,9 @@ export class FormQuoteService {
   private customToastService = inject(CustomToastService);
   private quoteService = inject(QuoteService);
 
+  // FORM
+  public isFormSubmitting = signal<boolean>(false);
+
   // ACTIONS
   public saveAction = NewQuoteFormAction.SAVE;
   public sendAction = NewQuoteFormAction.SEND;
@@ -97,15 +100,16 @@ export class FormQuoteService {
       email: null,
     };
 
+    this.isFormSubmitting.set(true);
     this.quoteService.create(dataBackend).subscribe((resp) => {
-      if (resp && resp.msg) {
+      if (resp && resp.id) {
         this.customToastService.add({
-          message: resp.msg,
+          message: `Cotización generada con estado ${resp.status} correctamente.`,
           type: TypeMessageToast.SUCCESS,
           duration: 5000,
         });
-        this.router.navigateByUrl('/list-quotes');
-        // TODO: change this to receive quoteId and redirect to detail quote
+
+        this.router.navigateByUrl(`/detail-quote/${resp.id}`);
       } else {
         this.customToastService.add({
           message: resp.message,
@@ -113,6 +117,8 @@ export class FormQuoteService {
           duration: 5000,
         });
       }
+
+      this.isFormSubmitting.set(false);
     });
   }
 
