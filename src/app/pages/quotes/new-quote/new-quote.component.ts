@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { ClientService, ItemService } from '../../../api';
+import { AuthService, ClientService, ItemService } from '../../../api';
 import { FormErrorService } from '../../../shared/services/form-error.service';
 import { FormQuoteService } from '../form-quote.service';
 import { CustomToastService } from '../../../shared/services/custom-toast.service';
@@ -42,6 +42,7 @@ import {
   IItemForSelect,
   ICodeLabel,
   IDataToCreateQuote,
+  ShortAuth,
 } from '../../../interfaces';
 
 @Component({
@@ -64,6 +65,7 @@ export default class NewQuoteComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private location = inject(Location);
   private router = inject(Router);
+  private authService = inject(AuthService);
   private itemService = inject(ItemService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
@@ -71,6 +73,9 @@ export default class NewQuoteComponent implements OnInit {
 
   // ITEMS
   public items = signal<IItemForSelect[]>([]);
+
+  // SELLERS
+  public sellers = signal<ShortAuth[]>([]);
 
   // FORM
   public formQuoteService = inject(FormQuoteService);
@@ -88,6 +93,7 @@ export default class NewQuoteComponent implements OnInit {
     quoteItems: this.fb.array([
       this.fb.group({
         itemId: ['', [Validators.required]],
+        sellerUid: [null, []],
         description: ['', []],
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
@@ -97,6 +103,7 @@ export default class NewQuoteComponent implements OnInit {
       }),
       this.fb.group({
         itemId: ['', [Validators.required]],
+        sellerUid: [null, []],
         description: ['', []],
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
@@ -130,6 +137,7 @@ export default class NewQuoteComponent implements OnInit {
   ngOnInit(): void {
     this.fetchAllShortClients();
     this.fetchAllShortItems();
+    this.fetchSellers();
 
     // Set up listener for the initial quote item row
     if (this.quoteItems.controls.length === 2) {
@@ -165,6 +173,14 @@ export default class NewQuoteComponent implements OnInit {
       });
   }
 
+  fetchSellers(): void {
+    this.authService.fetchAllSellers().subscribe((resp) => {
+      if (resp && resp.length) {
+        this.sellers.set(resp);
+      }
+    });
+  }
+
   validField(controlPath: string): boolean {
     const control = this.newQuoteForm.get(controlPath);
     if (!control) return false;
@@ -184,6 +200,7 @@ export default class NewQuoteComponent implements OnInit {
   addQuoteItem(): void {
     const itemGroup = this.fb.group({
       itemId: ['', [Validators.required]],
+      sellerUid: [null, []],
       description: ['', []],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required]],

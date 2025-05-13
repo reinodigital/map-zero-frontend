@@ -77,8 +77,11 @@
             <th class="col-1">
               <label>Cuenta</label>
             </th>
-            <th class="col-2">
+            <th class="col-1">
               <label>Impuesto</label>
+            </th>
+            <th class="col-1">
+              <label>Vendedor</label>
             </th>
             <th class="col-1"></th>
           </tr>
@@ -135,6 +138,17 @@
                 <option [value]="tax.code">{{ tax.label }}</option>
                 }
               </select>
+            </td>
+            <td>
+              <ng-select
+                [items]="sellers()"
+                bindLabel="name"
+                bindValue="uid"
+                placeholder="--Seleccione--"
+                formControlName="sellerUid"
+                [searchable]="true"
+              >
+              </ng-select>
             </td>
             <td>
               <button

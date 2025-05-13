@@ -1,4 +1,5 @@
 import { IClient, IShortSelectClient } from './client.interface';
+import { ShortAuth } from './commons.interface';
 import { IItem } from './item.interface';
 import { ITracking } from './tracking.interface';
 
@@ -31,6 +32,7 @@ export interface IQuoteItem {
   taxRate?: string;
   amount: number;
   item: IItem;
+  seller: ShortAuth | null;
 }
 
 export interface IDataToCreateQuote {
@@ -48,6 +50,7 @@ export interface IDataToCreateQuote {
 
 export interface IDataToCreateQuoteItem {
   itemId: number;
+  sellerUid: number | null;
   description?: string;
   quantity: number;
   price: number;
