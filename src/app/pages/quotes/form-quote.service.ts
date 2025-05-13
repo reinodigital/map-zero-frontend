@@ -12,7 +12,7 @@ import { NewQuoteFormAction, TypeMessageToast } from '../../enums';
 import {
   IDataToCreateQuote,
   IDataToModalEmailSendQuote,
-  IDataToSubmitAndSendNewQuote,
+  IDataToSubmitAndSaveNewQuote,
 } from '../../interfaces';
 
 @Injectable({
@@ -95,9 +95,8 @@ export class FormQuoteService {
 
   // ========= Actions Submit ============
   public onSaveAction(data: IDataToCreateQuote): void {
-    const dataBackend: IDataToSubmitAndSendNewQuote = {
+    const dataBackend: IDataToSubmitAndSaveNewQuote = {
       quote: data,
-      email: null,
     };
 
     this.isFormSubmitting.set(true);

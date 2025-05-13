@@ -13,9 +13,11 @@ import { CustomToastService } from '../../services/custom-toast.service';
 import { FormQuoteService } from '../../../pages/quotes/form-quote.service';
 import { QuoteService } from '../../../api/index';
 import { SubmitButtonComponent } from '../../components/submit-button/submit-button.component';
+import { formatDateToString } from '../../helpers';
 import {
+  IDataEmailForSendQuote,
   IDataToModalEmailSendQuote,
-  IDataToSubmitAndSendNewQuote,
+  IDataToSubmitAndSaveNewQuote,
 } from '../../../interfaces';
 import { TypeMessageToast } from '../../../enums';
 
@@ -128,13 +130,8 @@ export class ModalSendQuoteEmailRecipientComponent {
     }
 
     // build data to send to backend
-    const dataBackend: IDataToSubmitAndSendNewQuote = {
+    const dataBackend: IDataToSubmitAndSaveNewQuote = {
       quote: this.data()!.quote,
-      email: {
-        emails: this.emails(),
-        message: this.newSendQuoteEmailForm().controls['message'].value ?? '',
-        subject: this.newSendQuoteEmailForm().controls['subject'].value ?? '',
-      },
     };
 
     this.isFormSubmitting.set(true);
@@ -143,20 +140,50 @@ export class ModalSendQuoteEmailRecipientComponent {
         this.customToastService.add({
           message: `Cotización generada con estado ${dataBackend.quote.status} correctamente.`,
           type: TypeMessageToast.SUCCESS,
-          duration: 6000,
+          duration: 8000,
         });
 
-        this.dialogRef.close();
-        this.router.navigateByUrl(`/detail-quote/${resp.id}`);
+        // SEND QUOTE EMAIL TO CLIENT
+        this.sendQuoteEmailToClient(resp.id);
       } else {
         this.customToastService.add({
           message: resp.message,
           type: TypeMessageToast.ERROR,
           duration: 8000,
         });
+
+        this.isFormSubmitting.set(false);
+      }
+    });
+  }
+
+  sendQuoteEmailToClient(quoteId: number) {
+    const dataEmail: IDataEmailForSendQuote = {
+      sentAt: formatDateToString(new Date()),
+      emails: this.emails(),
+      message: this.newSendQuoteEmailForm().controls['message'].value ?? '',
+      subject: this.newSendQuoteEmailForm().controls['subject'].value ?? '',
+    };
+
+    this.quoteService.sendEmail(quoteId, dataEmail).subscribe((resp) => {
+      if (resp && resp.msg) {
+        this.customToastService.add({
+          message: resp.msg,
+          type: TypeMessageToast.SUCCESS,
+          duration: 10000,
+        });
+
+        this.dialogRef.close();
+        this.router.navigateByUrl(`/detail-quote/${quoteId}`);
+      } else {
+        this.customToastService.add({
+          message: resp.message,
+          type: TypeMessageToast.ERROR,
+          duration: 10000,
+        });
       }
 
-      this.isFormSubmitting.set(true);
+      this.isFormSubmitting.set(false);
     });
   }
 }

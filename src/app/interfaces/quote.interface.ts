@@ -62,12 +62,12 @@ export interface IDataToModalEmailSendQuote {
 }
 
 // DATA SUBMIT NEW QUOTE ALWAYS
-export interface IDataToSubmitAndSendNewQuote {
-  email: IDataEmailForSendQuote | null;
+export interface IDataToSubmitAndSaveNewQuote {
   quote: IDataToCreateQuote;
 }
 
 export interface IDataEmailForSendQuote {
+  sentAt: string;
   emails: string[];
   subject?: string;
   message?: string;

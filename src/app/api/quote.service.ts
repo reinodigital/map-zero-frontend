@@ -9,7 +9,8 @@ import {
   IMessage,
   IQuote,
   IQuoteAndCount,
-  IDataToSubmitAndSendNewQuote,
+  IDataToSubmitAndSaveNewQuote,
+  IDataEmailForSendQuote,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -34,8 +35,20 @@ export class QuoteService {
     return new HttpHeaders().set('Authorization', `Bearer `);
   }
 
-  create(data: IDataToSubmitAndSendNewQuote): Observable<IQuote | any> {
+  create(data: IDataToSubmitAndSaveNewQuote): Observable<IQuote | any> {
     const url = `${this._baseUrl}/quote`;
+
+    return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
+  }
+
+  sendEmail(
+    quoteId: number,
+    data: IDataEmailForSendQuote
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/send-email/${quoteId}`;
 
     return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(
       map((resp) => resp),
