@@ -83,12 +83,12 @@ export default class EditClientComponent {
           this.sellers().find(
             (seller) => seller.name === this.client()?.defaultSeller
           ) || null;
-        this.fillOutClientForm(selectedSeller);
+        this.fillOutClientForm(selectedSeller?.name ?? null);
       }
     });
   }
 
-  fillOutClientForm(defaultSellerObject: ShortAuth | null): void {
+  fillOutClientForm(defaultSellerObject: string | null): void {
     this.editClientForm.set(
       this.fb.group({
         name: [
@@ -142,14 +142,15 @@ export default class EditClientComponent {
 
     for (const key in this.editClientForm()?.value) {
       if (this.editClientForm()?.value.hasOwnProperty(key)) {
-        const controlValue = this.editClientForm()!.controls[key].value;
+        const control = this.editClientForm()!.controls[key];
+        const controlValue = control.value;
 
-        if (controlValue && key !== 'defaultSeller') {
+        if (control) {
           data[key] = controlValue;
         }
 
-        if (controlValue && key === 'defaultSeller') {
-          data[key] = controlValue.name;
+        if (!controlValue && key === 'defaultSeller') {
+          data[key] = null;
         }
       }
     }
