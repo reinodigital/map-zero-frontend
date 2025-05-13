@@ -16,3 +16,10 @@ export interface ICodeLabel {
   label: string;
   code: string;
 }
+
+export interface ITotals {
+  iva: number;
+  discounts: number;
+  subtotal: number;
+  total: number;
+}

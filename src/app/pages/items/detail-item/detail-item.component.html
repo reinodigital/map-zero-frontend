@@ -86,7 +86,7 @@
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Impuesto compra </span>
             <span class="ms-4">{{
-              listItemsService.getTariffTextIva(item()!.purchaseTaxRate)
+              listItemsService.getTaxRateLabel(item()!.purchaseTaxRate)
             }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
@@ -96,7 +96,7 @@
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Impuesto venta </span>
             <span class="ms-4">{{
-              listItemsService.getTariffTextIva(item()!.saleTaxRate)
+              listItemsService.getTaxRateLabel(item()!.saleTaxRate)
             }}</span>
           </li>
         </ul>

@@ -11,7 +11,7 @@ import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { QuoteService } from '../../../api';
-import { ListQuotesService } from '../list-quotes.service';
+import { DetailQuoteService } from '../detail-quote.service';
 
 import { ReadableDatePipe } from '../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../shared/components/tracking-entity/tracking-entity.component';
@@ -39,7 +39,7 @@ export default class DetailQuoteComponent {
   private location = inject(Location);
 
   private quoteService = inject(QuoteService);
-  public listQuotesService = inject(ListQuotesService);
+  public detailQuoteService = inject(DetailQuoteService);
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -48,6 +48,12 @@ export default class DetailQuoteComponent {
   // DATA
   public quoteId!: number;
   public quote = signal<IQuote | null>(null);
+
+  // DATA TOTALS
+  public subtotal = signal<number>(0);
+  public totalDiscount = signal<number>(0);
+  public totalTax = signal<number>(0);
+  public totalAmount = signal<number>(0);
 
   constructor() {
     this.quoteId = this.activatedRoute.snapshot.params['id'];
@@ -64,8 +70,19 @@ export default class DetailQuoteComponent {
       .subscribe((resp) => {
         if (resp && resp.id) {
           this.quote.set(resp);
+          this.updateTotals();
         }
       });
+  }
+
+  private updateTotals(): void {
+    const totals = this.detailQuoteService.calculateTotalsOnDetail(
+      this.quote()?.quoteItems ?? []
+    );
+    this.subtotal.set(totals.subtotal);
+    this.totalDiscount.set(totals.discounts);
+    this.totalTax.set(totals.iva);
+    this.totalAmount.set(totals.total);
   }
 
   /* redirects */
