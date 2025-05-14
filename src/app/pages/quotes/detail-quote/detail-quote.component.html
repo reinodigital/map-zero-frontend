@@ -19,7 +19,106 @@
           {{ quote()?.status }}
         </span>
       </div>
-      <div>Actions here</div>
+      <div class="hstack gap-3">
+        <button class="btn btn-outline-secondary">Imprimir PDF</button>
+        @if (allowedStatusToBeEditedFromDraft.includes(quote()!.status)) {
+        <!-- TODO -->
+        <button type="button" class="btn btn-primary">
+          <i class="fa-solid fa-pen-to-square me-2"></i>
+          Editar
+        </button>
+        } @if (allowedStatusToBeAccepted.includes(quote()!.status)) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="detailQuoteService.markAsAccepted(quoteId)"
+        >
+          Marcar como aceptada
+        </button>
+        } @if (allowedStatusToBeInvoiced.includes(quote()!.status)) {
+        <button class="btn btn-primary">Crear factura</button>
+        }
+        <div class="dropdown">
+          <i
+            class="fa-solid fa-ellipsis-vertical three_points_dropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ></i>
+          <ul class="dropdown-menu">
+            @if (allowedStatusToBeAccepted.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.markAsAccepted(quoteId)"
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como aceptada
+              </button>
+            </li>
+            } @if (allowedStatusToBeSent.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.displayModalQuoteEmail(quote()!)"
+              >
+                <i class="fa-solid fa-paper-plane icon_sent me-2"></i>
+                Enviar
+              </button>
+            </li>
+            } @if (allowedStatusToMarkAsSent.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.markAsSent(quoteId)"
+              >
+                <i class="fa-solid fa-marker icon_mark_as_sent me-2"></i>
+                Marcar como enviada
+              </button>
+            </li>
+            } @if (allowedStatusToBeDeclined.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.markAsDeclined(quoteId)"
+              >
+                <i class="fa-solid fa-xmark icon_declined me-2"></i>
+                Marcar como rechazada
+              </button>
+            </li>
+            } @if (allowedStatusToBeInvoiced.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.markAsInvoiced(quoteId)"
+              >
+                <i
+                  class="fa-solid fa-file-invoice-dollar icon_accepted me-2"
+                ></i>
+                Marcar como facturada
+              </button>
+            </li>
+            } @if (allowedStatusToBeEdited.includes(quote()!.status)) {
+            <li>
+              <button class="dropdown-item" type="button">
+                <i class="fa-solid fa-pen-to-square icon_pencil me-2"></i>
+                Editar
+              </button>
+            </li>
+            }
+            <!-- <li>
+              <button class="dropdown-item" type="button">
+                <i class="fa-solid fa-trash icon_trash me-2"></i>
+                Remover
+              </button>
+            </li> -->
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="row mb-5">

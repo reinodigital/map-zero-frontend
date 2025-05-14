@@ -11,6 +11,7 @@ import {
   IQuoteAndCount,
   IDataToSubmitAndSaveNewQuote,
   IDataEmailForSendQuote,
+  IMarkAndChangeStatus,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -99,4 +100,59 @@ export class QuoteService {
         catchError((err) => of(err.error))
       );
   }
+
+  /* ========= MARK && CHANGE STATUS ========== */
+  markAsSent(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/mark-as-sent/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  markAsAccepted(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/mark-as-accepted/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  markAsDeclined(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/mark-as-declined/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  markAsInvoiced(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/mark-as-invoiced/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  /* ========= END MARK && CHANGE STATUS ========== */
 }

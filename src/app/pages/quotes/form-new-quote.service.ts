@@ -5,20 +5,21 @@ import { Router } from '@angular/router';
 
 import { QuoteService } from '../../api/quote.service';
 import { CustomToastService } from '../../shared/services/custom-toast.service';
-import { ModalSendQuoteEmailRecipientComponent } from '../../shared/modals/modal-email-recipient/modal-send-quote-email-recipient.component';
-
+import { CustomModalSendQuoteEmailRecipientComponent } from '../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
 import { getTaxRateValue } from '../../shared/helpers';
+
 import { NewQuoteFormAction, TypeMessageToast } from '../../enums';
 import {
+  ICustomDataToModalEmailSendQuote,
+  IDataEmailForSendQuote,
   IDataToCreateQuote,
-  IDataToModalEmailSendQuote,
   IDataToSubmitAndSaveNewQuote,
 } from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FormQuoteService {
+export class FormNewQuoteService {
   private router = inject(Router);
   private dialog = inject(MatDialog);
   private customToastService = inject(CustomToastService);
@@ -121,20 +122,81 @@ export class FormQuoteService {
     });
   }
 
-  // modal email data
-  public onSendAction(data: IDataToCreateQuote): void {
-    const dataModal: IDataToModalEmailSendQuote = {
+  // STEP 1 display modal and get data email
+  handleCreateNewQuoteSendingEmailAsWell(quote: IDataToCreateQuote) {
+    const data: ICustomDataToModalEmailSendQuote = {
+      clientName: quote.client.name,
+      currency: quote.currency,
+      terms: quote.terms,
       total: this.totalAmount(),
-      quote: data,
     };
 
     // Mat Dialog solution
-    let dialogRef = this.dialog.open(ModalSendQuoteEmailRecipientComponent, {
-      width: '70rem',
-      autoFocus: false,
-      data: dataModal,
-    });
+    let dialogRef = this.dialog.open(
+      CustomModalSendQuoteEmailRecipientComponent,
+      {
+        width: '70rem',
+        autoFocus: false,
+        data: data,
+      }
+    );
 
     dialogRef.updatePosition({ top: '100px' });
+    dialogRef.afterClosed().subscribe((dataEmail) => {
+      if (dataEmail) {
+        this.onCreateNewQuoteSendingEmail(quote, JSON.parse(dataEmail));
+      }
+    });
+  }
+
+  // STEP 2 create new quote sending email
+  onCreateNewQuoteSendingEmail(
+    data: IDataToCreateQuote,
+    dataEmail: IDataEmailForSendQuote
+  ): void {
+    const dataBackend = { quote: data };
+
+    this.quoteService.create(dataBackend).subscribe((resp) => {
+      if (resp && resp.id) {
+        this.customToastService.add({
+          message: `Cotización generada con estado ${dataBackend.quote.status} correctamente.`,
+          type: TypeMessageToast.SUCCESS,
+          duration: 8000,
+        });
+
+        // SEND QUOTE EMAIL TO CLIENT
+        this.sendQuoteEmailAfterNewQuoteCreated(resp.id, dataEmail);
+      } else {
+        this.customToastService.add({
+          message: resp.message,
+          type: TypeMessageToast.ERROR,
+          duration: 8000,
+        });
+      }
+    });
+  }
+
+  // STEP 3 after create new quote and being selected send action
+  sendQuoteEmailAfterNewQuoteCreated(
+    quoteId: number,
+    data: IDataEmailForSendQuote
+  ) {
+    this.quoteService.sendEmail(quoteId, data).subscribe((resp) => {
+      if (resp && resp.msg) {
+        this.customToastService.add({
+          message: resp.msg,
+          type: TypeMessageToast.SUCCESS,
+          duration: 5000,
+        });
+      } else {
+        this.customToastService.add({
+          message: resp.message,
+          type: TypeMessageToast.ERROR,
+          duration: 5000,
+        });
+      }
+
+      this.router.navigateByUrl('/detail-quote/' + quoteId);
+    });
   }
 }

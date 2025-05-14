@@ -233,7 +233,7 @@
         <submit-button
           (btnWasClicked)="onCustomSubmitBtnClicked($event)"
           [isFormSubmitting]="isFormSubmitting()"
-          [buttonAction]="formQuoteService.saveAction"
+          [buttonAction]="formNewQuoteService.saveAction"
           primaryText="Guardar"
           secondaryText="Guardando"
         ></submit-button>
@@ -241,7 +241,7 @@
           <button
             type="button"
             class="btn btn-outline-primary"
-            (click)="callToAction(formQuoteService.sendAction)"
+            (click)="callToAction(formNewQuoteService.sendAction)"
           >
             Enviar
           </button>
@@ -257,7 +257,7 @@
             <li>
               <a
                 class="dropdown-item cp"
-                (click)="callToAction(formQuoteService.sendAction)"
+                (click)="callToAction(formNewQuoteService.sendAction)"
               >
                 Enviar
               </a>
@@ -265,7 +265,7 @@
             <li>
               <a
                 class="dropdown-item cp"
-                (click)="callToAction(formQuoteService.markAsSentAction)"
+                (click)="callToAction(formNewQuoteService.markAsSentAction)"
               >
                 Marcar como enviada
               </a>

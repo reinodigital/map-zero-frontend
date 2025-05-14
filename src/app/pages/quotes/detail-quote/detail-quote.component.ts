@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -17,16 +17,12 @@ import { ReadableDatePipe } from '../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../shared/components/tracking-entity/tracking-entity.component';
 
 import { IQuote } from '../../../interfaces';
+import { StatusQuote } from '../../../enums';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'detail-quote',
-  imports: [
-    CommonModule,
-    RouterLink,
-    ReadableDatePipe,
-    TrackingEntityComponent,
-  ],
+  imports: [CommonModule, ReadableDatePipe, TrackingEntityComponent],
   templateUrl: './detail-quote.component.html',
   styleUrl: './detail-quote.component.scss',
   standalone: true,
@@ -40,6 +36,21 @@ export default class DetailQuoteComponent {
 
   private quoteService = inject(QuoteService);
   public detailQuoteService = inject(DetailQuoteService);
+
+  // STATUS GATEWAY
+  public allowedStatusToBeEditedFromDraft = [StatusQuote.DRAFT as String];
+  public allowedStatusToBeSent = [
+    StatusQuote.DRAFT as String,
+    StatusQuote.SENT as String,
+  ];
+  public allowedStatusToMarkAsSent = [StatusQuote.DRAFT as String];
+  public allowedStatusToBeAccepted = [StatusQuote.SENT as String];
+  public allowedStatusToBeInvoiced = [StatusQuote.ACCEPTED as String];
+  public allowedStatusToBeDeclined = [StatusQuote.SENT as String];
+  public allowedStatusToBeEdited = [
+    StatusQuote.DRAFT as String,
+    StatusQuote.SENT as String,
+  ];
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -60,10 +71,17 @@ export default class DetailQuoteComponent {
   }
 
   ngOnInit(): void {
-    this.fetchItem();
+    this.fetchQuote();
+
+    // LISTEN WHEN STATUS CHANGE
+    this.detailQuoteService.statusChange$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.fetchQuote();
+      });
   }
 
-  private fetchItem(): void {
+  private fetchQuote(): void {
     this.quoteService
       .fetchOne(this.quoteId)
       .pipe(takeUntilDestroyed(this.destroyRef))

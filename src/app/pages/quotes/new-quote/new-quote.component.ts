@@ -22,7 +22,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AuthService, ClientService, ItemService } from '../../../api';
 import { FormErrorService } from '../../../shared/services/form-error.service';
-import { FormQuoteService } from '../form-quote.service';
+import { FormNewQuoteService } from '../form-new-quote.service';
 import { CustomToastService } from '../../../shared/services/custom-toast.service';
 import { QuickDatePickerComponent } from '../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../shared/components/submit-button/submit-button.component';
@@ -78,9 +78,9 @@ export default class NewQuoteComponent implements OnInit {
   public sellers = signal<ShortAuth[]>([]);
 
   // FORM
-  public formQuoteService = inject(FormQuoteService);
+  public formNewQuoteService = inject(FormNewQuoteService);
   public isFormSubmitting = computed(() =>
-    this.formQuoteService.isFormSubmitting()
+    this.formNewQuoteService.isFormSubmitting()
   );
   public taxRates: ICodeLabel[] = taxRateArray;
   public clients = signal<ICommonSelect[]>([]);
@@ -115,10 +115,12 @@ export default class NewQuoteComponent implements OnInit {
   });
 
   // TOTALS
-  public subtotal = computed(() => this.formQuoteService.subtotal());
-  public totalDiscount = computed(() => this.formQuoteService.totalDiscount());
-  public totalTax = computed(() => this.formQuoteService.totalTax());
-  public totalAmount = computed(() => this.formQuoteService.totalAmount());
+  public subtotal = computed(() => this.formNewQuoteService.subtotal());
+  public totalDiscount = computed(() =>
+    this.formNewQuoteService.totalDiscount()
+  );
+  public totalTax = computed(() => this.formNewQuoteService.totalTax());
+  public totalAmount = computed(() => this.formNewQuoteService.totalAmount());
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -216,29 +218,29 @@ export default class NewQuoteComponent implements OnInit {
 
   removeQuoteItem(index: number): void {
     this.quoteItems.removeAt(index);
-    this.formQuoteService.calculateTotals(this.quoteItems);
+    this.formNewQuoteService.calculateTotals(this.quoteItems);
   }
 
   setupItemGroupValueChangeListener(itemGroup: FormGroup): void {
     itemGroup.controls['quantity'].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((_) => {
-        this.formQuoteService.calculateTotals(this.quoteItems);
+        this.formNewQuoteService.calculateTotals(this.quoteItems);
       });
     itemGroup.controls['price'].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((_) => {
-        this.formQuoteService.calculateTotals(this.quoteItems);
+        this.formNewQuoteService.calculateTotals(this.quoteItems);
       });
     itemGroup.controls['discount'].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((_) => {
-        this.formQuoteService.calculateTotals(this.quoteItems);
+        this.formNewQuoteService.calculateTotals(this.quoteItems);
       });
     itemGroup.controls['taxRate'].valueChanges
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((_) => {
-        this.formQuoteService.calculateTotals(this.quoteItems);
+        this.formNewQuoteService.calculateTotals(this.quoteItems);
       });
   }
 
@@ -264,7 +266,7 @@ export default class NewQuoteComponent implements OnInit {
             itemGroup.controls['description'].reset();
           }
 
-          this.formQuoteService.calculateTotals(this.quoteItems);
+          this.formNewQuoteService.calculateTotals(this.quoteItems);
         } else {
           itemGroup.controls['price'].reset();
           itemGroup.controls['description'].reset();
@@ -277,7 +279,7 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   callToAction(action: string): void {
-    if (!this.formQuoteService.verifyQuoteItems(this.quoteItems)) {
+    if (!this.formNewQuoteService.verifyQuoteItems(this.quoteItems)) {
       this.customToastService.add({
         message: 'Uno o más items tienen error.',
         type: TypeMessageToast.ERROR,
@@ -310,17 +312,17 @@ export default class NewQuoteComponent implements OnInit {
       case NewQuoteFormAction.SAVE:
         data.status = StatusQuote.DRAFT;
         data.action = NewQuoteFormAction.SAVE;
-        this.formQuoteService.onSaveAction(data);
+        this.formNewQuoteService.onSaveAction(data);
         break;
       case NewQuoteFormAction.MARK_AS_SENT:
         data.status = StatusQuote.SENT;
         data.action = NewQuoteFormAction.MARK_AS_SENT;
-        this.formQuoteService.onSaveAction(data);
+        this.formNewQuoteService.onSaveAction(data);
         break;
       case NewQuoteFormAction.SEND:
-        data.status = StatusQuote.SENT;
+        data.status = StatusQuote.DRAFT;
         data.action = NewQuoteFormAction.SEND;
-        this.formQuoteService.onSendAction(data);
+        this.formNewQuoteService.handleCreateNewQuoteSendingEmailAsWell(data);
         break;
 
       default:

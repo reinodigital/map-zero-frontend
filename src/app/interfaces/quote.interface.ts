@@ -59,8 +59,17 @@ export interface IDataToCreateQuoteItem {
   taxRate: string;
 }
 
+// This should removed so ICustomDataToModalEmailSendQuote is better
 export interface IDataToModalEmailSendQuote {
   quote: IDataToCreateQuote;
+  total: number;
+}
+
+export interface ICustomDataToModalEmailSendQuote {
+  clientName: string;
+  currency: string;
+  terms?: string;
+  // reference properties
   total: number;
 }
 
@@ -74,4 +83,8 @@ export interface IDataEmailForSendQuote {
   emails: string[];
   subject?: string;
   message?: string;
+}
+
+export interface IMarkAndChangeStatus {
+  updatedAt: string;
 }

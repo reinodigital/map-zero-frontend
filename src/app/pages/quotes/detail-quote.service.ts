@@ -1,15 +1,38 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 
-import { getTaxRateLabel, getTaxRateValue } from '../../shared/helpers';
+import {
+  formatDateToString,
+  getTaxRateLabel,
+  getTaxRateValue,
+} from '../../shared/helpers';
 
-import { StatusQuote } from '../../enums';
-import { IQuoteItem, ITotals } from '../../interfaces';
+import { QuoteService } from '../../api/quote.service';
+import { CustomToastService } from '../../shared/services/custom-toast.service';
+import { CustomModalSendQuoteEmailRecipientComponent } from '../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
+
+import { StatusQuote, TypeMessageToast } from '../../enums';
+import {
+  ICustomDataToModalEmailSendQuote,
+  IDataEmailForSendQuote,
+  IMarkAndChangeStatus,
+  IQuote,
+  IQuoteItem,
+  ITotals,
+} from '../../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DetailQuoteService {
-  public lastOffsetQuotesList = signal<number>(0);
+  private dialog = inject(MatDialog);
+  private quoteService = inject(QuoteService);
+  private customToastService = inject(CustomToastService);
+
+  // Using a Subject to emit when a status quote changed
+  private _statusChange$ = new Subject<void>();
+  public statusChange$ = this._statusChange$.asObservable();
 
   calculateTotalsOnDetail(quoteItems: IQuoteItem[]): ITotals {
     const { subtotal, discounts, iva }: any = quoteItems.reduce(
@@ -72,4 +95,85 @@ export class DetailQuoteService {
 
     return result;
   }
+
+  // DESCRIPTION: user click over "Enviar" button from detail-quote
+  displayModalQuoteEmail(quote: IQuote): void {
+    const data: ICustomDataToModalEmailSendQuote = {
+      clientName: quote.client.name,
+      currency: quote.currency,
+      terms: quote.terms,
+      total: quote.total,
+    };
+
+    // Mat Dialog solution
+    let dialogRef = this.dialog.open(
+      CustomModalSendQuoteEmailRecipientComponent,
+      {
+        width: '70rem',
+        autoFocus: false,
+        data: data,
+      }
+    );
+
+    dialogRef.updatePosition({ top: '100px' });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data) {
+        // user want to send email
+        const dataEmail: IDataEmailForSendQuote = JSON.parse(data);
+        this.quoteService
+          .sendEmail(quote.id, dataEmail)
+          .subscribe((resp) => this.processResponse(resp));
+      }
+    });
+  }
+
+  /* MARK AND CHANGE QUOTE STATUS */
+  markAsSent(quoteId: number): void {
+    this.quoteService
+      .markAsSent(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsAccepted(quoteId: number): void {
+    this.quoteService
+      .markAsAccepted(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsDeclined(quoteId: number): void {
+    this.quoteService
+      .markAsDeclined(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsInvoiced(quoteId: number): void {
+    this.quoteService
+      .markAsInvoiced(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+
+  private generateUpdatedAtProperty(): IMarkAndChangeStatus {
+    const data: IMarkAndChangeStatus = {
+      updatedAt: formatDateToString(new Date()),
+    };
+
+    return data;
+  }
+
+  private processResponse(resp: any): void {
+    if (resp && resp.msg) {
+      this.customToastService.add({
+        message: resp.msg,
+        type: TypeMessageToast.SUCCESS,
+        duration: 5000,
+      });
+
+      // Emit an event when status changed
+      this._statusChange$.next();
+    } else {
+      this.customToastService.add({
+        message: resp.message,
+        type: TypeMessageToast.ERROR,
+        duration: 5000,
+      });
+    }
+  }
+  /* END MARK AND CHANGE QUOTE STATUS */
 }

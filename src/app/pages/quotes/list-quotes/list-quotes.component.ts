@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { DetailQuoteService } from '../detail-quote.service';
 import { ListQuotesService } from '../list-quotes.service';
 import { QuoteService } from '../../../api';
 
@@ -36,6 +37,7 @@ export default class ListQuotesComponent {
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
   private quoteService = inject(QuoteService);
+  public detailQuoteService = inject(DetailQuoteService);
   public listQuotesService = inject(ListQuotesService);
 
   // QUOTES
@@ -55,7 +57,7 @@ export default class ListQuotesComponent {
   public isActiveFilters = signal<boolean>(false);
   public searchForm = signal<FormGroup>(
     this.fb.group({
-      name: ['', []],
+      quoteNumber: ['', []],
     })
   );
 

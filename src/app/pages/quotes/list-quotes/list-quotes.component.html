@@ -35,8 +35,8 @@
           >
             <div class="row">
               <div class="col-12 col-sm-6 col-lg-4">
-                <label for="name">Nombre</label>
-                <input type="text" formControlName="name" />
+                <label for="name">Número</label>
+                <input type="text" formControlName="quoteNumber" />
               </div>
             </div>
 
@@ -88,6 +88,8 @@
                 <th>Número</th>
                 <th>Cliente</th>
                 <th>Fecha inicio</th>
+                <th>Estado</th>
+                <th>Monto</th>
               </tr>
             </thead>
             <tbody class="animate__animated animate__fadeIn">
@@ -96,6 +98,18 @@
                 <td>{{ quote.quoteNumber }}</td>
                 <td>{{ quote.client.name }}</td>
                 <td>{{ quote.initDate | readableDate }}</td>
+                <td>
+                  <span
+                    [class]="
+                      detailQuoteService.getStatusBadgeFromQuote(
+                        quote?.status ?? ''
+                      )
+                    "
+                  >
+                    {{ quote?.status }}
+                  </span>
+                </td>
+                <td>{{ quote.total }}</td>
               </tr>
               } @empty {
               <tr>

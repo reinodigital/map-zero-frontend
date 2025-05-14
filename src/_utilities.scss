@@ -59,6 +59,21 @@
 .icon_trash {
   color: var(--red);
 }
+.icon_pencil {
+  color: var(--primary_blue);
+}
+.icon_declined {
+  color: var(--red);
+}
+.icon_accepted {
+  color: var(--green);
+}
+.icon_sent {
+  color: var(--primary_blue);
+}
+.icon_mark_as_sent {
+  color: var(--letter);
+}
 // End Icons
 
 // Transparent badges
@@ -162,3 +177,12 @@
   align-items: center;
 }
 // End Pills
+
+.three_points_dropdown {
+  padding: 0.4rem 0.9rem;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--light);
+  }
+}

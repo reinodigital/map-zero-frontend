@@ -39,16 +39,20 @@
       placeholder="mensaje"
     ></textarea>
     <div class="hstack gap-3 buttons">
-      <button (click)="closePopUp('cancel')" class="btn btn-light">
+      <button
+        type="button"
+        (click)="closePopUp('cancel')"
+        class="btn btn-light"
+      >
         Cancelar
       </button>
-      <submit-button
-        (btnWasClicked)="closePopUp($event)"
-        [isFormSubmitting]="isFormSubmitting()"
-        [buttonAction]="formQuoteService.sendAction"
-        primaryText="Enviar"
-        secondaryText="Enviando"
-      ></submit-button>
+      <button
+        type="button"
+        (click)="closePopUp('send')"
+        class="btn btn-success"
+      >
+        Enviar
+      </button>
     </div>
   </form>
 </div>
