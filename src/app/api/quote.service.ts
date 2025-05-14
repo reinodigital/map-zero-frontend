@@ -101,6 +101,15 @@ export class QuoteService {
       );
   }
 
+  removeOne(quoteId: number, removedAt: string): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/${quoteId}?removedAt=${removedAt}`;
+
+    return this.http.delete<IMessage>(url, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
+  }
+
   /* ========= MARK && CHANGE STATUS ========== */
   markAsSent(
     quoteId: number,
@@ -115,6 +124,7 @@ export class QuoteService {
         catchError((err) => of(err.error))
       );
   }
+
   markAsAccepted(
     quoteId: number,
     data: IMarkAndChangeStatus
@@ -128,6 +138,7 @@ export class QuoteService {
         catchError((err) => of(err.error))
       );
   }
+
   markAsDeclined(
     quoteId: number,
     data: IMarkAndChangeStatus
@@ -141,6 +152,7 @@ export class QuoteService {
         catchError((err) => of(err.error))
       );
   }
+
   markAsInvoiced(
     quoteId: number,
     data: IMarkAndChangeStatus
@@ -155,4 +167,48 @@ export class QuoteService {
       );
   }
   /* ========= END MARK && CHANGE STATUS ========== */
+
+  /* ========= UNDO MARK && COME BACK STATUS ========== */
+  undoMarkAsAccepted(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/undo-mark-as-accepted/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  undoMarkAsDeclined(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/undo-mark-as-declined/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  undoMarkAsInvoiced(
+    quoteId: number,
+    data: IMarkAndChangeStatus
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/quote/undo-mark-as-invoiced/${quoteId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  /* ========= END UNDO MARK && COME BACK STATUS ========== */
 }

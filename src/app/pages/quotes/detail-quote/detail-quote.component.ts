@@ -52,6 +52,10 @@ export default class DetailQuoteComponent {
     StatusQuote.SENT as String,
   ];
 
+  public allowedStatusToUnMarkAsAccepted = [StatusQuote.ACCEPTED as String];
+  public allowedStatusToUnMarkAsDeclined = [StatusQuote.DECLINED as String];
+  public allowedStatusToUnMarkAsInvoiced = [StatusQuote.INVOICED as String];
+
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }

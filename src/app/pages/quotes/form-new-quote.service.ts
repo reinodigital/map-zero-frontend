@@ -27,6 +27,7 @@ export class FormNewQuoteService {
 
   // FORM
   public isFormSubmitting = signal<boolean>(false);
+  public isFormNewQuoteAndEmailSubmitting = signal<boolean>(false);
 
   // ACTIONS
   public saveAction = NewQuoteFormAction.SAVE;
@@ -181,6 +182,8 @@ export class FormNewQuoteService {
     quoteId: number,
     data: IDataEmailForSendQuote
   ) {
+    this.isFormNewQuoteAndEmailSubmitting.set(true);
+
     this.quoteService.sendEmail(quoteId, data).subscribe((resp) => {
       if (resp && resp.msg) {
         this.customToastService.add({
@@ -196,6 +199,7 @@ export class FormNewQuoteService {
         });
       }
 
+      this.isFormNewQuoteAndEmailSubmitting.set(false);
       this.router.navigateByUrl('/detail-quote/' + quoteId);
     });
   }

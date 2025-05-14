@@ -1,3 +1,25 @@
+// Spinner inside button
+.spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 2px solid var(--gray);
+  border-top-color: var(--success);
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.06rem; /* Add some space between the spinner and the text if needed */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .text_center {
   text-align: center;
 }
@@ -95,6 +117,10 @@
 }
 .bg-label-light {
   background-color: #7b8b98 !important;
+  color: var(--white) !important;
+}
+.bg-label-removed {
+  background-color: #f3b7be !important;
   color: var(--white) !important;
 }
 // END Transparent badges

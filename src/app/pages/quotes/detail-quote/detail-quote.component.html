@@ -39,11 +39,15 @@
         <button class="btn btn-primary">Crear factura</button>
         }
         <div class="dropdown">
+          @if (detailQuoteService.isSendEmailFromDetailComponentSubmitting()) {
+          <div class="spinner ms-1"></div>
+          } @else {
           <i
             class="fa-solid fa-ellipsis-vertical three_points_dropdown"
             data-bs-toggle="dropdown"
             aria-expanded="false"
           ></i>
+          }
           <ul class="dropdown-menu">
             @if (allowedStatusToBeAccepted.includes(quote()!.status)) {
             <li>
@@ -78,6 +82,39 @@
                 Marcar como enviada
               </button>
             </li>
+            } @if (allowedStatusToUnMarkAsAccepted.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.undoMarkAsAccepted(quoteId)"
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como aceptada
+              </button>
+            </li>
+            } @if (allowedStatusToUnMarkAsDeclined.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.undoMarkAsDeclined(quoteId)"
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como rechazada
+              </button>
+            </li>
+            } @if (allowedStatusToUnMarkAsInvoiced.includes(quote()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.undoMarkAsInvoiced(quoteId)"
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como facturada
+              </button>
+            </li>
             } @if (allowedStatusToBeDeclined.includes(quote()!.status)) {
             <li>
               <button
@@ -109,13 +146,22 @@
                 Editar
               </button>
             </li>
-            }
-            <!-- <li>
-              <button class="dropdown-item" type="button">
+            } @if (quote()!.status !== 'removida') {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailQuoteService.removeQuote(quote()!)"
+              >
                 <i class="fa-solid fa-trash icon_trash me-2"></i>
                 Remover
               </button>
-            </li> -->
+            </li>
+            }
+            <li>
+              <div class="line_divider mt-3 mb-2"></div>
+              <small class="ms-3 fs-4">Acciones</small>
+            </li>
           </ul>
         </div>
       </div>

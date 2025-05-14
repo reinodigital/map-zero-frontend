@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
@@ -10,6 +10,7 @@ import {
 
 import { QuoteService } from '../../api/quote.service';
 import { CustomToastService } from '../../shared/services/custom-toast.service';
+import { ModalConfirmComponent } from '../../shared/modals/modal-confirm/modal-confirm.component';
 import { CustomModalSendQuoteEmailRecipientComponent } from '../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
 
 import { StatusQuote, TypeMessageToast } from '../../enums';
@@ -33,6 +34,9 @@ export class DetailQuoteService {
   // Using a Subject to emit when a status quote changed
   private _statusChange$ = new Subject<void>();
   public statusChange$ = this._statusChange$.asObservable();
+
+  // LOADING
+  public isSendEmailFromDetailComponentSubmitting = signal<boolean>(false);
 
   calculateTotalsOnDetail(quoteItems: IQuoteItem[]): ITotals {
     const { subtotal, discounts, iva }: any = quoteItems.reduce(
@@ -88,6 +92,9 @@ export class DetailQuoteService {
       case StatusQuote.INVOICED:
         result = 'badge bg-label-warning';
         break;
+      case StatusQuote.REMOVED:
+        result = 'badge bg-label-removed';
+        break;
 
       default:
         break;
@@ -118,6 +125,8 @@ export class DetailQuoteService {
     dialogRef.updatePosition({ top: '100px' });
     dialogRef.afterClosed().subscribe((data) => {
       if (data) {
+        this.isSendEmailFromDetailComponentSubmitting.set(true);
+
         // user want to send email
         const dataEmail: IDataEmailForSendQuote = JSON.parse(data);
         this.quoteService
@@ -149,6 +158,22 @@ export class DetailQuoteService {
       .subscribe((resp) => this.processResponse(resp));
   }
 
+  undoMarkAsAccepted(quoteId: number): void {
+    this.quoteService
+      .undoMarkAsAccepted(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  undoMarkAsDeclined(quoteId: number): void {
+    this.quoteService
+      .undoMarkAsDeclined(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  undoMarkAsInvoiced(quoteId: number): void {
+    this.quoteService
+      .undoMarkAsInvoiced(quoteId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+
   private generateUpdatedAtProperty(): IMarkAndChangeStatus {
     const data: IMarkAndChangeStatus = {
       updatedAt: formatDateToString(new Date()),
@@ -174,6 +199,27 @@ export class DetailQuoteService {
         duration: 5000,
       });
     }
+
+    this.isSendEmailFromDetailComponentSubmitting.set(false);
   }
   /* END MARK AND CHANGE QUOTE STATUS */
+
+  removeQuote(quote: IQuote): void {
+    // Mat Dialog solution
+    let dialogRef = this.dialog.open(ModalConfirmComponent, {
+      width: '60rem',
+      height: '20rem',
+      autoFocus: false,
+      data: `Estás seguro/a de que deseas eliminar esta cotización ${quote.quoteNumber} ?`,
+    });
+
+    dialogRef.updatePosition({ top: '100px' });
+    dialogRef.afterClosed().subscribe((election: boolean) => {
+      if (election) {
+        this.quoteService
+          .removeOne(quote.id, formatDateToString(new Date()))
+          .subscribe(this.processResponse);
+      }
+    });
+  }
 }

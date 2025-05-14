@@ -243,7 +243,12 @@
             class="btn btn-outline-primary"
             (click)="callToAction(formNewQuoteService.sendAction)"
           >
-            Enviar
+            @if (formNewQuoteService.isFormNewQuoteAndEmailSubmitting()) {
+            <div class="d-flex align-items-center">
+              Enviando
+              <div class="spinner ms-2"></div>
+            </div>
+            } @else { Enviar }
           </button>
           <button
             type="button"
