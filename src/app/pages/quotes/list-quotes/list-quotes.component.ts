@@ -9,6 +9,7 @@ import {
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatTabChangeEvent, MatTabsModule } from '@angular/material/tabs';
 
 import { DetailQuoteService } from '../detail-quote.service';
 import { ListQuotesService } from '../list-quotes.service';
@@ -18,7 +19,7 @@ import { PaginationComponent } from '../../../shared/components/pagination/pagin
 import { ReadableDatePipe } from '../../../pipes/readable-date.pipe';
 
 import { IQuote } from '../../../interfaces';
-import { LimitValues } from '../../../enums';
+import { LimitValues, StatusQuote } from '../../../enums';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -26,6 +27,7 @@ import { LimitValues } from '../../../enums';
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    MatTabsModule,
     PaginationComponent,
     RouterLink,
     ReadableDatePipe,
@@ -51,7 +53,16 @@ export default class ListQuotesComponent {
   public total = signal<number>(0);
   public isLoading = signal<boolean>(true);
 
+  // TOTALS STATUS
+  public totalAll = signal<number>(0);
+  public totalDraft = signal<number>(0);
+  public totalSent = signal<number>(0);
+  public totalAccepted = signal<number>(0);
+  public totalDeclined = signal<number>(0);
+  public totalInvoiced = signal<number>(0);
+
   // FILTERS
+  public quoteStatusFilter = signal<string>('');
   public filtersOpen = signal<boolean>(false);
   public filters = signal<any>({});
   public isActiveFilters = signal<boolean>(false);
@@ -66,6 +77,8 @@ export default class ListQuotesComponent {
   }
 
   fetchAllItems(): void {
+    this.filters.set({ ...this.filters(), status: this.quoteStatusFilter() });
+
     this.quoteService
       .fetchAll(this.limit, this.offset(), this.filters())
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -73,15 +86,44 @@ export default class ListQuotesComponent {
         if (resp && resp.count >= 0) {
           this.total.set(resp.count);
           this.quotes.set(resp.quotes);
+
+          // status
+          this.totalAll.set(resp.total);
+          this.fillOutStatusQuote(resp.statusCounts ?? null);
         }
 
         this.isLoading.set(false);
       });
   }
 
+  // FILL OUT STATUS
+  fillOutStatusQuote(statusCounts: Record<string, number> | null): void {
+    if (!statusCounts) return;
+
+    this.totalDraft.set(statusCounts[StatusQuote.DRAFT]);
+    this.totalSent.set(statusCounts[StatusQuote.SENT]);
+    this.totalAccepted.set(statusCounts[StatusQuote.ACCEPTED]);
+    this.totalDeclined.set(statusCounts[StatusQuote.DECLINED]);
+    this.totalInvoiced.set(statusCounts[StatusQuote.INVOICED]);
+  }
+
   // FILTERS
   openCloseFilters(): void {
     this.filtersOpen.set(!this.filtersOpen());
+  }
+
+  onTabChange(event: MatTabChangeEvent): void {
+    const statusByIndex = [
+      '',
+      StatusQuote.DRAFT,
+      StatusQuote.SENT,
+      StatusQuote.DECLINED,
+      StatusQuote.ACCEPTED,
+      StatusQuote.INVOICED,
+    ];
+    this.quoteStatusFilter.set(statusByIndex[event.index]);
+
+    this.fetchAllItems();
   }
 
   searchFormSubmit(): void {

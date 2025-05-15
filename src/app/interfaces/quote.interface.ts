@@ -6,6 +6,10 @@ import { ITracking } from './tracking.interface';
 export interface IQuoteAndCount {
   count: number;
   quotes: IQuote[];
+  total: number;
+  statusCounts?: {
+    [StatusQuote: string]: number;
+  };
 }
 
 export interface IQuote {

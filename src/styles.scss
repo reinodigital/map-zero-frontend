@@ -3,6 +3,8 @@
 @use "./_utilities.scss";
 @use "./mixins";
 
+@use "@angular/material" as mat;
+
 :root {
   // Fonts
   --font_primary: "Montserrat", sans-serif;
@@ -35,4 +37,11 @@
 
   // Border radius
   --border_radius: 0.3rem;
+
+  // Mats Override
+  @include mat.tabs-overrides(
+    (
+      label-text-size: 1.6rem,
+    )
+  );
 }
