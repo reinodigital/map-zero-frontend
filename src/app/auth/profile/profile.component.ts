@@ -1,6 +1,6 @@
 import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { AuthService } from '../../api';
 import { IAuth } from '../../interfaces';
@@ -9,7 +9,6 @@ import { IAuth } from '../../interfaces';
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
-  imports: [RouterLink],
   standalone: true,
 })
 export default class ProfileComponent {
