@@ -8,4 +8,4 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   templateUrl: './new-account.component.html',
   styleUrl: './new-account.component.scss',
 })
-export class NewAccountComponent {}
+export default class NewAccountComponent {}

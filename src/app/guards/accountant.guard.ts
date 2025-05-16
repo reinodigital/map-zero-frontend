@@ -14,7 +14,7 @@ import { SecurityRoles } from '../enums';
 @Injectable({
   providedIn: 'root',
 })
-export class SellerGuard {
+export class AccountantGuard {
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -29,7 +29,7 @@ export class SellerGuard {
           const user = this.authService._user;
           if (
             !user()?.roles.includes(SecurityRoles.ADMIN) &&
-            !user()?.roles.includes(SecurityRoles.SELLER) &&
+            !user()?.roles.includes(SecurityRoles.ACCOUNTANT) &&
             !user()?.roles.includes(SecurityRoles.SUPER_ADMIN)
           ) {
             this.router.navigateByUrl('/dashboard');
@@ -50,7 +50,7 @@ export class SellerGuard {
           const user = this.authService._user;
           if (
             !user()?.roles.includes(SecurityRoles.ADMIN) &&
-            !user()?.roles.includes(SecurityRoles.SELLER) &&
+            !user()?.roles.includes(SecurityRoles.ACCOUNTANT) &&
             !user()?.roles.includes(SecurityRoles.SUPER_ADMIN)
           ) {
             this.router.navigateByUrl('/dashboard');

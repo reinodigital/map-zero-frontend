@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
+import { AccountantGuard } from './guards/accountant.guard';
 import { SellerGuard } from './guards/seller.guard';
 
 export const routes: Routes = [
@@ -148,4 +149,21 @@ export const routes: Routes = [
     canLoad: [AuthGuard],
   },
   // END QUOTES
+
+  // ACCOUNT
+  {
+    path: 'list-accounts',
+    loadComponent: () =>
+      import('./modules/accounting/list-accounts/list-accounts.component'),
+    canActivate: [AccountantGuard],
+    canLoad: [AccountantGuard],
+  },
+  {
+    path: 'new-account',
+    loadComponent: () =>
+      import('./modules/accounting/new-account/new-account.component'),
+    canActivate: [AccountantGuard],
+    canLoad: [AccountantGuard],
+  },
+  // END ACCOUNT
 ];
