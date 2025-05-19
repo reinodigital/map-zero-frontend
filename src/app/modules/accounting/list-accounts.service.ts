@@ -3,8 +3,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
 import { ModalNewAccountTypeComponent } from '../../shared/modals/modal-new-account-type/modal-new-account-type.component';
-import { ModalNewAccountComponent } from '../../shared/modals/modal-new-account/modal-new-account.component';
+import { ModalCreateUpdateAccountComponent } from '../../shared/modals/modal-create-update-account/modal-create-update-account.component';
 import { AccountTypeCategory } from '../../enums';
+import { IAccount, IDataModalAccountForm } from '../../interfaces';
+import { IPayloadAccountForm } from '../../interfaces/account.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -37,13 +39,26 @@ export class ListAccountsService {
     });
   }
 
-  displayModalAddAccount(): void {
+  displayModalCreateOrUpdateAccount(account: IAccount | null = null): void {
+    const data: IDataModalAccountForm = {
+      id: account?.id ?? null,
+      account: account
+        ? {
+            accountTypeId: account.accountType.id,
+            name: account.name,
+            code: account.code,
+            description: account.description ?? null,
+            tax: account.tax ?? null,
+          }
+        : null,
+    };
+
     // Mat Dialog solution
-    let dialogRef = this.dialogRef.open(ModalNewAccountComponent, {
+    let dialogRef = this.dialogRef.open(ModalCreateUpdateAccountComponent, {
       width: '50rem',
       height: 'auto',
       autoFocus: false,
-      data: null,
+      data,
     });
 
     dialogRef.updatePosition({ top: '100px' });

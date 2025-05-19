@@ -66,22 +66,20 @@
       </div>
     </div>
   </div>
-  }
-
-  <button
-    class="btn btn-primary mb-2"
-    (click)="listAccountsService.displayModalAddAccount()"
-  >
-    + Agregar cuenta
-  </button>
-
-  @if (!isLoading()) {
+  } @if (!isLoading()) {
   <div class="table_clients">
     <div class="box">
       <div class="row">
-        <div class="d-flex justify-content-between mb-3">
-          <h3>Listado cuentas</h3>
-          <span>Cantidad cuentas ({{ total() }})</span>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3>Listado cuentas ({{ total() }})</h3>
+          <div class="hstack gap-3">
+            <button
+              class="btn btn-primary mb-2"
+              (click)="listAccountsService.displayModalCreateOrUpdateAccount()"
+            >
+              + Agregar cuenta
+            </button>
+          </div>
         </div>
 
         <div class="table-responsive">
@@ -97,7 +95,9 @@
               @for (account of accounts(); track account.id) {
               <tr
                 class="admin_tr"
-                [routerLink]="'/detail-account/' + account.id"
+                (click)="
+                  listAccountsService.displayModalCreateOrUpdateAccount(account)
+                "
               >
                 <td>{{ account.code }}</td>
                 <td>{{ account.name }}</td>

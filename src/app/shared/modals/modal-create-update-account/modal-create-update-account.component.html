@@ -5,7 +5,7 @@
   (ngSubmit)="onSubmit()"
 >
   <div class="header_form">
-    <h3>Agregar Cuenta</h3>
+    <h3>{{ accountId() ? "Editar" : "Crear" }} Cuenta</h3>
     <i class="fa-solid fa-xmark icon_close" (click)="closePopUp()"></i>
   </div>
   <div class="form_content">
@@ -63,6 +63,6 @@
     [disabled]="newAccountForm().invalid"
     type="submit"
   >
-    Agregar
+    {{ accountId() ? "Editar" : "Crear" }}
   </button>
 </form>
