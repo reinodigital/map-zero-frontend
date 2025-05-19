@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
 export interface SubMenuItem {
   label: string;
@@ -19,6 +20,7 @@ export interface MenuItem {
   providedIn: 'root',
 })
 export class CustomMenuService {
+  private router = inject(Router);
   public openMenuIndex = signal<number | null>(null);
   public lastMenuItemActiveId = signal<string>('collapseAccounting');
 
@@ -112,5 +114,9 @@ export class CustomMenuService {
       // No menu is active
       this.lastMenuItemActiveId.set('');
     }
+  }
+
+  navigateToRoute(route: string): void {
+    this.router.navigateByUrl(`/${route}`);
   }
 }
