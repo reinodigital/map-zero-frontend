@@ -30,8 +30,7 @@
   transition: left 0.3s ease-in-out;
 
   .main_menu_title {
-    margin-top: 2rem;
-    margin-left: 2rem;
+    margin: 1rem 0rem 1rem 1rem;
   }
 }
 
@@ -40,17 +39,39 @@
   flex-direction: column;
   z-index: 12;
 
-  .main_menu_list_link {
+  .main_menu_list_parent {
+    .main_menu_list_parent_title_icon {
+      display: flex;
+      align-items: center;
+      border-radius: 1.5rem;
+      cursor: pointer;
+      padding: 1rem 1.5rem;
+
+      &:hover {
+        background-color: var(--light);
+      }
+    }
+  }
+}
+.main_menu_list_parent_dropdown {
+  display: none;
+
+  .main_menu_list_parent_dropdown_link {
     cursor: pointer;
     border-radius: 1.5rem;
     display: flex;
     align-items: center;
     padding: 1rem 1.5rem;
+    margin-left: 2rem;
 
     &:hover {
-      background-color: var(--light);
+      background-color: var(--gray);
     }
   }
+}
+.showLinks {
+  display: flex;
+  flex-direction: column;
 }
 // End menu
 

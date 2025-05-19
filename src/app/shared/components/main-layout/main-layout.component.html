@@ -1,43 +1,38 @@
 <div class="main">
   <aside class="main_menu" [class.main_menu_open]="isMenuOpen()">
-    <h3 class="main_menu_title">MENU</h3>
+    <div class="main_menu_title">
+      <img
+        src="../../../../assets/svg/logo.svg"
+        alt="logo"
+        width="250px"
+        height="120px"
+      />
+    </div>
+    <!-- <h3 class="main_menu_title">MENU</h3> -->
     <nav class="main_menu_list">
-      <a class="main_menu_list_link" routerLink="/" routerLinkActive="active">
-        <i class="fa-brands fa-slack me-2"></i>
-        <span>Dashboard</span>
-      </a>
-      <a
-        class="main_menu_list_link"
-        routerLink="/list-employees"
-        routerLinkActive="active"
-      >
-        <i class="fa-solid fa-users me-2"></i>
-        <span>Empleados</span>
-      </a>
-      <a
-        class="main_menu_list_link"
-        routerLink="/list-clients"
-        routerLinkActive="active"
-      >
-        <i class="fa-solid fa-address-book me-2"></i>
-        <span>Clientes</span>
-      </a>
-      <a
-        class="main_menu_list_link"
-        routerLink="/list-items"
-        routerLinkActive="active"
-      >
-        <i class="fas fa-life-ring me-2"></i>
-        <span>Items</span>
-      </a>
-      <a
-        class="main_menu_list_link"
-        routerLink="/list-quotes"
-        routerLinkActive="active"
-      >
-        <i class="fas fa-file-upload me-2"></i>
-        <span>Cotizaciones</span>
-      </a>
+      @for (menuItem of customMenuService.menu(); track $index) {
+      <div class="main_menu_list_parent">
+        <div
+          class="main_menu_list_parent_title_icon"
+          (click)="customMenuService.toggleMenuParent(menuItem.id)"
+        >
+          <i [class]="menuItem.icon"></i>
+          <span>{{ menuItem.label }}</span>
+        </div>
+
+        <div
+          class="main_menu_list_parent_dropdown"
+          [class.showLinks]="menuItem.isActive"
+          [id]="menuItem.id"
+        >
+          @for (sub of menuItem.submenu; track $index) {
+          <a class="main_menu_list_parent_dropdown_link">
+            <span>- {{ sub.label }}</span>
+          </a>
+          }
+        </div>
+      </div>
+      }
     </nav>
   </aside>
 

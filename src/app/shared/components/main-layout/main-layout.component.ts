@@ -1,9 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  signal,
+} from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 import { CurrentUserComponent } from '../current-user/current-user.component';
 import { CustomToastComponent } from '../custom-toast/custom-toast.component';
+import { CustomMenuService } from '../../services/custom-menu.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -12,7 +18,6 @@ import { CustomToastComponent } from '../custom-toast/custom-toast.component';
   imports: [
     CommonModule,
     RouterOutlet,
-    RouterLink,
     CurrentUserComponent,
     CustomToastComponent,
   ],
@@ -20,6 +25,7 @@ import { CustomToastComponent } from '../custom-toast/custom-toast.component';
   styleUrl: './main-layout.component.scss',
 })
 export default class MainLayoutComponent {
+  public customMenuService = inject(CustomMenuService);
   public isMenuOpen = signal(true);
 
   openCloseMenu() {
