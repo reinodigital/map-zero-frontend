@@ -1,0 +1,68 @@
+<form
+  class="form container"
+  autocomplete="off"
+  [formGroup]="newAccountForm()"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="header_form">
+    <h3>Agregar Cuenta</h3>
+    <i class="fa-solid fa-xmark icon_close" (click)="closePopUp()"></i>
+  </div>
+  <div class="form_content">
+    <div class="col-12">
+      <label>Tipo cuenta <span class="asterisk">*</span></label>
+      <select formControlName="accountTypeId">
+        <option value="">--Seleccione--</option>
+        @for (type of accountsType(); track type.id) {
+        <option [value]="type.id">{{ type.name }}</option>
+        }
+      </select>
+      @if (validField('accountTypeId')) {
+      <small class="form-text text-danger"> tipo cuenta es requerido </small>
+      }
+    </div>
+    <div class="col-12">
+      <label>Código <span class="asterisk">*</span></label>
+      <small>Un código/número único para esta cuenta</small>
+      <input formControlName="code" />
+      @if (validField('code')) {
+      <small class="form-text text-danger">
+        código con al menos 3 caracteres
+      </small>
+      }
+    </div>
+    <div class="col-12">
+      <label>Nombre <span class="asterisk">*</span></label>
+      <small>Un título corto para esta cuenta</small>
+      <input formControlName="name" />
+      @if (validField('name')) {
+      <small class="form-text text-danger">
+        requiere al menos 2 caracteres
+      </small>
+      }
+    </div>
+    <div class="col-12">
+      <label>Descripción <span class="muted">opcional</span></label>
+      <small>Una descripción de cómo se debe utilizar esta cuenta</small>
+      <textarea formControlName="description" rows="2"></textarea>
+    </div>
+    <div class="col-12">
+      <label>Impuestos <span class="muted">opcional</span></label>
+      <small>Impuestos por defecto para esta cuenta</small>
+      <select formControlName="tax">
+        <option [value]="null">--Seleccione--</option>
+        @for (tax of taxRates; track tax.code) {
+        <option [value]="tax.code">{{ tax.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <button
+    class="btn btn-success mt-4 mb-4 w-100"
+    [disabled]="newAccountForm().invalid"
+    type="submit"
+  >
+    Agregar
+  </button>
+</form>

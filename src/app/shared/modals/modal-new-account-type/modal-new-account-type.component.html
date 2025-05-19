@@ -1,0 +1,38 @@
+<form
+  class="form container"
+  autocomplete="off"
+  [formGroup]="newAccountTypeForm()"
+  (ngSubmit)="onSubmit()"
+>
+  <div class="header_form">
+    <h3>Agregar Tipo de cuenta</h3>
+    <i class="fa-solid fa-xmark icon_close" (click)="closePopUp()"></i>
+  </div>
+  <div class="form_content">
+    <div class="col-12">
+      <label>Nombre <span class="asterisk">*</span></label>
+      <input formControlName="name" placeholder="Ventas - Pasivos ..." />
+      @if (validField('name')) {
+      <small class="form-text text-danger">
+        requiere al menos 2 caracteres
+      </small>
+      }
+    </div>
+    <div class="col-12">
+      <label>Categoría <span class="asterisk">*</span></label>
+      <select formControlName="category">
+        @for (category of categories; track $index) {
+        <option [value]="category">{{ category | uppercase }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <button
+    class="btn btn-success mt-4 mb-4 w-100"
+    [disabled]="newAccountTypeForm().invalid"
+    type="submit"
+  >
+    Agregar
+  </button>
+</form>

@@ -1,4 +1,5 @@
 export * from './auth.service';
+export * from './account.service';
 export * from './account-type.service';
 export * from './cabys.service';
 export * from './client.service';

@@ -4,17 +4,22 @@ import { catchError, map, Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
-import { IMessage, ICommonSelect, IAccountType } from '../interfaces/index';
+import {
+  IMessage,
+  ICommonSelect,
+  IAccount,
+  ICountAndAccountAll,
+} from '../interfaces/index';
 import { isPlatformBrowser } from '@angular/common';
 import { LS } from '../enums';
 
 @Injectable({
   providedIn: 'root',
 })
-export class AccountTypeService {
+export class AccountService {
   private platformId = inject(PLATFORM_ID);
   private http = inject(HttpClient);
-  private _baseUrl = `${environment.baseUrl}/account-type`;
+  private _baseUrl = `${environment.baseUrl}/account`;
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
@@ -38,12 +43,27 @@ export class AccountTypeService {
     );
   }
 
-  fetchAll(): Observable<IAccountType[]> {
+  fetchAll(
+    limit: number,
+    offset: number,
+    filters: any
+  ): Observable<ICountAndAccountAll> {
     const url = `${this._baseUrl}`;
 
-    return this.http.get<IAccountType[]>(url, { headers: this.getToken }).pipe(
-      map((resp) => resp),
-      catchError((err) => of(err.error))
-    );
+    let params = new HttpParams().set('limit', limit).set('offset', offset);
+
+    Object.keys(filters).forEach((key) => {
+      // Append filters to query params
+      if (filters[key]) {
+        params = params.set(key, filters[key]);
+      }
+    });
+
+    return this.http
+      .get<ICountAndAccountAll>(url, { headers: this.getToken, params })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
   }
 }

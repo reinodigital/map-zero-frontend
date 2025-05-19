@@ -159,9 +159,11 @@ export const routes: Routes = [
     canLoad: [AccountantGuard],
   },
   {
-    path: 'new-account',
+    path: 'list-account-type',
     loadComponent: () =>
-      import('./modules/accounting/new-account/new-account.component'),
+      import(
+        './modules/accounting/list-account-type/list-account-type.component'
+      ),
     canActivate: [AccountantGuard],
     canLoad: [AccountantGuard],
   },

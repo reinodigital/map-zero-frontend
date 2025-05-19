@@ -2,7 +2,7 @@
   <div class="filters mb-4">
     <div class="box">
       <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="mb-0">Filtrar cuentas</h3>
+        <h3 class="mb-0">Filtrar tipo cuentas</h3>
         @if (filtersOpen()) {
         <i
           class="fa-solid fa-window-minimize"
@@ -70,9 +70,9 @@
 
   <button
     class="btn btn-primary mb-2"
-    (click)="listAccountsService.displayModalAddAccount()"
+    (click)="listAccountsService.displayModalAddAccountType()"
   >
-    + Agregar cuenta
+    + Agregar tipo cuenta
   </button>
 
   @if (!isLoading()) {
@@ -80,28 +80,33 @@
     <div class="box">
       <div class="row">
         <div class="d-flex justify-content-between mb-3">
-          <h3>Listado cuentas</h3>
-          <span>Cantidad cuentas ({{ total() }})</span>
+          <h3>Listado tipo cuentas</h3>
+          <span>Cantidad tipo cuentas ({{ total() }})</span>
         </div>
 
         <div class="table-responsive">
           <table class="table table-bordered">
             <thead>
               <tr>
-                <th>Código</th>
                 <th>Nombre</th>
-                <th>Tipo cuenta</th>
+                <th>Categoría</th>
               </tr>
             </thead>
             <tbody class="animate__animated animate__fadeIn">
-              @for (account of accounts(); track account.id) {
-              <tr
-                class="admin_tr"
-                [routerLink]="'/detail-account/' + account.id"
-              >
-                <td>{{ account.code }}</td>
-                <td>{{ account.name }}</td>
-                <td>{{ account.accountType.name }}</td>
+              @for (accountType of accountTypes(); track accountType.id) {
+              <tr>
+                <td>{{ accountType.name }}</td>
+                <td>
+                  <span
+                    [class]="
+                      listAccountsService.getBadgeByCategory(
+                        accountType.category
+                      )
+                    "
+                  >
+                    {{ accountType.category | uppercase }}
+                  </span>
+                </td>
               </tr>
               } @empty {
               <tr>
@@ -110,7 +115,7 @@
                     {{
                       isActiveFilters()
                         ? "Sin resultados para esa búsqueda"
-                        : "No existen cuentas por el momento en el sistema"
+                        : "No existen tipos de cuentas por el momento en el sistema"
                     }}
                   </div>
                 </div>
@@ -124,18 +129,6 @@
       <!-- END ROW -->
     </div>
     <!-- End BOX -->
-  </div>
-  }
-
-  <!-- Pagination -->
-  @if (total()) {
-  <div class="d-flex justify-content-center w_100 mt-4">
-    <app-pagination
-      [total]="total()"
-      [factor]="limit"
-      [initialOffset]="offset()"
-      (offsetEmitter)="detectChangeOffset($event)"
-    ></app-pagination>
   </div>
   }
 </div>

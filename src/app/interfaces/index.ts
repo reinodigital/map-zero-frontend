@@ -1,4 +1,5 @@
 export * from './auth.interface';
+export * from './account.interface';
 export * from './cabys.interface';
 export * from './client.interface';
 export * from './commons.interface';

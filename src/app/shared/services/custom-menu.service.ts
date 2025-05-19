@@ -33,22 +33,13 @@ export class CustomMenuService {
       submenu: [
         {
           label: 'Tipos de cuentas',
-          baseUrl: '/list-accounts',
-          subroutes: [
-            'list-account-types',
-            'new-account-type',
-            'edit-account-type',
-          ],
+          baseUrl: '/list-account-type',
+          subroutes: ['list-account-type', 'edit-account-type'],
         },
         {
           label: 'Cuentas',
           baseUrl: '/list-accounts',
-          subroutes: [
-            'list-accounts',
-            'new-account',
-            'edit-account',
-            'detail-account',
-          ],
+          subroutes: ['list-accounts', 'edit-account', 'detail-account'],
         },
       ],
     },
