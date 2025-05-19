@@ -88,19 +88,15 @@
       </div>
     </div>
   </div>
-  }
-
-  <button class="btn btn-primary mb-2" routerLink="/new-client">
-    + Nuevo cliente
-  </button>
-
-  @if (!isLoading()) {
+  } @if (!isLoading()) {
   <div class="table_clients">
     <div class="box">
       <div class="row">
         <div class="d-flex justify-content-between mb-3">
-          <h3>Listado clientes</h3>
-          <span>Cantidad clientes ({{ total() }})</span>
+          <h3>Listado clientes ({{ total() }})</h3>
+          <button class="btn btn-primary mb-2" routerLink="/new-client">
+            + Nuevo cliente
+          </button>
         </div>
 
         <div class="table-responsive">

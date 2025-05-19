@@ -66,22 +66,18 @@
       </div>
     </div>
   </div>
-  }
-
-  <button
-    class="btn btn-primary mb-2"
-    (click)="listAccountsService.displayModalAddAccountType()"
-  >
-    + Agregar tipo cuenta
-  </button>
-
-  @if (!isLoading()) {
+  } @if (!isLoading()) {
   <div class="table_clients">
     <div class="box">
       <div class="row">
         <div class="d-flex justify-content-between mb-3">
-          <h3>Listado tipo cuentas</h3>
-          <span>Cantidad tipo cuentas ({{ total() }})</span>
+          <h3>Listado tipo cuentas ({{ total() }})</h3>
+          <button
+            class="btn btn-primary mb-2"
+            (click)="listAccountsService.displayModalCreateUpdateAccountType()"
+          >
+            + Agregar tipo cuenta
+          </button>
         </div>
 
         <div class="table-responsive">
@@ -94,7 +90,14 @@
             </thead>
             <tbody class="animate__animated animate__fadeIn">
               @for (accountType of accountTypes(); track accountType.id) {
-              <tr>
+              <tr
+                class="admin_tr"
+                (click)="
+                  listAccountsService.displayModalCreateUpdateAccountType(
+                    accountType
+                  )
+                "
+              >
                 <td>{{ accountType.name }}</td>
                 <td>
                   <span

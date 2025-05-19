@@ -46,4 +46,15 @@ export class AccountTypeService {
       catchError((err) => of(err.error))
     );
   }
+
+  update(accountTypeId: number, data: any): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/${accountTypeId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
 }

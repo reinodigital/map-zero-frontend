@@ -2,11 +2,14 @@ import { inject, Injectable, signal } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject } from 'rxjs';
 
-import { ModalNewAccountTypeComponent } from '../../shared/modals/modal-new-account-type/modal-new-account-type.component';
 import { ModalCreateUpdateAccountComponent } from '../../shared/modals/modal-create-update-account/modal-create-update-account.component';
+import { ModalCreateUpdateAccountTypeComponent } from '../../shared/modals/modal-create-update-account-type/modal-create-update-account-type.component';
 import { AccountTypeCategory } from '../../enums';
 import { IAccount, IDataModalAccountForm } from '../../interfaces';
-import { IPayloadAccountForm } from '../../interfaces/account.interface';
+import {
+  IAccountType,
+  IDataModalAccountTypeForm,
+} from '../../interfaces/account.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -21,13 +24,25 @@ export class ListAccountsService {
   private _newAccount$ = new Subject<void>();
   public newAccount$ = this._newAccount$.asObservable();
 
-  displayModalAddAccountType(): void {
+  displayModalCreateUpdateAccountType(
+    accountType: IAccountType | null = null
+  ): void {
+    const data: IDataModalAccountTypeForm = {
+      id: accountType?.id ?? null,
+      accountType: accountType
+        ? {
+            name: accountType.name,
+            category: accountType.category,
+          }
+        : null,
+    };
+
     // Mat Dialog solution
-    let dialogRef = this.dialogRef.open(ModalNewAccountTypeComponent, {
+    let dialogRef = this.dialogRef.open(ModalCreateUpdateAccountTypeComponent, {
       width: '35rem',
       height: 'auto',
       autoFocus: false,
-      data: null,
+      data,
     });
 
     dialogRef.updatePosition({ top: '100px' });

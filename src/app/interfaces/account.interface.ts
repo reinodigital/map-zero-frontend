@@ -19,6 +19,17 @@ export interface IAccountType {
   category: string;
 }
 
+// ========= related with modal account type form ===========
+export interface IDataModalAccountTypeForm {
+  id: number | null;
+  accountType: IPayloadAccountTypeForm | null;
+}
+export interface IPayloadAccountTypeForm {
+  name: string;
+  category: string;
+}
+// ========= end related with modal account type form ===========
+
 // ========= related with modal account form ===========
 export interface IDataModalAccountForm {
   id: number | null;
