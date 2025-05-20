@@ -242,12 +242,13 @@
         <!-- END Contacts -->
       </div>
 
-      <!-- History tracking changes-->
-      @if (client()) {
-      <tracking-entity [tracking]="client()!.tracking"></tracking-entity>
-      }
       <!-- History -->
       <!-- End Data Pills -->
     </div>
   </div>
 </div>
+
+<!-- History tracking changes-->
+@if (client()) {
+<tracking-entity [tracking]="client()!.tracking"></tracking-entity>
+}

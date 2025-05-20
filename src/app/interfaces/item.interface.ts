@@ -1,3 +1,4 @@
+import { IAccount } from './account.interface';
 import { ITracking } from './tracking.interface';
 
 export interface IItemAndCount {
@@ -10,11 +11,11 @@ export interface IItem {
   name: string;
   cabys: ICabys;
   costPrice: number;
-  purchaseAccount: string;
+  purchaseAccount?: IAccount;
   purchaseTaxRate: string;
   purchaseDescription?: string;
   salePrice: number;
-  saleAccount: string;
+  saleAccount: IAccount;
   saleTaxRate: string;
   saleDescription?: string;
   createdAt: Date;
@@ -60,7 +61,7 @@ export interface IItemForSelect {
   name: string;
   cabys: ICabys;
   salePrice: number;
-  saleAccount: string;
+  saleAccount: IAccount;
   saleTaxRate: string;
   saleDescription?: string;
 }

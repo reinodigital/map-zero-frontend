@@ -16,15 +16,15 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ItemService } from '../../../../api';
+import { AccountService, ItemService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
 import { CabysSelectComponent } from '../../../../shared/components/cabys-select/cabys-select.component';
-import { formatDateToString } from '../../../../shared/helpers';
+import { formatDateToString, taxRateArray } from '../../../../shared/helpers';
 
 import { TypeMessageToast } from '../../../../enums';
-import { IItem } from '../../../../interfaces';
+import { IAccount, IItem } from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,12 +42,15 @@ export default class EditItemComponent {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private itemService = inject(ItemService);
+  private accountService = inject(AccountService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
 
   // DATA
   public itemId!: number;
   public item = signal<IItem | null>(null);
+  public accounts = signal<IAccount[]>([]);
+  public taxesArray = taxRateArray;
 
   // FORM
   public editItemForm = signal<FormGroup | null>(null);
@@ -62,6 +65,18 @@ export default class EditItemComponent {
 
   ngOnInit(): void {
     this.fetchItem();
+    this.fetchAccounts();
+  }
+
+  fetchAccounts() {
+    this.accountService
+      .fetchAll(999, 0, {})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resp) => {
+        if (resp && resp.accounts) {
+          this.accounts.set(resp.accounts);
+        }
+      });
   }
 
   fetchItem(): void {
@@ -85,8 +100,8 @@ export default class EditItemComponent {
         ],
         cabys: [this.item()?.cabys?.code ?? null, [Validators.required]],
         costPrice: [this.item()?.costPrice ?? '', [Validators.required]],
-        purchaseAccount: [
-          this.item()?.purchaseAccount ?? '300',
+        purchaseAccountId: [
+          this.item()?.purchaseAccount?.id ?? '',
           [Validators.required],
         ],
         purchaseTaxRate: [
@@ -95,7 +110,10 @@ export default class EditItemComponent {
         ],
         purchaseDescription: [this.item()?.purchaseDescription ?? '', []],
         salePrice: [this.item()?.salePrice ?? '', [Validators.required]],
-        saleAccount: [this.item()?.saleAccount ?? '200', [Validators.required]],
+        saleAccountId: [
+          this.item()?.saleAccount.id ?? '',
+          [Validators.required],
+        ],
         saleTaxRate: [this.item()?.saleTaxRate ?? '08', [Validators.required]],
         saleDescription: [this.item()?.saleDescription ?? '', []],
       })

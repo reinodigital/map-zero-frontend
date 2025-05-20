@@ -2,7 +2,9 @@ import { isPlatformBrowser, Location } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
+  OnInit,
   PLATFORM_ID,
   signal,
 } from '@angular/core';
@@ -13,14 +15,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { ItemService } from '../../../../api';
+import { AccountService, ItemService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { CabysSelectComponent } from '../../../../shared/components/cabys-select/cabys-select.component';
-import { formatDateToString } from '../../../../shared/helpers';
+import { formatDateToString, taxRateArray } from '../../../../shared/helpers';
 
 import { TypeMessageToast } from '../../../../enums';
+import { IAccount } from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,26 +34,31 @@ import { TypeMessageToast } from '../../../../enums';
   templateUrl: './new-item.component.html',
   styleUrl: './new-item.component.scss',
 })
-export default class NewItemComponent {
+export default class NewItemComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
+  private destroyRef = inject(DestroyRef);
   private fb = inject(FormBuilder);
   private location = inject(Location);
   private router = inject(Router);
   private itemService = inject(ItemService);
+  private accountService = inject(AccountService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
+
+  public accounts = signal<IAccount[]>([]);
+  public taxesArray = taxRateArray;
 
   // FORM
   public newItemForm = signal<FormGroup>(
     this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       cabys: [null, [Validators.required]],
-      costPrice: ['', [Validators.required]],
-      purchaseAccount: ['300', [Validators.required]],
-      purchaseTaxRate: ['08', [Validators.required]],
+      costPrice: ['', []],
+      purchaseAccountId: ['', []],
+      purchaseTaxRate: ['08', []],
       purchaseDescription: ['', []],
       salePrice: ['', [Validators.required]],
-      saleAccount: ['200', [Validators.required]],
+      saleAccountId: ['', [Validators.required]],
       saleTaxRate: ['08', [Validators.required]],
       saleDescription: ['', []],
     })
@@ -57,6 +66,21 @@ export default class NewItemComponent {
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
+  }
+
+  ngOnInit(): void {
+    this.fetchAccounts();
+  }
+
+  fetchAccounts() {
+    this.accountService
+      .fetchAll(999, 0, {})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resp) => {
+        if (resp && resp.accounts) {
+          this.accounts.set(resp.accounts);
+        }
+      });
   }
 
   validField(field: string): boolean {

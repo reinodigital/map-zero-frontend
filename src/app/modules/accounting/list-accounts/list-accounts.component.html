@@ -100,7 +100,12 @@
                 "
               >
                 <td>{{ account.code }}</td>
-                <td>{{ account.name }}</td>
+                <td class="fs-5">
+                  <div class="d-flex flex-column">
+                    <span class="text text-primary">{{ account.name }}</span>
+                    <small>{{ account.description }}</small>
+                  </div>
+                </td>
                 <td>{{ account.accountType.name }}</td>
               </tr>
               } @empty {

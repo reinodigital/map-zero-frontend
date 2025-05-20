@@ -1,11 +1,12 @@
 import { ICodeLabel } from '../../interfaces';
 
 export const taxRateArray: ICodeLabel[] = [
+  { code: '01', label: 'Tarifa 0% (Artículo 32, num 1, RLIVA)' },
   { code: '02', label: 'Tarifa reducida 1%' },
   { code: '03', label: 'Tarifa reducida 2%' },
   { code: '04', label: 'Tarifa reducida 4%' },
-  // { code: '05', label: 'Transitorio 0%' },
-  // { code: '06', label: 'Transitorio 4%' },
+  { code: '05', label: 'Transitorio 0%' },
+  { code: '06', label: 'Transitorio 4%' },
   { code: '07', label: 'Tarifa transitoria 8%' },
   { code: '08', label: 'Tarifa general 13%' },
   { code: '09', label: 'Tarifa reducida 0.5%' },
