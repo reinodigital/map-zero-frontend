@@ -99,22 +99,13 @@ export default class EditItemComponent {
           [Validators.required, Validators.minLength(2)],
         ],
         cabys: [this.item()?.cabys?.code ?? null, [Validators.required]],
-        costPrice: [this.item()?.costPrice ?? '', [Validators.required]],
-        purchaseAccountId: [
-          this.item()?.purchaseAccount?.id ?? '',
-          [Validators.required],
-        ],
-        purchaseTaxRate: [
-          this.item()?.purchaseTaxRate ?? '08',
-          [Validators.required],
-        ],
+        costPrice: [this.item()?.costPrice ?? null, []],
+        purchaseAccountId: [this.item()?.purchaseAccount?.id ?? '', []],
+        purchaseTaxRate: [this.item()?.purchaseTaxRate ?? '', []],
         purchaseDescription: [this.item()?.purchaseDescription ?? '', []],
-        salePrice: [this.item()?.salePrice ?? '', [Validators.required]],
-        saleAccountId: [
-          this.item()?.saleAccount.id ?? '',
-          [Validators.required],
-        ],
-        saleTaxRate: [this.item()?.saleTaxRate ?? '08', [Validators.required]],
+        salePrice: [this.item()?.salePrice ?? null, []],
+        saleAccountId: [this.item()?.saleAccount?.id ?? '', []],
+        saleTaxRate: [this.item()?.saleTaxRate ?? '', []],
         saleDescription: [this.item()?.saleDescription ?? '', []],
       })
     );

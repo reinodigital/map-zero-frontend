@@ -20,7 +20,12 @@ import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { AuthService, ItemService, ClientService } from '../../../../api';
+import {
+  AuthService,
+  ItemService,
+  ClientService,
+  AccountService,
+} from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormNewQuoteService } from '../form-new-quote.service';
@@ -39,11 +44,12 @@ import {
   StatusQuote,
 } from '../../../../enums';
 import {
-  IItemForSelect,
+  IItemForSelectOnSale,
   ShortAuth,
   ICodeLabel,
   ICommonSelect,
   IDataToCreateQuote,
+  IAccount,
 } from '../../../../interfaces';
 
 @Component({
@@ -67,16 +73,20 @@ export default class NewQuoteComponent implements OnInit {
   private location = inject(Location);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private accountService = inject(AccountService);
   private itemService = inject(ItemService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
 
   // ITEMS
-  public items = signal<IItemForSelect[]>([]);
+  public items = signal<IItemForSelectOnSale[]>([]);
 
   // SELLERS
   public sellers = signal<ShortAuth[]>([]);
+
+  // ACCOUNTS
+  public accounts = signal<IAccount[]>([]);
 
   // FORM
   public formNewQuoteService = inject(FormNewQuoteService);
@@ -99,7 +109,7 @@ export default class NewQuoteComponent implements OnInit {
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
         discount: [0, []],
-        account: ['200', [Validators.required]],
+        accountId: ['', [Validators.required]],
         taxRate: ['08', [Validators.required]],
       }),
       this.fb.group({
@@ -109,7 +119,7 @@ export default class NewQuoteComponent implements OnInit {
         quantity: [1, [Validators.required, Validators.min(1)]],
         price: ['', [Validators.required]],
         discount: [0, []],
-        account: ['200', [Validators.required]],
+        accountId: ['', [Validators.required]],
         taxRate: ['08', [Validators.required]],
       }),
     ]),
@@ -141,6 +151,7 @@ export default class NewQuoteComponent implements OnInit {
     this.fetchAllShortClients();
     this.fetchAllShortItems();
     this.fetchSellers();
+    this.fetchAccounts();
 
     // Set up listener for the initial quote item row
     if (this.quoteItems.controls.length === 2) {
@@ -152,6 +163,17 @@ export default class NewQuoteComponent implements OnInit {
     this.quoteItems.controls.forEach((control) => {
       this.setupItemGroupValueChangeListener(control as FormGroup);
     });
+  }
+
+  fetchAccounts() {
+    this.accountService
+      .fetchAll(999, 0, {})
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resp) => {
+        if (resp && resp.accounts) {
+          this.accounts.set(resp.accounts);
+        }
+      });
   }
 
   fetchAllShortClients(): void {
@@ -208,7 +230,7 @@ export default class NewQuoteComponent implements OnInit {
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required]],
       discount: [0, []],
-      account: ['200', [Validators.required]],
+      accountId: ['200', [Validators.required]],
       taxRate: ['08', [Validators.required]],
     });
 
@@ -258,7 +280,10 @@ export default class NewQuoteComponent implements OnInit {
           ); // Find the selected item from your items array
 
           if (selectedItem) {
-            itemGroup.controls['price'].patchValue(selectedItem.salePrice);
+            itemGroup.controls['accountId'].patchValue(
+              selectedItem.saleAccount?.id ?? ''
+            );
+            itemGroup.controls['price'].patchValue(selectedItem.salePrice ?? 0);
             itemGroup.controls['description'].patchValue(
               selectedItem.saleDescription
             );

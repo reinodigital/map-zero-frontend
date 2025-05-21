@@ -90,8 +90,8 @@
               @for (item of items(); track item.id) {
               <tr class="admin_tr" [routerLink]="'/detail-item/' + item.id">
                 <td>{{ item.name }}</td>
-                <td>{{ item.costPrice }}</td>
-                <td>{{ item.salePrice }}</td>
+                <td>{{ item.costPrice ?? "_" }}</td>
+                <td>{{ item.salePrice ?? "_" }}</td>
               </tr>
               } @empty {
               <tr>

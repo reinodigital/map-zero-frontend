@@ -128,8 +128,13 @@
               <input type="number" formControlName="discount" placeholder="%" />
             </td>
             <td>
-              <select formControlName="account">
-                <option value="200">200 - 523601 Ventas de mercadería</option>
+              <select formControlName="accountId">
+                <option value="">--Seleccione--</option>
+                @for (account of accounts(); track account.id) {
+                <option [value]="account.id">
+                  {{`${account.code} - ${account.name}`}}
+                </option>
+                }
               </select>
             </td>
             <td>

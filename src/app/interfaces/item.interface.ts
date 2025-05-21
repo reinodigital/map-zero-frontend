@@ -10,13 +10,13 @@ export interface IItem {
   id: number;
   name: string;
   cabys: ICabys;
-  costPrice: number;
+  costPrice?: number;
   purchaseAccount?: IAccount;
-  purchaseTaxRate: string;
+  purchaseTaxRate?: string;
   purchaseDescription?: string;
-  salePrice: number;
-  saleAccount: IAccount;
-  saleTaxRate: string;
+  salePrice?: number;
+  saleAccount?: IAccount;
+  saleTaxRate?: string;
   saleDescription?: string;
   createdAt: Date;
   tracking: ITracking[];
@@ -56,12 +56,12 @@ export interface IDataToUpdateItem {
   saleDescription?: string;
 }
 
-export interface IItemForSelect {
+export interface IItemForSelectOnSale {
   id: number;
   name: string;
   cabys: ICabys;
-  salePrice: number;
-  saleAccount: IAccount;
-  saleTaxRate: string;
+  salePrice?: number;
+  saleAccount?: IAccount;
+  saleTaxRate?: string;
   saleDescription?: string;
 }

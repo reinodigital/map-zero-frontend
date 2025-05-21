@@ -81,32 +81,38 @@
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Coste </span>
-            <span class="ms-4">{{ item()!.costPrice }}</span>
+            <span class="ms-4">{{ item()!.costPrice ?? "_" }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Cuenta de compra </span>
             <span class="ms-4">{{ item()!.purchaseAccount?.name ?? "_" }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Impuesto compra </span>
-            <span class="ms-4">{{
-              listItemsService.getTaxRateLabel(item()!.purchaseTaxRate)
-            }}</span>
+            <span class="fw-bold">Impuesto de compra </span>
+            <span class="ms-4">
+              {{
+                item()!.purchaseTaxRate
+                  ? listItemsService.getTaxRateLabel(item()!.purchaseTaxRate!)
+                  : "_"
+              }}
+            </span>
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Precio venta </span>
-            <span class="ms-4">{{ item()!.salePrice }}</span>
+            <span class="ms-4">{{ item()!.salePrice ?? "_" }}</span>
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Cuenta de venta </span>
             <span class="ms-4">
-              {{ `${item()!.saleAccount.code} - ${item()!.saleAccount.name}` }}
+              {{ `${item()!.saleAccount?.code ?? ''} - ${item()!.saleAccount?.name ?? ''}` }}
             </span>
           </li>
           <li class="list-group-item list-group-item-light">
             <span class="fw-bold">Impuesto venta </span>
             <span class="ms-4">{{
-              listItemsService.getTaxRateLabel(item()!.saleTaxRate)
+              item()!.saleTaxRate
+                ? listItemsService.getTaxRateLabel(item()!.saleTaxRate!)
+                : "_"
             }}</span>
           </li>
         </ul>

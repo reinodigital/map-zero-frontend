@@ -1,3 +1,4 @@
+import { IAccount } from './account.interface';
 import { IClient, IShortSelectClient } from './client.interface';
 import { ShortAuth } from './commons.interface';
 import { IItem } from './item.interface';
@@ -32,7 +33,7 @@ export interface IQuoteItem {
   quantity: number;
   price: number;
   discount: number;
-  account?: string;
+  account?: IAccount;
   taxRate?: string;
   amount: number;
   item: IItem;

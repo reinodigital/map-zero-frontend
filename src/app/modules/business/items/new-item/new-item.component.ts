@@ -53,13 +53,13 @@ export default class NewItemComponent implements OnInit {
     this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
       cabys: [null, [Validators.required]],
-      costPrice: ['', []],
+      costPrice: [null, []],
       purchaseAccountId: ['', []],
-      purchaseTaxRate: ['08', []],
+      purchaseTaxRate: ['', []],
       purchaseDescription: ['', []],
-      salePrice: ['', [Validators.required]],
-      saleAccountId: ['', [Validators.required]],
-      saleTaxRate: ['08', [Validators.required]],
+      salePrice: [null, []],
+      saleAccountId: ['', []],
+      saleTaxRate: ['', []],
       saleDescription: ['', []],
     })
   );
