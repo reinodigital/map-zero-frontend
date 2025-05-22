@@ -1,0 +1,22 @@
+<div class="custom_select">
+  <input
+    type="text"
+    placeholder="buscar por nombre, cabys o código"
+    [formControl]="inputValue()"
+  />
+  @if (suggestions().length) {
+  <ul class="suggestions">
+    @for (suggestion of suggestions(); track suggestion.name) {
+    <li class="suggestion_item" (click)="selectSuggestion(suggestion)">
+      <div class="d-flex flex-column">
+        <span class="suggestion_item_cabys">{{ suggestion.cabys }}</span>
+        <span class="suggestion_item_name">{{ suggestion.shortName }}</span>
+        <span class="suggestion_item_name_little">
+          {{ suggestion.shortName }}
+        </span>
+      </div>
+    </li>
+    }
+  </ul>
+  }
+</div>

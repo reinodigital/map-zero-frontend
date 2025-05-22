@@ -1,0 +1,53 @@
+.custom_select {
+  position: relative;
+}
+
+ul.suggestions {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 3.2rem;
+  left: 0;
+  width: 40rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: var(--background);
+  border: 2px solid var(--black);
+  z-index: 980;
+}
+
+li {
+  cursor: pointer;
+  color: var(--black);
+  font-size: 1.3rem;
+  padding: 10px;
+
+  &:hover {
+    background-color: var(--light);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .suggestion_item_cabys {
+    font-size: 1.1rem;
+    color: var(--text);
+    background-color: var(--white);
+    border-radius: 0.4rem;
+    border: 1px solid var(--black);
+    padding: 0rem 0.2rem;
+    width: fit-content;
+  }
+  .suggestion_item_name {
+    color: var(--black);
+    font-size: 1.6rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
+  .suggestion_item_name_little {
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--text);
+  }
+}

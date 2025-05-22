@@ -30,6 +30,7 @@ import { CustomToastService } from '../../../../shared/services/custom-toast.ser
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormNewQuoteService } from '../form-new-quote.service';
 
+import { CustomSelectComponent } from '../../../../shared/components/custom-select/custom-select.component';
 import { QuickDatePickerComponent } from '../../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../../shared/components/submit-button/submit-button.component';
 import {
@@ -58,6 +59,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    // CustomSelectComponent,
     ReactiveFormsModule,
     NgSelectModule,
     QuickDatePickerComponent,
@@ -149,7 +151,7 @@ export default class NewQuoteComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllShortClients();
-    this.fetchAllShortItems();
+    this.fetchAllShortItems(); // now instead of a normal select, we use a custom select
     this.fetchSellers();
     this.fetchAccounts();
 

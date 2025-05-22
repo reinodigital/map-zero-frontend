@@ -12,6 +12,7 @@ import {
   IDataToUpdateItem,
   IItemAndCount,
   IItemForSelectOnSale,
+  IItemSuggestion,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -94,6 +95,17 @@ export class ItemService {
 
     return this.http
       .get<IItemForSelectOnSale[]>(url, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  getSuggestions(terminus: string): Observable<IItemSuggestion[]> {
+    const url = `${this._baseUrl}/item/suggestions?terminus=${terminus}`;
+
+    return this.http
+      .get<IItemSuggestion[]>(url, { headers: this.getToken })
       .pipe(
         map((resp) => resp),
         catchError((err) => of(err.error))
