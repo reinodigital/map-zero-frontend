@@ -71,5 +71,8 @@ export interface IItemSuggestion {
   name: string;
   shortName: string;
   cabys: string;
+  description: string;
+  salePrice: number;
+  saleAccountId: number | null;
   // type: string | null; // in case of make it generic
 }

@@ -45,13 +45,13 @@ import {
   StatusQuote,
 } from '../../../../enums';
 import {
-  IItemForSelectOnSale,
   ShortAuth,
   ICodeLabel,
   ICommonSelect,
   IDataToCreateQuote,
   IAccount,
 } from '../../../../interfaces';
+import { filter } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -59,7 +59,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
-    // CustomSelectComponent,
+    CustomSelectComponent,
     ReactiveFormsModule,
     NgSelectModule,
     QuickDatePickerComponent,
@@ -76,13 +76,10 @@ export default class NewQuoteComponent implements OnInit {
   private router = inject(Router);
   private authService = inject(AuthService);
   private accountService = inject(AccountService);
-  private itemService = inject(ItemService);
+  // private itemService = inject(ItemService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
-
-  // ITEMS
-  public items = signal<IItemForSelectOnSale[]>([]);
 
   // SELLERS
   public sellers = signal<ShortAuth[]>([]);
@@ -104,26 +101,8 @@ export default class NewQuoteComponent implements OnInit {
     currency: ['USD', [Validators.required]],
     terms: ['', []],
     quoteItems: this.fb.array([
-      this.fb.group({
-        itemId: ['', [Validators.required]],
-        sellerUid: [null, []],
-        description: ['', []],
-        quantity: [1, [Validators.required, Validators.min(1)]],
-        price: ['', [Validators.required]],
-        discount: [0, []],
-        accountId: ['', [Validators.required]],
-        taxRate: ['08', [Validators.required]],
-      }),
-      this.fb.group({
-        itemId: ['', [Validators.required]],
-        sellerUid: [null, []],
-        description: ['', []],
-        quantity: [1, [Validators.required, Validators.min(1)]],
-        price: ['', [Validators.required]],
-        discount: [0, []],
-        accountId: ['', [Validators.required]],
-        taxRate: ['08', [Validators.required]],
-      }),
+      this.createQuoteItemFormGroup(),
+      this.createQuoteItemFormGroup(),
     ]),
   });
 
@@ -151,15 +130,8 @@ export default class NewQuoteComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAllShortClients();
-    this.fetchAllShortItems(); // now instead of a normal select, we use a custom select
     this.fetchSellers();
     this.fetchAccounts();
-
-    // Set up listener for the initial quote item row
-    if (this.quoteItems.controls.length === 2) {
-      this.setupItemIdChangeListener(0);
-      this.setupItemIdChangeListener(1);
-    }
 
     // Set up listeners for all existing quote item rows at the beginning
     this.quoteItems.controls.forEach((control) => {
@@ -189,17 +161,6 @@ export default class NewQuoteComponent implements OnInit {
       });
   }
 
-  fetchAllShortItems(): void {
-    this.itemService
-      .fetchAllForSelect()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((resp) => {
-        if (resp && resp.length) {
-          this.items.set(resp);
-        }
-      });
-  }
-
   fetchSellers(): void {
     this.authService.fetchAllSellers().subscribe((resp) => {
       if (resp && resp.length) {
@@ -211,7 +172,6 @@ export default class NewQuoteComponent implements OnInit {
   validField(controlPath: string): boolean {
     const control = this.newQuoteForm.get(controlPath);
     if (!control) return false;
-
     return control.touched && control.invalid;
   }
 
@@ -224,21 +184,26 @@ export default class NewQuoteComponent implements OnInit {
     return this.newQuoteForm.get('quoteItems') as FormArray;
   }
 
-  addQuoteItem(): void {
+  createQuoteItemFormGroup(): FormGroup {
     const itemGroup = this.fb.group({
-      itemId: ['', [Validators.required]],
+      itemId: [null, [Validators.required]],
       sellerUid: [null, []],
       description: ['', []],
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required]],
       discount: [0, []],
-      accountId: ['200', [Validators.required]],
+      accountId: ['', [Validators.required]],
       taxRate: ['08', [Validators.required]],
     });
 
-    this.quoteItems.push(itemGroup);
-    this.setupItemIdChangeListener(this.quoteItems.length - 1);
-    this.setupItemGroupValueChangeListener(itemGroup);
+    this.setupItemGroupValueChangeListener(itemGroup); // Set up listeners immediately
+
+    return itemGroup;
+  }
+
+  addQuoteItem(): void {
+    this.quoteItems.push(this.createQuoteItemFormGroup());
+    this.formNewQuoteService.calculateTotals(this.quoteItems);
   }
 
   removeQuoteItem(index: number): void {
@@ -247,60 +212,41 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   setupItemGroupValueChangeListener(itemGroup: FormGroup): void {
-    itemGroup.controls['quantity'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((_) => {
-        this.formNewQuoteService.calculateTotals(this.quoteItems);
-      });
-    itemGroup.controls['price'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((_) => {
-        this.formNewQuoteService.calculateTotals(this.quoteItems);
-      });
-    itemGroup.controls['discount'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((_) => {
-        this.formNewQuoteService.calculateTotals(this.quoteItems);
-      });
-    itemGroup.controls['taxRate'].valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((_) => {
+    // Only subscribe once per itemGroup, not per itemId, etc.
+    itemGroup.valueChanges
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        filter(
+          (value) =>
+            value.quantity !== null &&
+            value.price !== null &&
+            value.discount !== null
+        ) // Only calculate if essential values are present
+      )
+      .subscribe(() => {
         this.formNewQuoteService.calculateTotals(this.quoteItems);
       });
   }
 
-  setupItemIdChangeListener(index: number): void {
-    const itemGroup = this.quoteItems.controls[index] as FormGroup;
-    const itemIdControl = itemGroup.controls['itemId'];
+  onItemSelectedInRow(selectedItem: any, rowIndex: number): void {
+    const itemGroup = this.quoteItems.at(rowIndex) as FormGroup;
 
-    itemIdControl.valueChanges
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((selectedItemId) => {
-        if (selectedItemId) {
-          const selectedItem = this.items().find(
-            (item) => item.id === +selectedItemId
-          ); // Find the selected item from your items array
-
-          if (selectedItem) {
-            itemGroup.controls['accountId'].patchValue(
-              selectedItem.saleAccount?.id ?? ''
-            );
-            itemGroup.controls['price'].patchValue(selectedItem.salePrice ?? 0);
-            itemGroup.controls['description'].patchValue(
-              selectedItem.saleDescription
-            );
-          } else {
-            itemGroup.controls['price'].reset();
-            itemGroup.controls['description'].reset();
-          }
-
-          this.formNewQuoteService.calculateTotals(this.quoteItems);
-        } else {
-          itemGroup.controls['price'].reset();
-          itemGroup.controls['description'].reset();
-        }
+    if (itemGroup && selectedItem) {
+      // The itemId is already set by the CVA via formControlName="itemId"
+      // Now, update the other related controls in this specific row
+      itemGroup.patchValue({
+        description: selectedItem.description || '',
+        price: selectedItem.salePrice ?? 0,
+        accountId: selectedItem.saleAccountId ?? '',
+        // You might also want to update taxRate if it's tied to the item
+        // taxRate: selectedItem.taxRateCode ?? '08',
       });
+
+      // Recalculate totals after patching values
+      this.formNewQuoteService.calculateTotals(this.quoteItems);
+    }
   }
+
   // ==== END QUOTE ITEMS =====
   onCustomSubmitBtnClicked(action: string): void {
     this.callToAction(action);

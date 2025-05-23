@@ -94,16 +94,11 @@
             [id]="'row_' + i"
           >
             <td>
-              <!-- <custom-select formControlName="itemId" (itemSelected)="onItemSelectedInRow($event, i)"></custom-select> -->
-              <ng-select
-                [items]="items()"
-                bindLabel="name"
-                bindValue="id"
+              <custom-select
                 formControlName="itemId"
-                [searchable]="true"
-              >
-              </ng-select>
-              @if (validField('itemId')) {
+                (itemSelectedEmitter)="onItemSelectedInRow($event, i)"
+              ></custom-select>
+              @if (validField('quoteItems.' + i + '.itemId')) {
               <small class="text-danger"> item es requerido </small>
               }
             </td>

@@ -3,13 +3,18 @@ import {
   Component,
   DestroyRef,
   inject,
-  input,
   output,
   signal,
+  forwardRef,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, filter, switchMap } from 'rxjs';
+import { debounceTime, filter, switchMap, tap } from 'rxjs';
 
 import { ItemService } from '../../../api';
 
@@ -22,81 +27,127 @@ import { IItemSuggestion } from '../../../interfaces';
   imports: [ReactiveFormsModule],
   templateUrl: './custom-select.component.html',
   styleUrl: './custom-select.component.scss',
+  // Provide the ControlValueAccessor
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => CustomSelectComponent),
+      multi: true,
+    },
+  ],
 })
-export class CustomSelectComponent {
+export class CustomSelectComponent implements ControlValueAccessor {
   private destroyRef = inject(DestroyRef);
   private itemService = inject(ItemService);
 
   // FORM CONTROL
-  public inputValue = signal<FormControl>(new FormControl(''));
+  public searchControl = new FormControl<string>('');
 
-  // SUGGESTION
-  public suggestions = signal<IItemSuggestion[]>([]);
-  public selectedSuggestion = signal<string>('');
+  // SUGGESTED ITEMS
+  public items = signal<IItemSuggestion[]>([]);
+  public selectedItem = signal<string>('');
   public notResultsString = 'sin resultados encontrados';
 
   // CONTROL FLAG
-  private _isSelectingSuggestion: boolean = false; // New flag to control search trigger
+  private _isSelectingItem = signal<boolean>(false); // New flag to control search trigger
 
-  // OUTPUT EMITTER for the selected item
-  public itemSelected = output<IItemSuggestion>(); // New output
+  // OUTPUT
+  public itemSelectedEmitter = output<IItemSuggestion>();
+
+  // CVA related properties
+  private onChange: (value: any) => void = () => {};
+  private onTouched: () => void = () => {};
+  public isDisabled: boolean = false;
 
   ngOnInit(): void {
-    this.onInputChange();
+    this.setupSearchControlListener();
   }
 
-  onInputChange(): void {
-    this.inputValue()
-      .valueChanges.pipe(
+  // --- ControlValueAccessor methods ---
+  writeValue(value: any): void {
+    if (typeof value === 'string') {
+      this.searchControl.setValue(value, { emitEvent: false });
+    } else if (typeof value === 'number') {
+      this.searchControl.setValue('', { emitEvent: false }); // Clear input if ID is set initially
+    } else {
+      this.searchControl.setValue('', { emitEvent: false }); // Clear input for null/undefined
+    }
+
+    // When the form wants to set the value, we don't want it to trigger a search
+    this._isSelectingItem.set(true);
+    setTimeout(() => this._isSelectingItem.set(false), 50);
+  }
+
+  // Registers a callback function that is called when the control's value changes in the UI.
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  // Registers a callback function that is called when the control receives a touch event.
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  // Sets the disabled state for the control.
+  setDisabledState?(isDisabled: boolean): void {
+    this.isDisabled = isDisabled;
+    if (isDisabled) {
+      this.searchControl.disable();
+    } else {
+      this.searchControl.enable();
+    }
+  }
+  // --- End ControlValueAccessor methods ---
+
+  setupSearchControlListener(): void {
+    this.searchControl.valueChanges
+      .pipe(
         takeUntilDestroyed(this.destroyRef),
         debounceTime(500),
-        filter(() => !this._isSelectingSuggestion), // Ignore value changes when selecting a suggestion
-        switchMap((query: string) => {
+        filter(() => !this._isSelectingItem()), // Ignore when selecting
+        tap(() => this.onTouched()), // Mark touched when user types
+        switchMap((query: string | null) => {
           const trimmedQuery = query ? query.trim() : '';
 
-          // Avoid unnecessary api call when input search is reset
           if (!trimmedQuery || trimmedQuery.length < 3) {
-            this.suggestions.set([]);
-            this.selectedSuggestion.set('');
-            return []; // Empty observable to avoid unnecessary API call
+            this.items.set([]);
+            // When the input is cleared by the user, we should also clear the form control's value
+            this.onChange(null); // Emit null or empty string to parent form control
+            return [];
           }
 
-          // this.selectedSuggestion.set(trimmedQuery);
           return this.itemService.getSuggestions(trimmedQuery);
         })
       )
-      .subscribe((suggestions: IItemSuggestion[]) => {
-        if (
-          suggestions.length === 1 &&
-          suggestions[0].name === this.notResultsString
-        ) {
-          this.suggestions.set(suggestions);
+      .subscribe((items: IItemSuggestion[]) => {
+        if (items.length === 1 && items[0].name === this.notResultsString) {
+          this.items.set(items);
           setTimeout(() => {
-            this.suggestions.set([]);
+            this.items.set([]);
           }, 2000);
         } else {
-          this.suggestions.set(suggestions);
+          this.items.set(items);
         }
       });
   }
 
-  public selectSuggestion(suggestion: IItemSuggestion): void {
-    if (!suggestion.id) {
+  public selectItem(item: IItemSuggestion): void {
+    if (!item.id) {
       return;
     }
 
-    // Set the flag to true BEFORE updating the input value
-    this._isSelectingSuggestion = true;
+    this._isSelectingItem.set(true);
+    this.searchControl.setValue(item.shortName, { emitEvent: false }); // Update visual input
+    this.items.set([]);
 
-    this.inputValue().setValue(suggestion.shortName, { emitEvent: false });
+    // Emit the actual ID to the parent form control (itemId)
+    this.onChange(item.id); // This is how you update the parent FormArray's itemId!
+    this.onTouched(); // Mark the control as touched
 
-    this.suggestions.set([]);
+    this.itemSelectedEmitter.emit(item);
 
-    this.itemSelected.emit(suggestion);
-
-    // This delay ensures that any immediate subsequent actions don't re-trigger accidentally
     setTimeout(() => {
-      this._isSelectingSuggestion = false;
-    }, 50); // A small delay is usually sufficient (e.g., 50ms)
+      this._isSelectingItem.set(false);
+    }, 50); // Small delay to prevent re-triggering search immediately
   }
 }
