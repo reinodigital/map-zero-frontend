@@ -192,8 +192,8 @@ export default class NewQuoteComponent implements OnInit {
       quantity: [1, [Validators.required, Validators.min(1)]],
       price: ['', [Validators.required]],
       discount: [0, []],
-      accountId: ['', [Validators.required]],
-      taxRate: ['08', [Validators.required]],
+      accountId: ['', [Validators.required, Validators.minLength(1)]],
+      taxRate: ['08', [Validators.required, , Validators.minLength(1)]],
     });
 
     this.setupItemGroupValueChangeListener(itemGroup); // Set up listeners immediately
@@ -253,6 +253,8 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   callToAction(action: string): void {
+    this.formErrorService.throwFormErrors(this.newQuoteForm);
+
     if (!this.formNewQuoteService.verifyQuoteItems(this.quoteItems)) {
       this.customToastService.add({
         message: 'Uno o más items tienen error.',

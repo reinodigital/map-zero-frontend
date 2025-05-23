@@ -72,7 +72,7 @@
               <label>Precio</label>
             </th>
             <th class="col-1">
-              <label>Descuento</label>
+              <label>Descuento (%)</label>
             </th>
             <th class="col-1">
               <label>Cuenta</label>
@@ -108,16 +108,14 @@
             </td>
             <td>
               <input type="number" formControlName="quantity" />
-              @if (validField('quantity')) {
-              <small class="text-danger">
-                cantidad debe ser mayor o igual 1
-              </small>
+              @if (validField('quoteItems.' + i + '.quantity')) {
+              <small class="text-danger"> cantidad debe ser > 0 </small>
               }
             </td>
             <td>
               <input type="number" formControlName="price" />
-              @if (validField('price')) {
-              <small class="text-danger"> formato precio incorrecto </small>
+              @if (validField('quoteItems.' + i + '.price')) {
+              <small class="text-danger"> precio incorrecto </small>
               }
             </td>
             <td>
@@ -132,6 +130,9 @@
                 </option>
                 }
               </select>
+              @if (validField('quoteItems.' + i + '.accountId')) {
+              <small class="text-danger"> contabilidad es requerido </small>
+              }
             </td>
             <td>
               <select formControlName="taxRate">
@@ -139,6 +140,9 @@
                 <option [value]="tax.code">{{ tax.label }}</option>
                 }
               </select>
+              @if (validField('quoteItems.' + i + '.taxRate')) {
+              <small class="text-danger"> impuesto es requerido </small>
+              }
             </td>
             <td>
               <ng-select
