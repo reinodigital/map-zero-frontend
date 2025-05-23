@@ -218,7 +218,7 @@ export class DetailQuoteService {
       if (election) {
         this.quoteService
           .removeOne(quote.id, formatDateToString(new Date()))
-          .subscribe(this.processResponse);
+          .subscribe((resp) => this.processResponse(resp));
       }
     });
   }
