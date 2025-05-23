@@ -100,11 +100,11 @@ export default class ListQuotesComponent {
   fillOutStatusQuote(statusCounts: Record<string, number> | null): void {
     if (!statusCounts) return;
 
-    this.totalDraft.set(statusCounts[StatusQuote.DRAFT]);
-    this.totalSent.set(statusCounts[StatusQuote.SENT]);
-    this.totalAccepted.set(statusCounts[StatusQuote.ACCEPTED]);
-    this.totalDeclined.set(statusCounts[StatusQuote.DECLINED]);
-    this.totalInvoiced.set(statusCounts[StatusQuote.INVOICED]);
+    this.totalDraft.set(statusCounts[StatusQuote.DRAFT] ?? 0);
+    this.totalSent.set(statusCounts[StatusQuote.SENT] ?? 0);
+    this.totalAccepted.set(statusCounts[StatusQuote.ACCEPTED] ?? 0);
+    this.totalDeclined.set(statusCounts[StatusQuote.DECLINED] ?? 0);
+    this.totalInvoiced.set(statusCounts[StatusQuote.INVOICED] ?? 0);
   }
 
   // FILTERS

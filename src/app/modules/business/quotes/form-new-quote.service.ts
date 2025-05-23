@@ -8,6 +8,7 @@ import { CustomToastService } from '../../../shared/services/custom-toast.servic
 
 import { getTaxRateValue } from '../../../shared/helpers';
 import { CustomModalSendQuoteEmailRecipientComponent } from '../../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
+import { roundToTwoDecimals } from '../../../shared/helpers/round-two-decimals.helper';
 
 import { NewQuoteFormAction, TypeMessageToast } from '../../../enums';
 import {
@@ -46,40 +47,43 @@ export class FormNewQuoteService {
     const subtotal = quoteItems.controls.reduce((sum, control) => {
       const quantity = control.get('quantity')?.value || 0;
       const price = control.get('price')?.value || 0;
-      return sum + quantity * price;
+      return sum + quantity * roundToTwoDecimals(price);
     }, 0);
 
     // total discount
     const totalDiscount = quoteItems.controls.reduce((sum, control) => {
       const quantity = control.get('quantity')?.value || 0;
       const price = control.get('price')?.value || 0;
+      const roundedPrice = roundToTwoDecimals(price);
       const discount = control.get('discount')?.value || 0;
-      const discountAmount = (quantity * price * discount) / 100;
+      const discountAmount = (quantity * roundedPrice * discount) / 100;
       return sum + discountAmount;
     }, 0);
 
     // pre tax total
-    const preTaxTotal = subtotal - totalDiscount;
+    const preTaxTotal =
+      roundToTwoDecimals(subtotal) - roundToTwoDecimals(totalDiscount);
 
     // total tax amount
     let totalTaxAmount = 0;
     quoteItems.controls.forEach((control) => {
       const quantity = control.get('quantity')?.value || 0;
       const price = control.get('price')?.value || 0;
+      const roundedPrice = roundToTwoDecimals(price);
       const discount = control.get('discount')?.value || 0;
-      const discountAmount = (quantity * price * discount) / 100;
+      const discountAmount = (quantity * roundedPrice * discount) / 100;
 
       const taxRateCode = control.get('taxRate')?.value || '08';
-      const taxableAmount = quantity * price - discountAmount;
+      const taxableAmount = quantity * roundedPrice - discountAmount;
       totalTaxAmount += (taxableAmount * getTaxRateValue(taxRateCode)) / 100;
     });
 
-    this.subtotal.set(subtotal);
-    this.totalDiscount.set(totalDiscount);
-    this.totalTax.set(totalTaxAmount);
+    this.subtotal.set(roundToTwoDecimals(subtotal));
+    this.totalDiscount.set(roundToTwoDecimals(totalDiscount));
+    this.totalTax.set(roundToTwoDecimals(totalTaxAmount));
 
     // total
-    this.totalAmount.set(preTaxTotal + totalTaxAmount);
+    this.totalAmount.set(roundToTwoDecimals(preTaxTotal + totalTaxAmount));
   }
 
   public verifyQuoteItems(quoteItems: FormArray): boolean {
