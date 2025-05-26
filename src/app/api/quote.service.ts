@@ -9,7 +9,7 @@ import {
   IMessage,
   IQuote,
   IQuoteAndCount,
-  IDataToSubmitAndSaveNewQuote,
+  IDataToCreateQuote,
   IDataEmailForSendQuote,
   IMarkAndChangeStatus,
 } from '../interfaces/index';
@@ -36,7 +36,7 @@ export class QuoteService {
     return new HttpHeaders().set('Authorization', `Bearer `);
   }
 
-  create(data: IDataToSubmitAndSaveNewQuote): Observable<IQuote | any> {
+  create(data: IDataToCreateQuote): Observable<IQuote | any> {
     const url = `${this._baseUrl}/quote`;
 
     return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(

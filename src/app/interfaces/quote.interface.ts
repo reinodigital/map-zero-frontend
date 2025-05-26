@@ -54,6 +54,7 @@ export interface IDataToCreateQuote {
 }
 
 export interface IDataToCreateQuoteItem {
+  id?: number; // optional for new items
   itemId: number;
   sellerUid: number | null;
   description?: string;
@@ -76,11 +77,6 @@ export interface ICustomDataToModalEmailSendQuote {
   terms?: string;
   // reference properties
   total: number;
-}
-
-// DATA SUBMIT NEW QUOTE ALWAYS
-export interface IDataToSubmitAndSaveNewQuote {
-  quote: IDataToCreateQuote;
 }
 
 export interface IDataEmailForSendQuote {

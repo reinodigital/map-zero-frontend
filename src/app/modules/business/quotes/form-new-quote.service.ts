@@ -13,7 +13,6 @@ import { roundToTwoDecimals } from '../../../shared/helpers/round-two-decimals.h
 import { NewQuoteFormAction, TypeMessageToast } from '../../../enums';
 import {
   IDataToCreateQuote,
-  IDataToSubmitAndSaveNewQuote,
   ICustomDataToModalEmailSendQuote,
   IDataEmailForSendQuote,
 } from '../../../interfaces';
@@ -102,12 +101,8 @@ export class FormNewQuoteService {
 
   // ========= Actions Submit ============
   public onSaveAction(data: IDataToCreateQuote): void {
-    const dataBackend: IDataToSubmitAndSaveNewQuote = {
-      quote: data,
-    };
-
     this.isFormSubmitting.set(true);
-    this.quoteService.create(dataBackend).subscribe((resp) => {
+    this.quoteService.create(data).subscribe((resp) => {
       if (resp && resp.id) {
         this.customToastService.add({
           message: `Cotización generada con estado ${resp.status} correctamente.`,
@@ -160,12 +155,10 @@ export class FormNewQuoteService {
     data: IDataToCreateQuote,
     dataEmail: IDataEmailForSendQuote
   ): void {
-    const dataBackend = { quote: data };
-
-    this.quoteService.create(dataBackend).subscribe((resp) => {
+    this.quoteService.create(data).subscribe((resp) => {
       if (resp && resp.id) {
         this.customToastService.add({
-          message: `Cotización generada con estado ${dataBackend.quote.status} correctamente.`,
+          message: `Cotización generada con estado ${data.status} correctamente.`,
           type: TypeMessageToast.SUCCESS,
           duration: 8000,
         });
