@@ -50,6 +50,13 @@ export class FormNewQuoteService {
   public totalTax = signal<number>(0);
   public totalAmount = signal<number>(0);
 
+  public cleanTotalValues(): void {
+    this.subtotal.set(0);
+    this.totalDiscount.set(0);
+    this.totalTax.set(0);
+    this.totalAmount.set(0);
+  }
+
   public calculateTotals(quoteItems: FormArray): void {
     // subtotal
     const subtotal = quoteItems.controls.reduce((sum, control) => {

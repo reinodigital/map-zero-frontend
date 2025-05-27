@@ -6,11 +6,12 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { QuoteService } from '../../../../api';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { DetailQuoteService } from '../detail-quote.service';
 
 import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
@@ -35,9 +36,8 @@ import { IQuote } from '../../../../interfaces';
 export default class DetailQuoteComponent {
   private platformId = inject(PLATFORM_ID);
   private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
+  private commonAdminService = inject(CommonAdminService);
   private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
 
   private quoteService = inject(QuoteService);
   public detailQuoteService = inject(DetailQuoteService);
@@ -114,16 +114,6 @@ export default class DetailQuoteComponent {
 
   /* redirects */
   comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-quotes');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+    this.commonAdminService.comeBackToList('/list-quotes');
   }
 }

@@ -15,6 +15,7 @@ import {
 import { Router } from '@angular/router';
 
 import { AuthService } from '../../../../api';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
@@ -32,7 +33,7 @@ import { IAuthToSignUp } from '../../../../interfaces';
 export default class NewEmployeeComponent {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
-  private location = inject(Location);
+  private commonAdminService = inject(CommonAdminService);
   private authService = inject(AuthService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
@@ -70,15 +71,6 @@ export default class NewEmployeeComponent {
       this.newEmployeeForm().controls[field].touched &&
       this.newEmployeeForm().controls[field].invalid
     );
-  }
-
-  // Redirect to list, but if filters applies then keep them
-  comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-employees');
-    }
   }
 
   onSubmit(): void {
@@ -123,11 +115,7 @@ export default class NewEmployeeComponent {
   }
 
   // --------- HELPERS ----------
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
-    // return true => There is a back URL
-    // return false => There is no back URL or it's the initial navigation
+  comeBackToList(): void {
+    this.commonAdminService.comeBackToList('/list-employees');
   }
 }

@@ -1,4 +1,4 @@
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,10 +7,11 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { ListItemsService } from '../list-items.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 
 import { ItemService } from '../../../../api';
@@ -27,9 +28,8 @@ import { IItem } from '../../../../interfaces';
 export default class DetailItemComponent {
   private platformId = inject(PLATFORM_ID);
   private activatedRoute = inject(ActivatedRoute);
-  private router = inject(Router);
+  private commonAdminService = inject(CommonAdminService);
   private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
 
   private itemService = inject(ItemService);
   public listItemsService = inject(ListItemsService);
@@ -63,16 +63,6 @@ export default class DetailItemComponent {
 
   // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-items');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+    this.commonAdminService.comeBackToList('/list-items');
   }
 }

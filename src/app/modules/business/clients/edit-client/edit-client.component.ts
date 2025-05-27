@@ -5,7 +5,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -17,6 +17,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AuthService, ClientService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { formatDateToString } from '../../../../shared/helpers';
 
@@ -34,7 +35,7 @@ import { IClient, ShortAuth, IClientToUpdate } from '../../../../interfaces';
 export default class EditClientComponent {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
-  private location = inject(Location);
+  private commonAdminService = inject(CommonAdminService);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
@@ -174,18 +175,7 @@ export default class EditClientComponent {
   }
 
   // --------- HELPERS ----------
-  // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-clients');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+    this.commonAdminService.comeBackToList('/list-clients');
   }
 }

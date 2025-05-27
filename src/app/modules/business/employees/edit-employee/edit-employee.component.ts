@@ -1,5 +1,5 @@
 import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   FormBuilder,
   FormGroup,
@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
 import { SecurityRoles, TypeMessageToast } from '../../../../enums';
@@ -24,7 +25,7 @@ import { IAuth, IAuthToUpdate } from '../../../../interfaces';
 export default class EditEmployeeComponent {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
-  private location = inject(Location);
+  private commonAdminService = inject(CommonAdminService);
   private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private formErrorService = inject(FormErrorService);
@@ -140,18 +141,7 @@ export default class EditEmployeeComponent {
   }
 
   // --------- HELPERS ----------
-  // Redirect to list, but if filters applies then keep them
   comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-employees');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+    this.commonAdminService.comeBackToList('/list-employees');
   }
 }

@@ -18,6 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AccountService, ItemService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
 import { CabysSelectComponent } from '../../../../shared/components/cabys-select/cabys-select.component';
@@ -37,7 +38,7 @@ import { IAccount, IItem } from '../../../../interfaces';
 export default class EditItemComponent {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
-  private location = inject(Location);
+  private commonAdminService = inject(CommonAdminService);
   private destroyRef = inject(DestroyRef);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
@@ -159,18 +160,7 @@ export default class EditItemComponent {
   }
 
   // --------- HELPERS ----------
-  // Redirect to list, but if filters applies then keep them
-  public comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-items');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+  comeBackToList(): void {
+    this.commonAdminService.comeBackToList('/list-items');
   }
 }

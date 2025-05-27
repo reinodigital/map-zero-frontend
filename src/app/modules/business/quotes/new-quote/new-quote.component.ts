@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,12 +16,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { filter } from 'rxjs';
 
 import { AuthService, ClientService, AccountService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormNewQuoteService } from '../form-new-quote.service';
 
@@ -46,7 +47,6 @@ import {
   IDataToCreateQuote,
   IAccount,
 } from '../../../../interfaces';
-import { filter } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,10 +67,9 @@ export default class NewQuoteComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
-  private router = inject(Router);
   private authService = inject(AuthService);
   private accountService = inject(AccountService);
+  private commonAdminService = inject(CommonAdminService);
   // private itemService = inject(ItemService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
@@ -124,6 +123,7 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.formNewQuoteService.cleanTotalValues();
     this.fetchAllShortClients();
     this.fetchSellers();
     this.fetchAccounts();
@@ -304,17 +304,7 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   // --------- HELPERS ----------
-  public comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-quotes');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+  comeBackToList(): void {
+    this.commonAdminService.comeBackToList('/list-quotes');
   }
 }
