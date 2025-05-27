@@ -148,6 +148,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
   },
+  {
+    path: 'edit-quote/:id',
+    loadComponent: () =>
+      import('./modules/business/quotes/edit-quote/edit-quote.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
   // END QUOTES
 
   // ACCOUNT

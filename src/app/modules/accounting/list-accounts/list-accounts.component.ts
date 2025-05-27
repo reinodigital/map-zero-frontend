@@ -7,20 +7,19 @@ import {
   signal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 import { AccountService } from '../../../api';
 import { ListAccountsService } from '../list-accounts.service';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 
 import { IAccount } from '../../../interfaces';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'list-accounts',
   standalone: true,
-  imports: [ReactiveFormsModule, PaginationComponent, RouterLink],
+  imports: [ReactiveFormsModule, PaginationComponent],
   templateUrl: './list-accounts.component.html',
   styleUrl: './list-accounts.component.scss',
 })

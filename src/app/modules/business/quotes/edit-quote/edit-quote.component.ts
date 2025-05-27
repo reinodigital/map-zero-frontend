@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,12 +16,19 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { AuthService, ClientService, AccountService } from '../../../../api';
+import {
+  AuthService,
+  ClientService,
+  AccountService,
+  QuoteService,
+} from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
+import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormNewQuoteService } from '../form-new-quote.service';
 
@@ -36,7 +43,7 @@ import {
 
 import {
   TypeMessageToast,
-  NewQuoteFormAction,
+  EditQuoteFormAction,
   StatusQuote,
 } from '../../../../enums';
 import {
@@ -45,12 +52,13 @@ import {
   ICommonSelect,
   IDataToCreateQuote,
   IAccount,
+  IQuote,
+  IDataToUpdateQuote,
 } from '../../../../interfaces';
-import { filter } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'new-quote',
+  selector: 'edit-quote',
   standalone: true,
   imports: [
     CommonModule,
@@ -60,18 +68,18 @@ import { filter } from 'rxjs';
     QuickDatePickerComponent,
     SubmitButtonComponent,
   ],
-  templateUrl: './new-quote.component.html',
-  styleUrl: './new-quote.component.scss',
+  templateUrl: './edit-quote.component.html',
+  styleUrl: './edit-quote.component.scss',
 })
-export default class NewQuoteComponent implements OnInit {
+export default class EditQuoteComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
-  private location = inject(Location);
-  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private accountService = inject(AccountService);
-  // private itemService = inject(ItemService);
+  private commonAdminService = inject(CommonAdminService);
+  private quoteService = inject(QuoteService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
@@ -83,23 +91,15 @@ export default class NewQuoteComponent implements OnInit {
   public accounts = signal<IAccount[]>([]);
 
   // FORM
+  public quoteId = signal<number | null>(null);
+  public quote = signal<IQuote | null>(null);
   public formNewQuoteService = inject(FormNewQuoteService);
   public isFormSubmitting = computed(() =>
     this.formNewQuoteService.isFormSubmitting()
   );
   public taxRates: ICodeLabel[] = taxRateArray;
   public clients = signal<ICommonSelect[]>([]);
-  public newQuoteForm: FormGroup = this.fb.group({
-    client: [null, [Validators.required]],
-    initDate: [this.currentDate, [Validators.required]],
-    expireDate: [this.dateInSevenDay, []],
-    currency: ['USD', [Validators.required]],
-    terms: ['', []],
-    quoteItems: this.fb.array([
-      this.createQuoteItemFormGroup(),
-      this.createQuoteItemFormGroup(),
-    ]),
-  });
+  public editQuoteForm = signal<FormGroup | null>(null);
 
   // TOTALS
   public subtotal = computed(() => this.formNewQuoteService.subtotal());
@@ -123,15 +123,15 @@ export default class NewQuoteComponent implements OnInit {
     return formatDateForInput(in7Days);
   }
 
+  constructor() {
+    this.quoteId.set(this.activatedRoute.snapshot.params['id']);
+  }
+
   ngOnInit(): void {
     this.fetchAllShortClients();
     this.fetchSellers();
     this.fetchAccounts();
-
-    // Set up listeners for all existing quote item rows at the beginning
-    this.quoteItems.controls.forEach((control) => {
-      this.setupItemGroupValueChangeListener(control as FormGroup);
-    });
+    this.fetchQuoteById();
   }
 
   fetchAccounts() {
@@ -164,23 +164,91 @@ export default class NewQuoteComponent implements OnInit {
     });
   }
 
+  fetchQuoteById(): void {
+    this.quoteService
+      .fetchOne(this.quoteId()!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((quote) => {
+        if (quote && quote.id) {
+          this.quote.set(quote);
+          this.fillOutQuoteForm();
+        }
+      });
+  }
+
+  fillOutQuoteForm(): void {
+    const quoteData = this.quote()!; // Get the fetched quote
+
+    const quoteItemsFormArray = this.fb.array(
+      quoteData.quoteItems.map((item) => {
+        // Map the backend QuoteItem object to the form group's expected structure
+        const formGroupValue = {
+          // itemId will be the NUMBER ID, which CustomSelectComponent now handles
+          itemId: item.item.id,
+          sellerUid: item.seller?.uid || null,
+          description: item.description ?? '',
+          quantity: item.quantity,
+          price: item.price,
+          discount: item.discount ?? 0,
+          accountId: item.account?.id,
+          taxRate: item.taxRate ?? '08',
+          id: item.id, // Include the existing quote item ID for backend updates
+        };
+        // No need to pass 'isEditing' flag now, CustomSelect handles the number directly
+        const itemGroup = this.createQuoteItemFormGroup(); // Use the existing create method
+        itemGroup.patchValue(formGroupValue);
+        return itemGroup;
+      })
+    );
+
+    this.editQuoteForm.set(
+      this.fb.group({
+        // For 'client', if `ng-select` handles objects with `compareWith`, keep it as object.
+        // Otherwise, you might need to use `quoteData.client.id` if the formControlName="client" expects just an ID.
+        client: [quoteData.client, [Validators.required]],
+        initDate: [
+          formatDateForInput(new Date(quoteData.initDate ?? new Date())),
+          [Validators.required],
+        ],
+        expireDate: [
+          formatDateForInput(new Date(quoteData.expireDate ?? new Date())),
+          [],
+        ],
+        currency: [quoteData.currency ?? 'USD', [Validators.required]],
+        terms: [quoteData.terms ?? '', []],
+        quoteItems: quoteItemsFormArray,
+      })
+    );
+
+    // Set up listeners for all existing quote item rows AFTER the form is built
+    // This loop can now be here as the controls are pushed
+    this.quoteItems.controls.forEach((control) => {
+      this.setupItemGroupValueChangeListener(control as FormGroup);
+    });
+
+    if (this.quoteItems && this.quoteItems.controls) {
+      this.formNewQuoteService.calculateTotals(this.quoteItems);
+    }
+  }
+
   validField(controlPath: string): boolean {
-    const control = this.newQuoteForm.get(controlPath);
+    const control = this.editQuoteForm()?.get(controlPath);
     if (!control) return false;
     return control.touched && control.invalid;
   }
 
   onExpireDateChange(value: any): void {
-    this.newQuoteForm.controls['expireDate'].patchValue(value);
+    this.editQuoteForm()?.controls['expireDate'].patchValue(value);
   }
 
   // ==== QUOTE ITEMS =====
   get quoteItems(): FormArray {
-    return this.newQuoteForm.get('quoteItems') as FormArray;
+    return this.editQuoteForm()?.get('quoteItems') as FormArray;
   }
 
   createQuoteItemFormGroup(): FormGroup {
     const itemGroup = this.fb.group({
+      id: [null], // Add id control for existing items (will be null for new items)
       itemId: [null, [Validators.required]],
       sellerUid: [null, []],
       description: ['', []],
@@ -188,11 +256,10 @@ export default class NewQuoteComponent implements OnInit {
       price: ['', [Validators.required]],
       discount: [0, []],
       accountId: ['', [Validators.required, Validators.minLength(1)]],
-      taxRate: ['08', [Validators.required, , Validators.minLength(1)]],
+      taxRate: ['08', [Validators.required, Validators.minLength(1)]],
     });
 
-    this.setupItemGroupValueChangeListener(itemGroup); // Set up listeners immediately
-
+    this.setupItemGroupValueChangeListener(itemGroup);
     return itemGroup;
   }
 
@@ -219,7 +286,10 @@ export default class NewQuoteComponent implements OnInit {
         ) // Only calculate if essential values are present
       )
       .subscribe(() => {
-        this.formNewQuoteService.calculateTotals(this.quoteItems);
+        const formArray = this.quoteItems;
+        if (formArray) {
+          this.formNewQuoteService.calculateTotals(formArray);
+        }
       });
   }
 
@@ -230,11 +300,20 @@ export default class NewQuoteComponent implements OnInit {
       // The itemId is already set by the CVA via formControlName="itemId"
       // Now, update the other related controls in this specific row
       itemGroup.patchValue({
-        description: selectedItem.description || '',
-        price: selectedItem.salePrice ?? 0,
-        accountId: selectedItem.saleAccountId ?? '',
-        // You might also want to update taxRate if it's tied to the item
-        // taxRate: selectedItem.taxRateCode ?? '08',
+        description:
+          this.formNewQuoteService.getCorrectDescriptionFromItemSelectedEmitter(
+            this.quote(),
+            selectedItem
+          ),
+        price: this.formNewQuoteService.getCorrectPriceFromItemSelectedEmitter(
+          this.quote(),
+          selectedItem
+        ),
+        accountId:
+          this.formNewQuoteService.getCorrectAccountFromItemSelectedEmitter(
+            this.quote(),
+            selectedItem
+          ),
       });
 
       // Recalculate totals after patching values
@@ -248,7 +327,7 @@ export default class NewQuoteComponent implements OnInit {
   }
 
   callToAction(action: string): void {
-    this.formErrorService.throwFormErrors(this.newQuoteForm);
+    this.formErrorService.throwFormErrors(this.editQuoteForm()!);
 
     if (!this.formNewQuoteService.verifyQuoteItems(this.quoteItems)) {
       this.customToastService.add({
@@ -260,7 +339,7 @@ export default class NewQuoteComponent implements OnInit {
       return;
     }
 
-    if (!this.newQuoteForm.controls['client'].value) {
+    if (!this.editQuoteForm()!.controls['client'].value) {
       this.customToastService.add({
         message: 'Seleccione un cliente para continuar.',
         type: TypeMessageToast.ERROR,
@@ -270,51 +349,32 @@ export default class NewQuoteComponent implements OnInit {
       return;
     }
 
-    if (this.newQuoteForm.invalid) {
-      this.formErrorService.throwFormErrors(this.newQuoteForm);
+    if (this.editQuoteForm()!.invalid) {
+      this.formErrorService.throwFormErrors(this.editQuoteForm()!);
 
       return;
     }
 
-    const data: IDataToCreateQuote = this.newQuoteForm.value;
-    data.createdAt = formatDateToString(new Date());
+    const data: IDataToUpdateQuote = this.editQuoteForm()!.value;
+    data.updatedAt = formatDateToString(new Date());
 
-    switch (action) {
-      case NewQuoteFormAction.SAVE:
-        data.status = StatusQuote.DRAFT;
-        data.action = NewQuoteFormAction.SAVE;
-        this.formNewQuoteService.onSaveAction(data);
-        break;
-      case NewQuoteFormAction.MARK_AS_SENT:
+    if (action === EditQuoteFormAction.EDIT) {
+      this.formNewQuoteService.onEditAction(this.quoteId()!, data);
+    }
+
+    if (action === EditQuoteFormAction.EDIT_AND_SEND) {
+      if (this.quote()?.status === StatusQuote.DRAFT) {
         data.status = StatusQuote.SENT;
-        data.action = NewQuoteFormAction.MARK_AS_SENT;
-        this.formNewQuoteService.onSaveAction(data);
-        break;
-      case NewQuoteFormAction.SEND:
-        data.status = StatusQuote.DRAFT;
-        data.action = NewQuoteFormAction.SEND;
-        this.formNewQuoteService.handleCreateOrEditQuoteSendingEmailAsWell(
-          data
-        );
-        break;
-
-      default:
-        break;
+      }
+      this.formNewQuoteService.handleCreateOrEditQuoteSendingEmailAsWell(
+        data,
+        this.quoteId()
+      );
     }
   }
 
   // --------- HELPERS ----------
-  public comeBackToList(): void {
-    if (this.isBrowser) {
-      this.checkBackUrl()
-        ? window.history.go(-1)
-        : this.router.navigateByUrl('/list-quotes');
-    }
-  }
-
-  private checkBackUrl(): boolean {
-    const backUrl: any = this.location.getState();
-
-    return backUrl && backUrl.navigationId > 1;
+  comeBackToList(): void {
+    this.commonAdminService.comeBackToList('/list-quotes');
   }
 }

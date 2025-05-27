@@ -10,11 +10,18 @@ import { getTaxRateValue } from '../../../shared/helpers';
 import { CustomModalSendQuoteEmailRecipientComponent } from '../../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
 import { roundToTwoDecimals } from '../../../shared/helpers/round-two-decimals.helper';
 
-import { NewQuoteFormAction, TypeMessageToast } from '../../../enums';
+import {
+  EditQuoteFormAction,
+  NewQuoteFormAction,
+  TypeMessageToast,
+} from '../../../enums';
 import {
   IDataToCreateQuote,
   ICustomDataToModalEmailSendQuote,
   IDataEmailForSendQuote,
+  IDataToUpdateQuote,
+  IItemSuggestion,
+  IQuote,
 } from '../../../interfaces';
 
 @Injectable({
@@ -34,6 +41,8 @@ export class FormNewQuoteService {
   public saveAction = NewQuoteFormAction.SAVE;
   public sendAction = NewQuoteFormAction.SEND;
   public markAsSentAction = NewQuoteFormAction.MARK_AS_SENT;
+  public editAction = EditQuoteFormAction.EDIT;
+  public editAndSendAction = EditQuoteFormAction.EDIT_AND_SEND;
 
   // TOTALS
   public subtotal = signal<number>(0);
@@ -123,8 +132,34 @@ export class FormNewQuoteService {
     });
   }
 
+  public onEditAction(quoteId: number, data: IDataToUpdateQuote): void {
+    this.isFormSubmitting.set(true);
+    this.quoteService.update(quoteId, data).subscribe((resp) => {
+      if (resp && resp.id) {
+        this.customToastService.add({
+          message: `Cotización actualizada correctamente.`,
+          type: TypeMessageToast.SUCCESS,
+          duration: 5000,
+        });
+
+        this.router.navigateByUrl(`/detail-quote/${resp.id}`);
+      } else {
+        this.customToastService.add({
+          message: resp.message,
+          type: TypeMessageToast.ERROR,
+          duration: 5000,
+        });
+      }
+
+      this.isFormSubmitting.set(false);
+    });
+  }
+
   // STEP 1 display modal and get data email
-  handleCreateNewQuoteSendingEmailAsWell(quote: IDataToCreateQuote) {
+  handleCreateOrEditQuoteSendingEmailAsWell(
+    quote: IDataToCreateQuote | IDataToUpdateQuote,
+    quoteId: number | null = null
+  ) {
     const data: ICustomDataToModalEmailSendQuote = {
       clientName: quote.client.name,
       currency: quote.currency,
@@ -145,12 +180,21 @@ export class FormNewQuoteService {
     dialogRef.updatePosition({ top: '100px' });
     dialogRef.afterClosed().subscribe((dataEmail) => {
       if (dataEmail) {
-        this.onCreateNewQuoteSendingEmail(quote, JSON.parse(dataEmail));
+        quoteId
+          ? this.onEditQuoteSendingEmail(
+              quoteId,
+              quote as IDataToUpdateQuote,
+              JSON.parse(dataEmail)
+            )
+          : this.onCreateNewQuoteSendingEmail(
+              quote as IDataToCreateQuote,
+              JSON.parse(dataEmail)
+            );
       }
     });
   }
 
-  // STEP 2 create new quote sending email
+  // STEP 2 CREATE new quote sending email
   onCreateNewQuoteSendingEmail(
     data: IDataToCreateQuote,
     dataEmail: IDataEmailForSendQuote
@@ -164,7 +208,33 @@ export class FormNewQuoteService {
         });
 
         // SEND QUOTE EMAIL TO CLIENT
-        this.sendQuoteEmailAfterNewQuoteCreated(resp.id, dataEmail);
+        this.sendQuoteEmail(resp.id, dataEmail);
+      } else {
+        this.customToastService.add({
+          message: resp.message,
+          type: TypeMessageToast.ERROR,
+          duration: 8000,
+        });
+      }
+    });
+  }
+
+  // STEP 2 EDIT quote sending email
+  onEditQuoteSendingEmail(
+    quoteId: number,
+    data: IDataToUpdateQuote,
+    dataEmail: IDataEmailForSendQuote
+  ): void {
+    this.quoteService.update(quoteId, data).subscribe((resp) => {
+      if (resp && resp.id) {
+        this.customToastService.add({
+          message: `Cotización actualizada correctamente.`,
+          type: TypeMessageToast.SUCCESS,
+          duration: 8000,
+        });
+
+        // SEND QUOTE EMAIL TO CLIENT
+        this.sendQuoteEmail(resp.id, dataEmail);
       } else {
         this.customToastService.add({
           message: resp.message,
@@ -176,10 +246,7 @@ export class FormNewQuoteService {
   }
 
   // STEP 3 after create new quote and being selected send action
-  sendQuoteEmailAfterNewQuoteCreated(
-    quoteId: number,
-    data: IDataEmailForSendQuote
-  ) {
+  sendQuoteEmail(quoteId: number, data: IDataEmailForSendQuote) {
     this.isFormNewQuoteAndEmailSubmitting.set(true);
 
     this.quoteService.sendEmail(quoteId, data).subscribe((resp) => {
@@ -200,5 +267,51 @@ export class FormNewQuoteService {
       this.isFormNewQuoteAndEmailSubmitting.set(false);
       this.router.navigateByUrl('/detail-quote/' + quoteId);
     });
+  }
+
+  // verify if item emitted is loading an existing one
+  getCorrectPriceFromItemSelectedEmitter(
+    quote: IQuote | null,
+    item: IItemSuggestion
+  ): number {
+    const quoteItem = quote?.quoteItems.find(
+      (quoteItem) => quoteItem.item.id === item.id
+    );
+
+    if (item.isLoadingExistingItem) {
+      return quoteItem?.price ?? 0;
+    }
+
+    return item.salePrice;
+  }
+
+  getCorrectAccountFromItemSelectedEmitter(
+    quote: IQuote | null,
+    item: IItemSuggestion
+  ): number | string {
+    const quoteItem = quote?.quoteItems.find(
+      (quoteItem) => quoteItem.item.id === item.id
+    );
+
+    if (item.isLoadingExistingItem) {
+      return quoteItem?.account?.id ?? '';
+    }
+
+    return item.saleAccountId ?? '';
+  }
+
+  getCorrectDescriptionFromItemSelectedEmitter(
+    quote: IQuote | null,
+    item: IItemSuggestion
+  ): string {
+    const quoteItem = quote?.quoteItems.find(
+      (quoteItem) => quoteItem.item.id === item.id
+    );
+
+    if (item.isLoadingExistingItem) {
+      return quoteItem?.description ?? '';
+    }
+
+    return item.description ?? '';
   }
 }

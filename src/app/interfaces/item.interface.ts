@@ -75,4 +75,5 @@ export interface IItemSuggestion {
   salePrice: number;
   saleAccountId: number | null;
   // type: string | null; // in case of make it generic
+  isLoadingExistingItem?: boolean; // needed when editing existing item on edit quote
 }

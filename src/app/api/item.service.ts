@@ -55,6 +55,15 @@ export class ItemService {
     );
   }
 
+  findOneAsSuggestion(itemId: number): Observable<IItemSuggestion> {
+    const url = `${this._baseUrl}/item/find-one-as-suggestion/${itemId}`;
+
+    return this.http.get<IItemSuggestion>(url, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
+  }
+
   update(itemId: number, data: IDataToUpdateItem): Observable<IMessage | any> {
     const url = `${this._baseUrl}/item/${itemId}`;
 

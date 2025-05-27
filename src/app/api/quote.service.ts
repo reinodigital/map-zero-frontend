@@ -12,6 +12,7 @@ import {
   IDataToCreateQuote,
   IDataEmailForSendQuote,
   IMarkAndChangeStatus,
+  IDataToUpdateQuote,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -66,16 +67,14 @@ export class QuoteService {
     );
   }
 
-  // update(quoteId: number, data: IData): Observable<IMessage | any> {
-  //   const url = `${this._baseUrl}/quote/${quoteId}`;
+  update(quoteId: number, data: IDataToUpdateQuote): Observable<IQuote | any> {
+    const url = `${this._baseUrl}/quote/${quoteId}`;
 
-  //   return this.http
-  //     .patch<IMessage>(url, data, { headers: this.getToken })
-  //     .pipe(
-  //       map((resp) => resp),
-  //       catchError((err) => of(err.error))
-  //     );
-  // }
+    return this.http.patch<IQuote>(url, data, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
+  }
 
   fetchAll(
     limit: number,

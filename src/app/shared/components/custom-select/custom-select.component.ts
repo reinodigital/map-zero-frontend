@@ -6,6 +6,7 @@ import {
   output,
   signal,
   forwardRef,
+  OnInit,
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -14,7 +15,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { debounceTime, filter, switchMap, tap } from 'rxjs';
+import { debounceTime, filter, of, switchMap, tap } from 'rxjs';
 
 import { ItemService } from '../../../api';
 
@@ -36,12 +37,12 @@ import { IItemSuggestion } from '../../../interfaces';
     },
   ],
 })
-export class CustomSelectComponent implements ControlValueAccessor {
+export class CustomSelectComponent implements ControlValueAccessor, OnInit {
   private destroyRef = inject(DestroyRef);
   private itemService = inject(ItemService);
 
   // FORM CONTROL
-  public searchControl = new FormControl<string>('');
+  public searchControl = new FormControl<string | number>('');
 
   // SUGGESTED ITEMS
   public items = signal<IItemSuggestion[]>([]);
@@ -49,7 +50,8 @@ export class CustomSelectComponent implements ControlValueAccessor {
   public notResultsString = 'sin resultados encontrados';
 
   // CONTROL FLAG
-  private _isSelectingItem = signal<boolean>(false); // New flag to control search trigger
+  private _isSelectingItem = signal<boolean>(false); // flag to control search trigger
+  private _isInitialLoad = signal<boolean>(true); // flag for initial load editing
 
   // OUTPUT
   public itemSelectedEmitter = output<IItemSuggestion>();
@@ -65,17 +67,67 @@ export class CustomSelectComponent implements ControlValueAccessor {
 
   // --- ControlValueAccessor methods ---
   writeValue(value: any): void {
-    if (typeof value === 'string') {
-      this.searchControl.setValue(value, { emitEvent: false });
-    } else if (typeof value === 'number') {
-      this.searchControl.setValue('', { emitEvent: false }); // Clear input if ID is set initially
-    } else {
-      this.searchControl.setValue('', { emitEvent: false }); // Clear input for null/undefined
+    if (value === null || value === undefined) {
+      // Clear input for null/undefined
+      this.searchControl.setValue('', { emitEvent: false });
+      this._isInitialLoad.set(false); // No initial value to load
+      return;
     }
 
-    // When the form wants to set the value, we don't want it to trigger a search
-    this._isSelectingItem.set(true);
-    setTimeout(() => this._isSelectingItem.set(false), 50);
+    // When a value is set from the form
+    this._isSelectingItem.set(true); // Temporarily stop search triggering
+
+    if (typeof value === 'number') {
+      // This is the case for editing: an itemId (number) is passed
+      this.itemService
+        .findOneAsSuggestion(value)
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          // Ensure we don't trigger a new search on the input for this initial load
+          tap(() => this._isSelectingItem.set(true))
+        )
+        .subscribe({
+          next: (item: IItemSuggestion) => {
+            if (item && item.id) {
+              this.searchControl.setValue(item.shortName, { emitEvent: false });
+              this.selectedItem.set(item.name); // Store the displayed name
+              // Emit the item to the parent if it's the very first load and parent needs it
+              if (this._isInitialLoad()) {
+                item.isLoadingExistingItem = true;
+                this.itemSelectedEmitter.emit(item);
+                this.onChange(item.id); // Ensure the form control holds the ID
+              }
+            } else {
+              // Item not found, clear the input
+              this.searchControl.setValue('', { emitEvent: false });
+              this.selectedItem.set('');
+              this.onChange(null); // Clear parent form control
+            }
+          },
+          error: (err: any) => {
+            this.searchControl.setValue('', { emitEvent: false });
+            this.selectedItem.set('');
+            this.onChange(null); // Clear parent form control
+          },
+          complete: () => {
+            // Reset initial load flag and allow search
+            this._isInitialLoad.set(false);
+            this._isSelectingItem.set(false);
+          },
+        });
+    } else if (typeof value === 'string') {
+      // This is for cases where the form might set a string (e.g., initial search query)
+      this.searchControl.setValue(value, { emitEvent: false });
+      this.selectedItem.set(value); // Store the displayed name
+      this._isInitialLoad.set(false); // Not an initial ID load
+      this._isSelectingItem.set(false);
+    } else {
+      // Fallback for unexpected types
+      this.searchControl.setValue('', { emitEvent: false });
+      this.selectedItem.set('');
+      this._isInitialLoad.set(false);
+      this._isSelectingItem.set(false);
+    }
   }
 
   // Registers a callback function that is called when the control's value changes in the UI.
@@ -103,17 +155,26 @@ export class CustomSelectComponent implements ControlValueAccessor {
     this.searchControl.valueChanges
       .pipe(
         takeUntilDestroyed(this.destroyRef),
+        // Important: Only process valueChanges if not in _isSelectingItem mode
+        filter(
+          (query) => typeof query === 'string' && !this._isSelectingItem()
+        ),
         debounceTime(500),
-        filter(() => !this._isSelectingItem()), // Ignore when selecting
-        tap(() => this.onTouched()), // Mark touched when user types
-        switchMap((query: string | null) => {
+        tap((value: any) => this.onTouched()),
+        switchMap((query: string) => {
+          // Query is now guaranteed to be a string
           const trimmedQuery = query ? query.trim() : '';
 
           if (!trimmedQuery || trimmedQuery.length < 3) {
             this.items.set([]);
-            // When the input is cleared by the user, we should also clear the form control's value
-            this.onChange(null); // Emit null or empty string to parent form control
-            return [];
+            // When the input is cleared by the user, also clear the form control's value
+            if (this.selectedItem() !== '') {
+              // Only emit null if an item was previously selected/displayed
+              this.onChange(null);
+              this.itemSelectedEmitter.emit(null!); // Emit null to parent
+            }
+            this.selectedItem.set(''); // Clear selected item
+            return of([]); // Return an empty observable
           }
 
           return this.itemService.getSuggestions(trimmedQuery);
@@ -136,18 +197,19 @@ export class CustomSelectComponent implements ControlValueAccessor {
       return;
     }
 
-    this._isSelectingItem.set(true);
+    this._isSelectingItem.set(true); // Block search temporarily
     this.searchControl.setValue(item.shortName, { emitEvent: false }); // Update visual input
-    this.items.set([]);
+    this.selectedItem.set(item.shortName); // Store the displayed name
+    this.items.set([]); // Clear suggestions
 
     // Emit the actual ID to the parent form control (itemId)
-    this.onChange(item.id); // This is how you update the parent FormArray's itemId!
-    this.onTouched(); // Mark the control as touched
+    this.onChange(item.id);
+    this.onTouched();
 
-    this.itemSelectedEmitter.emit(item);
+    this.itemSelectedEmitter.emit(item); // Emit full item for parent component to use
 
     setTimeout(() => {
-      this._isSelectingItem.set(false);
-    }, 50); // Small delay to prevent re-triggering search immediately
+      this._isSelectingItem.set(false); // Allow search again after a brief moment
+    }, 50);
   }
 }

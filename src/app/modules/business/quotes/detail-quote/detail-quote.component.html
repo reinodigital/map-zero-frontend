@@ -20,10 +20,14 @@
         </span>
       </div>
       <div class="hstack gap-3">
+        <!-- TODO -->
         <button class="btn btn-outline-secondary">Imprimir PDF</button>
         @if (allowedStatusToBeEditedFromDraft.includes(quote()!.status)) {
-        <!-- TODO -->
-        <button type="button" class="btn btn-primary">
+        <button
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="'/edit-quote/' + quoteId"
+        >
           <i class="fa-solid fa-pen-to-square me-2"></i>
           Editar
         </button>
@@ -141,7 +145,11 @@
             </li>
             } @if (allowedStatusToBeEdited.includes(quote()!.status)) {
             <li>
-              <button class="dropdown-item" type="button">
+              <button
+                class="dropdown-item"
+                type="button"
+                [routerLink]="'/edit-quote/' + quoteId"
+              >
                 <i class="fa-solid fa-pen-to-square icon_pencil me-2"></i>
                 Editar
               </button>

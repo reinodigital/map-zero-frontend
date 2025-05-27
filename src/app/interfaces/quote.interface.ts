@@ -52,6 +52,18 @@ export interface IDataToCreateQuote {
   // reference properties
   action: string;
 }
+export interface IDataToUpdateQuote {
+  updatedAt: string;
+  client: IShortSelectClient;
+  status: string;
+  initDate: string;
+  expireDate?: string;
+  currency: string;
+  terms?: string;
+  quoteItems: IDataToCreateQuoteItem[];
+  // reference properties
+  action: string;
+}
 
 export interface IDataToCreateQuoteItem {
   id?: number; // optional for new items

@@ -6,7 +6,7 @@ import {
   PLATFORM_ID,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule, isPlatformBrowser, Location } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -22,7 +22,12 @@ import { IQuote } from '../../../../interfaces';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'detail-quote',
-  imports: [CommonModule, ReadableDatePipe, TrackingEntityComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    ReadableDatePipe,
+    TrackingEntityComponent,
+  ],
   templateUrl: './detail-quote.component.html',
   styleUrl: './detail-quote.component.scss',
   standalone: true,
