@@ -6,6 +6,7 @@ export interface SubMenuItem {
   baseUrl: string;
   subroutes: string[];
   isActive?: boolean;
+  isSubtitle?: boolean;
 }
 
 export interface MenuItem {
@@ -45,8 +46,87 @@ export class CustomMenuService {
     },
     {
       label: 'Negocio',
-      icon: 'fas fa-user-tie me-2',
+      icon: 'fa-solid fa-toolbox me-2',
       id: 'collapseBusiness',
+      isActive: false,
+      submenu: [
+        {
+          label: 'Ventas',
+          baseUrl: '',
+          subroutes: [],
+          isSubtitle: true,
+        },
+        {
+          label: 'Facturas',
+          baseUrl: '/list-items', // changeMe!
+          subroutes: ['list-items'], // changeMe!
+        },
+        {
+          label: 'Pagos online',
+          baseUrl: '/list-items', // changeMe!
+          subroutes: ['list-items'], // changeMe!
+        },
+        {
+          label: 'Cotizaciones',
+          baseUrl: '/list-quotes',
+          subroutes: ['list-quotes', 'new-quote', 'edit-quote', 'detail-quote'],
+        },
+        {
+          label: 'Vista de ventas',
+          baseUrl: '/list-items', // changeMe!
+          subroutes: ['list-items'], // changeMe!
+        },
+        {
+          label: 'Compras',
+          baseUrl: '',
+          subroutes: [],
+          isSubtitle: true,
+        },
+        {
+          label: 'Órdenes de compra',
+          baseUrl: '/list-items', // changeMe!
+          subroutes: ['list-items'], // changeMe!
+        },
+        {
+          label: 'Vista de compras',
+          baseUrl: '/list-items', // changeMe!
+          subroutes: ['list-items'], // changeMe!
+        },
+        {
+          label: 'Productos/Servicios',
+          baseUrl: '',
+          subroutes: [],
+          isSubtitle: true,
+        },
+        {
+          label: 'Items',
+          baseUrl: '/list-items',
+          subroutes: ['list-items', 'new-item', 'edit-item', 'detail-item'],
+        },
+      ],
+    },
+    {
+      label: 'Contacto',
+      icon: 'fa-solid fa-address-book me-2',
+      id: 'collapseContacts',
+      isActive: false,
+      submenu: [
+        {
+          label: 'Contactos',
+          baseUrl: '/list-clients',
+          subroutes: [
+            'list-clients',
+            'new-client',
+            'edit-client',
+            'detail-client',
+          ],
+        },
+      ],
+    },
+    {
+      label: 'Administración',
+      icon: 'fas fa-user-tie me-2',
+      id: 'collapseAdministration',
       isActive: false,
       submenu: [
         {
@@ -58,26 +138,6 @@ export class CustomMenuService {
             'edit-employee',
             'detail-employee',
           ],
-        },
-        {
-          label: 'Clientes',
-          baseUrl: '/list-clients',
-          subroutes: [
-            'list-clients',
-            'new-client',
-            'edit-client',
-            'detail-client',
-          ],
-        },
-        {
-          label: 'Items',
-          baseUrl: '/list-items',
-          subroutes: ['list-items', 'new-item', 'edit-item', 'detail-item'],
-        },
-        {
-          label: 'Cotizaciones',
-          baseUrl: '/list-quotes',
-          subroutes: ['list-quotes', 'new-quote', 'edit-quote', 'detail-quote'],
         },
       ],
     },

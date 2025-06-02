@@ -1,7 +1,7 @@
 <div class="main_content">
   <div class="box">
     <div class="d-flex justify-content-between">
-      <h3 class="">Detalle cliente</h3>
+      <h3 class="">Detalle contacto</h3>
       <h4 class="cp" (click)="comeBackToList()">
         <i class="fa-solid fa-angles-left"></i> Regresar
       </h4>
@@ -45,7 +45,7 @@
             aria-controls="pills-contact"
             aria-selected="false"
           >
-            Contactos
+            Personas
           </button>
         </li>
       </ul>
@@ -60,7 +60,7 @@
           data-bs-toggle="contactModal"
           data-bs-target="#contactModal"
         >
-          <i class="fa-solid fa-address-book"></i> Agregar contacto
+          <i class="fa-solid fa-address-book"></i> Agregar persona
         </a>
         <a
           role="button"
@@ -106,45 +106,45 @@
         tabindex="0"
       >
         @if (client()) {
-        <ul class="list-group">
-          <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Nombre </span>
-            <span class="ms-4">{{ client()!.name }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Cédula </span>
-            <span class="ms-4">{{ client()!.identity }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Tipo cédula </span>
-            <span class="ms-4">{{
-              listClientsService.getIdentityType(client()!.identityType)
-            }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Teléfono </span>
-            <span class="ms-4">{{ client()!.mobile }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Correo electrónico </span>
-            <span class="ms-4">{{ client()!.email }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Moneda </span>
-            <span class="ms-4">{{ client()!.currency }}</span>
-          </li>
-          @if (client()!.notes) {
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Notas </span>
-            <span class="ms-4">{{ client()!.notes }}</span>
-          </li>
+        <div class="row mt-3">
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Nombre</label>
+            <span>{{ client()!.name }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Cédula</label>
+            <span>{{ client()!.identity }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Tipo cédula</label>
+            <span>
+              {{ listClientsService.getIdentityType(client()!.identityType) }}
+            </span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Teléfono</label>
+            <span>{{ client()!.mobile }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Moneda </label>
+            <span>{{ client()!.currency }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Correo electrónico </label>
+            <span>{{ client()!.email }}</span>
+          </div>
+          @if (client()?.notes) {
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Notas </label>
+            <span>{{ client()!.notes }}</span>
+          </div>
           } @if (client()?.defaultSeller) {
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Vendedor/a </span>
-            <span class="ms-4">{{ client()!.defaultSeller }}</span>
-          </li>
+          <div class="col-12 col-md-3 col-lg-2 mb-3">
+            <label>Vendedor/a </label>
+            <span>{{ client()!.defaultSeller }}</span>
+          </div>
           }
-        </ul>
+        </div>
         }
       </div>
       <!-- End Info Employee -->
@@ -232,7 +232,7 @@
             <tr>
               <div class="d-flex justify-content-start">
                 <div class="alert alert-warning">
-                  Sin contactos por el momento.
+                  Sin personas secundarias por el momento.
                 </div>
               </div>
             </tr>

@@ -1,14 +1,14 @@
 <div class="main">
   <aside class="main_menu" [class.main_menu_open]="isMenuOpen()">
-    <!-- <div class="main_menu_title">
+    <div class="main_menu_title">
       <img
         src="../../../../assets/svg/logo.svg"
         alt="logo"
-        width="250px"
-        height="120px"
+        width="230px"
+        height="100px"
       />
-    </div> -->
-    <h3 class="main_menu_title">MENU</h3>
+    </div>
+    <!-- <h3 class="main_menu_title">MENU</h3> -->
     <nav class="main_menu_list">
       @for (menuItem of customMenuService.menu(); track $index) {
       <div class="main_menu_list_parent">
@@ -25,14 +25,18 @@
           [class.showLinks]="menuItem.isActive"
           [id]="menuItem.id"
         >
-          @for (sub of menuItem.submenu; track $index) {
+          @for (sub of menuItem.submenu; track $index) { @if (sub.isSubtitle) {
+          <span class="main_menu_list_parent_dropdown_muted_subtitle muted">
+            {{ sub.label }}
+          </span>
+          } @else {
           <a
             class="main_menu_list_parent_dropdown_link"
             (click)="customMenuService.navigateToRoute(sub.baseUrl)"
           >
-            <span>- {{ sub.label }}</span>
+            <span> {{ sub.label }}</span>
           </a>
-          }
+          } }
         </div>
       </div>
       }
@@ -44,7 +48,7 @@
       <div (click)="openCloseMenu()">
         <i class="fa-solid fa-bars fs-1 me-3"></i>
       </div>
-      <h2 class="main_content_header_title">Map Zero</h2>
+      <!-- <h2 class="main_content_header_title">Map Zero</h2> -->
       <span class="main_content_spacer"></span>
       <!-- Authenticated User -->
       <current-user></current-user>

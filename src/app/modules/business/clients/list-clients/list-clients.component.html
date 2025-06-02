@@ -1,28 +1,19 @@
 <div class="main_content">
   <div class="filters mb-4">
     <div class="box">
-      <div class="d-flex justify-content-between align-items-center mb-2">
-        <h3 class="mb-0">Filtrar clientes</h3>
+      <div
+        class="d-flex justify-content-between align-items-center cp mb-2"
+        (click)="openCloseFilters()"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFilters"
+        aria-expanded="false"
+        aria-controls="collapseFilters"
+      >
+        <h3 class="mb-0">Filtrar contactos</h3>
         @if (filtersOpen()) {
-        <i
-          class="fa-solid fa-window-minimize"
-          (click)="openCloseFilters()"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseFilters"
-          aria-expanded="false"
-          aria-controls="collapseFilters"
-        >
-        </i>
+        <i class="fa-solid fa-window-minimize"> </i>
         } @else {
-        <i
-          class="fa-solid fa-window-maximize"
-          (click)="openCloseFilters()"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseFilters"
-          aria-expanded="false"
-          aria-controls="collapseFilters"
-        >
-        </i>
+        <i class="fa-solid fa-window-maximize"> </i>
         }
       </div>
       <div class="collapse" id="collapseFilters">
@@ -93,9 +84,9 @@
     <div class="box">
       <div class="row">
         <div class="d-flex justify-content-between mb-3">
-          <h3>Listado clientes ({{ total() }})</h3>
+          <h3>Listado contactos ({{ total() }})</h3>
           <button class="btn btn-primary mb-2" routerLink="/new-client">
-            + Nuevo cliente
+            + Nuevo contacto
           </button>
         </div>
 

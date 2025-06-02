@@ -4,6 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 
 import { AuthService } from '../../../../api';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
+import { ListEmployeesService } from '../list-employees.service';
 import { IAuth } from '../../../../interfaces';
 
 @Component({
@@ -17,6 +18,7 @@ export default class DetailEmployeeComponent {
   private activatedRoute = inject(ActivatedRoute);
   private commonAdminService = inject(CommonAdminService);
   private authService = inject(AuthService);
+  public listEmployeesService = inject(ListEmployeesService);
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);

@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   computed,
   inject,
+  PLATFORM_ID,
   signal,
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -25,6 +26,7 @@ import { SecurityRoles } from '../../../../enums';
   styleUrl: './list-employees.component.scss',
 })
 export default class ListEmployeesComponent {
+  private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   public listEmployeesService = inject(ListEmployeesService);
@@ -62,6 +64,10 @@ export default class ListEmployeesComponent {
     SecurityRoles.SELLER,
     SecurityRoles.ACCOUNTANT,
   ];
+
+  get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   ngOnInit(): void {
     this.fetchAllUsers();

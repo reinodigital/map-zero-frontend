@@ -3,7 +3,7 @@
   left: 0 !important;
 }
 .main_content_margin_left {
-  padding-left: 21rem;
+  padding-left: 26rem;
 }
 // End Globals
 
@@ -23,9 +23,9 @@
   padding: 0.4rem;
   position: absolute;
   top: 0;
-  left: -24rem;
+  left: -26rem;
   height: 100dvh;
-  width: 21rem;
+  width: 26rem;
   z-index: 11;
   transition: left 0.3s ease-in-out;
 
@@ -67,6 +67,11 @@
     &:hover {
       background-color: var(--gray);
     }
+  }
+
+  .main_menu_list_parent_dropdown_muted_subtitle {
+    font-size: 1.2rem;
+    margin-left: 3.5rem;
   }
 }
 .showLinks {

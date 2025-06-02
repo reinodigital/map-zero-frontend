@@ -23,7 +23,7 @@
           >
             Información
           </button>
-          <button
+          <!-- <button
             class="nav-link"
             id="pills-cabys-tab"
             data-bs-toggle="pill"
@@ -34,7 +34,7 @@
             aria-selected="false"
           >
             Cabys
-          </button>
+          </button> -->
         </li>
       </ul>
       <!-- End Pills -->
@@ -74,74 +74,73 @@
         tabindex="0"
       >
         @if (item()) {
-        <ul class="list-group">
-          <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Nombre </span>
-            <span class="ms-4">{{ item()!.name }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Coste </span>
-            <span class="ms-4">{{ item()!.costPrice ?? "_" }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Cuenta de compra </span>
-            <span class="ms-4">{{ item()!.purchaseAccount?.name ?? "_" }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Impuesto de compra </span>
-            <span class="ms-4">
+        <div class="row mt-3">
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Nombre </label>
+            <span>{{ item()!.name }}</span>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Código cabys </label>
+            <span>{{ item()!.cabys.code }}</span>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Impuesto de cabys (%) </label>
+            <span>{{ item()!.cabys.tax }}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <strong>Compra</strong>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Costo </label>
+            <span>{{ item()!.costPrice ?? "_" }}</span>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Cuenta de compra </label>
+            <span>{{ item()!.purchaseAccount?.name ?? "_" }}</span>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Impuesto de compra </label>
+            <span>
               {{
                 item()!.purchaseTaxRate
                   ? listItemsService.getTaxRateLabel(item()!.purchaseTaxRate!)
                   : "_"
               }}
             </span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Precio venta </span>
-            <span class="ms-4">{{ item()!.salePrice ?? "_" }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Cuenta de venta </span>
-            <span class="ms-4">
+          </div>
+          <div class="col-12 mb-3">
+            <label>Descripción</label>
+            <span>{{ item()?.purchaseDescription ?? "_" }}</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <strong>Venta</strong>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Venta </label>
+            <span>{{ item()!.salePrice ?? "_" }}</span>
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Cuenta de venta </label>
+            <span>
               {{ `${item()!.saleAccount?.code ?? ''} - ${item()!.saleAccount?.name ?? ''}` }}
             </span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Impuesto venta </span>
-            <span class="ms-4">{{
+          </div>
+          <div class="col-12 col-md-4 col-lg-4 mb-3">
+            <label>Impuesto de venta </label>
+            <span>{{
               item()!.saleTaxRate
                 ? listItemsService.getTaxRateLabel(item()!.saleTaxRate!)
                 : "_"
             }}</span>
-          </li>
-        </ul>
+          </div>
+          <div class="col-12 mb-3">
+            <label>Descripción</label>
+            <span>{{ item()?.saleDescription ?? "_" }}</span>
+          </div>
+        </div>
         }
       </div>
       <!-- End Info -->
-
-      <!-- Cabys details-->
-      <div
-        class="tab-pane fade"
-        id="pills-cabys"
-        role="tabpanel"
-        aria-labelledby="pills-cabys-tab"
-        tabindex="0"
-      >
-        @if (item()) {
-        <ul class="list-group">
-          <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Código </span>
-            <span class="ms-4">{{ item()!.cabys.code }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">IVA </span>
-            <span class="ms-4">{{ item()!.cabys.tax }}%</span>
-          </li>
-        </ul>
-        }
-      </div>
-      <!-- Cabys details -->
 
       <!-- End Data Pills -->
     </div>

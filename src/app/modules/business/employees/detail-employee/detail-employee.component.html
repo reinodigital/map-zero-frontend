@@ -74,26 +74,28 @@
         tabindex="0"
       >
         @if (employee()) {
-        <ul class="list-group">
-          <li class="list-group-item list-group-item-secondary">
-            <span class="fw-bold">Nombre </span>
-            <span class="ms-4">{{ employee()!.name }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Teléfono </span>
-            <span class="ms-4">{{ employee()!.mobile }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Correo electrónico </span>
-            <span class="ms-4">{{ employee()!.email ?? "_" }}</span>
-          </li>
-          <li class="list-group-item list-group-item-light">
-            <span class="fw-bold">Rol </span>
-            <span class="ms-4">
-              @for (role of employee()!.roles; track $index) { {{ role }} }
+        <div class="row mt-3">
+          <div class="col-12 col-md-3 col-lg-2">
+            <label>Nombre</label>
+            <span>{{ employee()!.name }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2">
+            <label>Teléfono</label>
+            <span>{{ employee()!.mobile }}</span>
+          </div>
+          <div class="col-12 col-md-3 col-lg-2">
+            <label>Rol</label>
+            @for (role of employee()!.roles; track $index) {
+            <span [class]="listEmployeesService.getClassForUserRole(role)">
+              {{ role }}
             </span>
-          </li>
-        </ul>
+            }
+          </div>
+          <div class="col-12 col-md-3 col-lg-2">
+            <label>Correo electrónico</label>
+            <span>{{ employee()!.email ?? "_" }}</span>
+          </div>
+        </div>
         }
       </div>
       <!-- End Info Employee -->
