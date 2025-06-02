@@ -23,6 +23,25 @@ export const routes: Routes = [
     canLoad: [AuthGuard],
   },
 
+  // ACCOUNT
+  {
+    path: 'list-accounts',
+    loadComponent: () =>
+      import('./modules/accounting/list-accounts/list-accounts.component'),
+    canActivate: [AccountantGuard],
+    canLoad: [AccountantGuard],
+  },
+  {
+    path: 'list-account-type',
+    loadComponent: () =>
+      import(
+        './modules/accounting/list-account-type/list-account-type.component'
+      ),
+    canActivate: [AccountantGuard],
+    canLoad: [AccountantGuard],
+  },
+  // END ACCOUNT
+
   // EMPLOYEES
   {
     path: 'list-employees',
@@ -126,20 +145,41 @@ export const routes: Routes = [
   },
   // END ITEMS
 
+  // LIST OVERVIEW
+  {
+    path: 'purchases-overview',
+    loadComponent: () =>
+      import(
+        './modules/business/overviews/purchases-overview/purchases-overview.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'sales-overview',
+    loadComponent: () =>
+      import(
+        './modules/business/overviews/sales-overview/sales-overview.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  // END OVERVIEW
+
   // QUOTES
   {
     path: 'list-quotes',
     loadComponent: () =>
       import('./modules/business/quotes/list-quotes/list-quotes.component'),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'new-quote',
     loadComponent: () =>
       import('./modules/business/quotes/new-quote/new-quote.component'),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'detail-quote/:id',
@@ -157,22 +197,52 @@ export const routes: Routes = [
   },
   // END QUOTES
 
-  // ACCOUNT
+  // INVOICES
   {
-    path: 'list-accounts',
-    loadComponent: () =>
-      import('./modules/accounting/list-accounts/list-accounts.component'),
-    canActivate: [AccountantGuard],
-    canLoad: [AccountantGuard],
-  },
-  {
-    path: 'list-account-type',
+    path: 'list-invoices',
     loadComponent: () =>
       import(
-        './modules/accounting/list-account-type/list-account-type.component'
+        './modules/business/invoices/list-invoices/list-invoices.component'
       ),
-    canActivate: [AccountantGuard],
-    canLoad: [AccountantGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
-  // END ACCOUNT
+  {
+    path: 'detail-invoice/:id',
+    loadComponent: () =>
+      import(
+        './modules/business/invoices/detail-invoice/detail-invoice.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'edit-invoice/:id',
+    loadComponent: () =>
+      import('./modules/business/quotes/edit-quote/edit-quote.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  // END INVOICES
+
+  // PURCHASE ORDERS
+  {
+    path: 'list-purchase-orders',
+    loadComponent: () =>
+      import(
+        './modules/business/purchase-orders/list-purchase-orders/list-purchase-orders.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'detail-purchase-order/:id',
+    loadComponent: () =>
+      import(
+        './modules/business/purchase-orders/detail-purchase-order/detail-purchase-order.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  // END PURCHASE ORDERS
 ];

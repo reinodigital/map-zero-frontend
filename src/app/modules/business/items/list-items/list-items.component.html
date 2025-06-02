@@ -1,28 +1,19 @@
 <div class="main_content">
   <div class="filters mb-4">
     <div class="box">
-      <div class="d-flex justify-content-between align-items-center mb-2">
+      <div
+        class="d-flex justify-content-between align-items-center cp mb-2"
+        (click)="openCloseFilters()"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFilters"
+        aria-expanded="false"
+        aria-controls="collapseFilters"
+      >
         <h3 class="mb-0">Filtrar items</h3>
         @if (filtersOpen()) {
-        <i
-          class="fa-solid fa-window-minimize"
-          (click)="openCloseFilters()"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseFilters"
-          aria-expanded="false"
-          aria-controls="collapseFilters"
-        >
-        </i>
+        <i class="fa-solid fa-window-minimize"> </i>
         } @else {
-        <i
-          class="fa-solid fa-window-maximize"
-          (click)="openCloseFilters()"
-          data-bs-toggle="collapse"
-          data-bs-target="#collapseFilters"
-          aria-expanded="false"
-          aria-controls="collapseFilters"
-        >
-        </i>
+        <i class="fa-solid fa-window-maximize"> </i>
         }
       </div>
       <div class="collapse" id="collapseFilters">

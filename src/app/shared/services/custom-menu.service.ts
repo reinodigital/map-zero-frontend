@@ -58,13 +58,8 @@ export class CustomMenuService {
         },
         {
           label: 'Facturas',
-          baseUrl: '/list-items', // changeMe!
-          subroutes: ['list-items'], // changeMe!
-        },
-        {
-          label: 'Pagos online',
-          baseUrl: '/list-items', // changeMe!
-          subroutes: ['list-items'], // changeMe!
+          baseUrl: '/list-invoices',
+          subroutes: ['list-invoices', 'edit-invoice', 'detail-invoice'],
         },
         {
           label: 'Cotizaciones',
@@ -72,9 +67,9 @@ export class CustomMenuService {
           subroutes: ['list-quotes', 'new-quote', 'edit-quote', 'detail-quote'],
         },
         {
-          label: 'Vista de ventas',
-          baseUrl: '/list-items', // changeMe!
-          subroutes: ['list-items'], // changeMe!
+          label: 'Vista preliminar ventas',
+          baseUrl: '/sales-overview',
+          subroutes: ['sales-overview'],
         },
         {
           label: 'Compras',
@@ -84,13 +79,13 @@ export class CustomMenuService {
         },
         {
           label: 'Órdenes de compra',
-          baseUrl: '/list-items', // changeMe!
-          subroutes: ['list-items'], // changeMe!
+          baseUrl: '/list-purchase-orders',
+          subroutes: ['list-purchase-orders', 'detail-purchase-order'],
         },
         {
-          label: 'Vista de compras',
-          baseUrl: '/list-items', // changeMe!
-          subroutes: ['list-items'], // changeMe!
+          label: 'Vista preliminar compras',
+          baseUrl: '/purchases-overview',
+          subroutes: ['purchases-overview'],
         },
         {
           label: 'Productos/Servicios',

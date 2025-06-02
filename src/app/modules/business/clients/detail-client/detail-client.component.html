@@ -107,39 +107,39 @@
       >
         @if (client()) {
         <div class="row mt-3">
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Nombre</label>
             <span>{{ client()!.name }}</span>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Cédula</label>
             <span>{{ client()!.identity }}</span>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Tipo cédula</label>
             <span>
               {{ listClientsService.getIdentityType(client()!.identityType) }}
             </span>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Teléfono</label>
             <span>{{ client()!.mobile }}</span>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Moneda </label>
             <span>{{ client()!.currency }}</span>
           </div>
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Correo electrónico </label>
             <span>{{ client()!.email }}</span>
           </div>
           @if (client()?.notes) {
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Notas </label>
             <span>{{ client()!.notes }}</span>
           </div>
           } @if (client()?.defaultSeller) {
-          <div class="col-12 col-md-3 col-lg-2 mb-3">
+          <div class="col-12 col-md-4 col-lg-3 mb-3">
             <label>Vendedor/a </label>
             <span>{{ client()!.defaultSeller }}</span>
           </div>
