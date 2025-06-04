@@ -1,0 +1,25 @@
+.custom_checkbox {
+  border-radius: 0.3rem;
+  background-color: var(--light);
+  display: flex;
+  height: 2.4rem;
+  position: relative;
+  width: fit-content;
+
+  .custom_checkbox_false,
+  .custom_checkbox_true {
+    cursor: pointer;
+    color: var(--black);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    padding: 0rem 0.8rem;
+    width: 50%;
+  }
+}
+
+.checked {
+  background-color: var(--primary_blue);
+  color: var(--white) !important;
+}

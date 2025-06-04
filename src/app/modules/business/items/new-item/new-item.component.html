@@ -101,9 +101,17 @@
           </div>
           <div class="row">
             <div class="col-12">
-              <label for="purchaseDescription">
-                Descripción compra <span class="muted">opcional</span>
-              </label>
+              <div class="d-flex justify-content-between">
+                <label for="purchaseDescription">
+                  Descripción compra <span class="muted">opcional</span>
+                </label>
+                <custom-checkbox
+                  [affirmativeLabel]="'Propagar'"
+                  [negativeLabel]="'Detener'"
+                  [checkboxDefaultValue]="true"
+                  (checkboxEmitter)="onDescriptionPropagationToggle($event)"
+                ></custom-checkbox>
+              </div>
               <textarea
                 formControlName="purchaseDescription"
                 rows="1"

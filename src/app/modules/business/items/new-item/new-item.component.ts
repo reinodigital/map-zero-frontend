@@ -1,4 +1,4 @@
-import { isPlatformBrowser, Location } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,12 +16,14 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime, filter } from 'rxjs';
 
 import { AccountService, ItemService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { CabysSelectComponent } from '../../../../shared/components/cabys-select/cabys-select.component';
+import { CustomCheckboxComponent } from '../../../../shared/components/custom-checkbox/custom-checkbox.component';
 import { formatDateToString, taxRateArray } from '../../../../shared/helpers';
 
 import { TypeMessageToast } from '../../../../enums';
@@ -31,7 +33,7 @@ import { IAccount } from '../../../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'new-item',
   standalone: true,
-  imports: [ReactiveFormsModule, CabysSelectComponent],
+  imports: [ReactiveFormsModule, CabysSelectComponent, CustomCheckboxComponent],
   templateUrl: './new-item.component.html',
   styleUrl: './new-item.component.scss',
 })
@@ -46,6 +48,7 @@ export default class NewItemComponent implements OnInit {
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
 
+  public descriptionPropagationIsActive = signal<boolean>(true);
   public accounts = signal<IAccount[]>([]);
   public taxesArray = taxRateArray;
 
@@ -71,6 +74,7 @@ export default class NewItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.fetchAccounts();
+    this.setupDescriptionSync();
   }
 
   fetchAccounts() {
@@ -89,6 +93,10 @@ export default class NewItemComponent implements OnInit {
       this.newItemForm().controls[field].touched &&
       this.newItemForm().controls[field].invalid
     );
+  }
+
+  onDescriptionPropagationToggle(e: boolean): void {
+    this.descriptionPropagationIsActive.set(e);
   }
 
   onCabysChange(cabys: string | null): void {
@@ -129,6 +137,27 @@ export default class NewItemComponent implements OnInit {
         });
       }
     });
+  }
+
+  private setupDescriptionSync(): void {
+    const purchaseDescriptionControl = this.newItemForm().get(
+      'purchaseDescription'
+    );
+    const saleDescriptionControl = this.newItemForm().get('saleDescription');
+
+    if (purchaseDescriptionControl && saleDescriptionControl) {
+      purchaseDescriptionControl.valueChanges
+        .pipe(
+          takeUntilDestroyed(this.destroyRef),
+          debounceTime(100), // Debounce to avoid too frequent updates while typing
+          filter(() => this.descriptionPropagationIsActive())
+        )
+        .subscribe((purchaseValue: string) => {
+          saleDescriptionControl.setValue(purchaseValue, {
+            emitEvent: false,
+          }); // Set value without triggering another valueChanges event
+        });
+    }
   }
 
   // --------- HELPERS ----------
