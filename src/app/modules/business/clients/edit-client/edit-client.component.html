@@ -20,6 +20,15 @@
           }
         </div>
         <div class="col-12 col-sm-6 col-lg-4">
+          <label for="type">
+            Tipo contacto <span class="asterisk">*</span>
+          </label>
+          <select formControlName="type">
+            <option value="CLIENTE">CLIENTE</option>
+            <option value="PROVEEDOR">PROVEEDOR</option>
+          </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
           <label for="mobile">Teléfono <span class="asterisk">*</span></label>
           <input type="text" formControlName="mobile" />
           @if (validField('mobile')) {

@@ -22,7 +22,7 @@ import { CustomToastService } from '../../../../shared/services/custom-toast.ser
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
-import { IdentityType, TypeMessageToast } from '../../../../enums';
+import { IdentityType, TypeClient, TypeMessageToast } from '../../../../enums';
 import { ShortAuth, IClientToUpdate } from '../../../../interfaces';
 
 @Component({
@@ -52,6 +52,7 @@ export default class NewClientComponent implements OnInit {
   public newClientForm = signal<FormGroup>(
     this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
+      type: [TypeClient.CLIENT, [Validators.required]],
       email: ['', [Validators.required, Validators.pattern(this.emailPattern)]],
       mobile: [
         '',

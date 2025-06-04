@@ -95,6 +95,7 @@
             <thead>
               <tr>
                 <th>Nombre</th>
+                <th>Tipo</th>
                 <th>Cédula</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
@@ -104,6 +105,15 @@
               @for (client of clients(); track client.id) {
               <tr class="admin_tr" [routerLink]="'/detail-client/' + client.id">
                 <td>{{ client.name }}</td>
+                <td>
+                  <span
+                    [class]="
+                      listClientsService.getClientContactTypeBadge(client.type)
+                    "
+                  >
+                    {{ client.type }}
+                  </span>
+                </td>
                 <td>{{ client.identity }}</td>
                 <td>{{ client.email }}</td>
                 <td>{{ client.mobile }}</td>

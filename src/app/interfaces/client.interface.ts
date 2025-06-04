@@ -8,6 +8,7 @@ export interface IClient {
   mobile: string;
   identity: string;
   identityType: string;
+  type: string;
   isActive: boolean;
   currency: string;
   addresses: IClientAddress[];

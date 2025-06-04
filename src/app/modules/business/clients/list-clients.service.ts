@@ -1,4 +1,5 @@
 import { Injectable, signal } from '@angular/core';
+import { TypeClient } from '../../../enums';
 
 @Injectable({
   providedIn: 'root',
@@ -28,5 +29,11 @@ export class ListClientsService {
     }
 
     return type;
+  }
+
+  public getClientContactTypeBadge(typeClientContact: string): string {
+    return typeClientContact === TypeClient.PROVIDER
+      ? 'badge bg-label-primary'
+      : 'badge bg-label-success';
   }
 }

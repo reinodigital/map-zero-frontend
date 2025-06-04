@@ -4,3 +4,8 @@ export enum IdentityType {
   DIMEX = '03',
   NITE = '04',
 }
+
+export enum TypeClient {
+  CLIENT = 'CLIENTE',
+  PROVIDER = 'PROVEEDOR',
+}

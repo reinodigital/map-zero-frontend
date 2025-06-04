@@ -96,6 +96,7 @@ export default class EditClientComponent {
           this.client()?.name ?? '',
           [Validators.required, Validators.minLength(2)],
         ],
+        type: [this.client()?.type, [Validators.required]],
         email: [
           this.client()?.email ?? '',
           [Validators.required, Validators.pattern(this.emailPattern)],
