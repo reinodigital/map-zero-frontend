@@ -17,6 +17,7 @@ import { QuoteService } from '../../../../api';
 
 import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
 import { PaginationComponent } from '../../../../shared/components/pagination/pagination.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
 import { LimitValues, StatusQuote } from '../../../../enums';
 import { IQuote } from '../../../../interfaces';
@@ -31,6 +32,7 @@ import { IQuote } from '../../../../interfaces';
     PaginationComponent,
     RouterLink,
     ReadableDatePipe,
+    BreadcrumbComponent,
   ],
   templateUrl: './list-quotes.component.html',
   styleUrl: './list-quotes.component.scss',

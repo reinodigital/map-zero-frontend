@@ -16,6 +16,7 @@ import { DetailQuoteService } from '../detail-quote.service';
 
 import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
 import { StatusQuote } from '../../../../enums';
 import { IQuote } from '../../../../interfaces';
@@ -28,6 +29,7 @@ import { IQuote } from '../../../../interfaces';
     RouterLink,
     ReadableDatePipe,
     TrackingEntityComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './detail-quote.component.html',
   styleUrl: './detail-quote.component.scss',

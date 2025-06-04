@@ -5,11 +5,13 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../api';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { ListEmployeesService } from '../list-employees.service';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
+
 import { IAuth } from '../../../../interfaces';
 
 @Component({
   selector: 'detail-employee',
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, BreadcrumbComponent],
   templateUrl: './detail-employee.component.html',
   styleUrl: './detail-employee.component.scss',
 })

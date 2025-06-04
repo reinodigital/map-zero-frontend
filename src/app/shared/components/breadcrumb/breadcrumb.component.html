@@ -1,0 +1,11 @@
+<div class="breadcrumb">
+  <span class="breadcrumb_link" [routerLink]="primaryLink()">
+    {{ primaryText() }}
+  </span>
+  <i class="fas fa-angle-right breadcrumb_icon"></i>
+  @if (secondaryLink()) {
+  <span class="breadcrumb_link" [routerLink]="secondaryLink()">
+    {{ secondaryText() }}
+  </span>
+  }
+</div>

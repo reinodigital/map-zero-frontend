@@ -15,6 +15,7 @@ import { CommonAdminService } from '../../../../shared/services/common-admin.ser
 import { DetailClientService } from '../detail-client.service';
 import { ListClientsService } from '../list-clients.service';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
 import { IClient } from '../../../../interfaces';
 
@@ -22,7 +23,7 @@ import { IClient } from '../../../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'detail-client',
-  imports: [RouterLink, TrackingEntityComponent],
+  imports: [RouterLink, TrackingEntityComponent, BreadcrumbComponent],
   templateUrl: './detail-client.component.html',
   styleUrl: './detail-client.component.scss',
 })

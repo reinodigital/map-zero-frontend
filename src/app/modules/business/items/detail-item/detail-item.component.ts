@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ListItemsService } from '../list-items.service';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
 import { ItemService } from '../../../../api';
 import { IItem } from '../../../../interfaces';
@@ -21,7 +22,7 @@ import { IItem } from '../../../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'detail-item',
   standalone: true,
-  imports: [RouterLink, TrackingEntityComponent],
+  imports: [RouterLink, TrackingEntityComponent, BreadcrumbComponent],
   templateUrl: './detail-item.component.html',
   styleUrl: './detail-item.component.scss',
 })
