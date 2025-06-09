@@ -4,6 +4,7 @@ export * from './cabys.interface';
 export * from './client.interface';
 export * from './commons.interface';
 export * from './item.interface';
+export * from './invoice.interface';
 export * from './territory.interface';
 export * from './toast.interface';
 export * from './tracking.interface';

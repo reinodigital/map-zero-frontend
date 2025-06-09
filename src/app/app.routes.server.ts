@@ -90,6 +90,25 @@ export const serverRoutes: ServerRoute[] = [
   },
   // END QUOTES
 
+  // INVOICES
+  {
+    path: 'list-invoices',
+    renderMode: RenderMode.Prerender,
+  },
+  {
+    path: 'new-invoice',
+    renderMode: RenderMode.Prerender,
+  },
+  // {
+  //   path: 'detail-invoice/:id',
+  //   renderMode: RenderMode.Client,
+  // },
+  // {
+  //   path: 'edit-invoice/:id',
+  //   renderMode: RenderMode.Client,
+  // },
+  // END INVOICES
+
   {
     path: '**',
     renderMode: RenderMode.Client,

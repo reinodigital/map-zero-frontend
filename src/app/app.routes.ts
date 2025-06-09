@@ -208,14 +208,21 @@ export const routes: Routes = [
     canLoad: [AuthGuard],
   },
   {
-    path: 'detail-invoice/:id',
+    path: 'new-invoice',
     loadComponent: () =>
-      import(
-        './modules/business/invoices/detail-invoice/detail-invoice.component'
-      ),
+      import('./modules/business/invoices/new-invoice/new-invoice.component'),
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
   },
+  // {
+  //   path: 'detail-invoice/:id',
+  //   loadComponent: () =>
+  //     import(
+  //       './modules/business/invoices/'
+  //     ),
+  //   canActivate: [AuthGuard],
+  //   canLoad: [AuthGuard],
+  // },
   {
     path: 'edit-invoice/:id',
     loadComponent: () =>

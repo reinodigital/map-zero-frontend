@@ -1,1 +1,156 @@
-<h2>Vista Listado Facturas</h2>
+<div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de ventas'"
+    [primaryLink]="'/sales-overview'"
+  ></breadcrumb>
+
+  <div class="filters mb-4">
+    <div class="box">
+      <div
+        class="d-flex justify-content-between align-items-center cp mb-2"
+        (click)="openCloseFilters()"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFilters"
+        aria-expanded="false"
+        aria-controls="collapseFilters"
+      >
+        <h3 class="mb-0">Filtrar facturas</h3>
+        @if (filtersOpen()) {
+        <i class="fa-solid fa-window-minimize"> </i>
+        } @else {
+        <i class="fa-solid fa-window-maximize"> </i>
+        }
+      </div>
+      <div class="collapse" id="collapseFilters">
+        <div class="card card-body">
+          <form
+            class="search_form"
+            [formGroup]="searchForm()"
+            autocomplete="off"
+            (ngSubmit)="searchFormSubmit()"
+          >
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="name">Número</label>
+                <input type="text" formControlName="invoiceNumber" />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-start mt-4">
+              <button class="btn btn-success" type="submit">Filtrar</button>
+              <button
+                class="btn btn-light ms-2"
+                type="button"
+                (click)="restartFilters()"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="row animate__animated animate__fadeIn">
+    <div class="col-12">
+      <div class="alert alert-info text-center" role="alert">
+        <h4 class="alert-heading">Loading</h4>
+        <i class="fa fa-spin fa-refresh fa-2x"></i>
+        <p class="mb-o">Cargando...</p>
+      </div>
+    </div>
+  </div>
+  } @if (!isLoading()) {
+  <div class="table_clients">
+    <div class="box">
+      <div class="row">
+        <div class="d-flex justify-content-between mb-3">
+          <h3>Facturas</h3>
+          <button class="btn btn-primary mb-2" routerLink="/new-invoice">
+            + Nueva factura
+          </button>
+        </div>
+
+        <mat-tab-group
+          class="mt-4 mb-3"
+          (selectedTabChange)="onTabChange($event)"
+        >
+          <mat-tab [label]="'Todas ' + totalAll()"></mat-tab>
+          <mat-tab [label]="'Borrador ' + totalDraft()"></mat-tab>
+          <!-- <mat-tab [label]="'Enviadas ' + totalSent()"></mat-tab>
+          <mat-tab [label]="'Rechazadas ' + totalDeclined()"></mat-tab>
+          <mat-tab [label]="'Aceptadas ' + totalAccepted()"></mat-tab>
+          <mat-tab [label]="'Facturadas ' + totalInvoiced()"></mat-tab> -->
+        </mat-tab-group>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Fecha inicio</th>
+                <th>Estado</th>
+                <th>Pago total</th>
+              </tr>
+            </thead>
+            <tbody class="animate__animated animate__fadeIn">
+              @for (invoice of invoices(); track invoice.id) {
+              <tr
+                class="admin_tr"
+                [routerLink]="'/detail-invoice/' + invoice.id"
+              >
+                <td>{{ invoice.invoiceNumber }}</td>
+                <td>{{ invoice.client.name }}</td>
+                <td>{{ invoice.initDate | readableDate }}</td>
+                <td>
+                  <span
+                    [class]="
+                      detailInvoiceService.getStatusBadgeFromInvoice(
+                        invoice?.status ?? ''
+                      )
+                    "
+                  >
+                    {{ invoice?.status }}
+                  </span>
+                </td>
+                <td>{{ invoice.total }}</td>
+              </tr>
+              } @empty {
+              <tr>
+                <div class="w-100 d-flex justify-content-start">
+                  <div class="alert alert-warning">
+                    {{
+                      isActiveFilters()
+                        ? "Sin resultados para esa búsqueda"
+                        : "No existen facturas por el momento en el sistema"
+                    }}
+                  </div>
+                </div>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- END TABLE -->
+      </div>
+      <!-- END ROW -->
+    </div>
+    <!-- End BOX -->
+  </div>
+  }
+
+  <!-- Pagination -->
+  @if (total()) {
+  <div class="d-flex justify-content-center w_100 mt-4">
+    <app-pagination
+      [total]="total()"
+      [factor]="limit"
+      [initialOffset]="offset()"
+      (offsetEmitter)="detectChangeOffset($event)"
+    ></app-pagination>
+  </div>
+  }
+</div>
