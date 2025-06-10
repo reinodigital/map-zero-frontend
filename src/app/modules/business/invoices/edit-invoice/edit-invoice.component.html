@@ -1,0 +1,265 @@
+<div class="main_content">
+  <div class="box">
+    <div class="d-flex justify-content-between">
+      <h3 class="">Editar factura</h3>
+      <h4 class="cp" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    @if (editInvoiceForm()) {
+    <form class="form" [formGroup]="editInvoiceForm()!">
+      <div class="row">
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label for="defaultSeller">
+            Cliente <span class="asterisk">*</span>
+          </label>
+          <ng-select
+            [items]="clients()"
+            bindLabel="name"
+            placeholder="--Seleccione--"
+            formControlName="client"
+            [searchable]="true"
+          >
+          </ng-select>
+          @if (validField('clientId')) {
+          <small class="text-danger"> cliente es requerido </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label class="w_100" for="initDate">
+            Fecha inicio
+            <span class="asterisk">*</span>
+          </label>
+          <input type="date" formControlName="initDate" />
+          @if (validField('initDate')) {
+          <small class="text-danger"> fecha inicio es requerida </small>
+          }
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label class="w_100" for="expireDate">
+            Fecha expira
+            <span class="muted">opcional</span>
+          </label>
+          <quick-date-picker
+            (dateChanged)="onExpireDateChange($event)"
+          ></quick-date-picker>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <label class="w_100" for="expireDate">
+            Moneda
+            <span class="asterisk">*</span>
+          </label>
+          <select formControlName="currency">
+            <option value="USD">USD</option>
+          </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4">
+          <div class="d-flex justify-content-between align-items-end mb-1">
+            <label class="w_100" for="reference">
+              Referencia
+              <span class="muted">opcional</span>
+            </label>
+            <i class="fas fa-tag"></i>
+          </div>
+          <input type="text" formControlName="reference" />
+        </div>
+      </div>
+
+      <!-- Invoice Items as Rows -->
+      <table class="table table-sm mb-3 mt-5">
+        <thead>
+          <tr>
+            <th class="col-2">
+              <label>Item</label>
+            </th>
+            <th class="col-2">
+              <label>Descripción</label>
+            </th>
+            <th class="col-1">
+              <label> Cantidad </label>
+            </th>
+            <th class="col-1">
+              <label>Precio</label>
+            </th>
+            <th class="col-1">
+              <label>Descuento (%)</label>
+            </th>
+            <th class="col-1">
+              <label>Cuenta</label>
+            </th>
+            <th class="col-1">
+              <label>Impuesto</label>
+            </th>
+            <!-- <th class="col-1">
+              <label>Vendedor</label>
+            </th> -->
+            <th class="col-1"></th>
+          </tr>
+        </thead>
+        <tbody formArrayName="invoiceItems">
+          <!-- @for (item of invoiceItems.controls; let i = $index) { -->
+          <tr
+            *ngFor="let item of invoiceItems.controls; let i = index"
+            [formGroupName]="i"
+            [id]="'row_' + i"
+          >
+            <td>
+              <custom-select
+                formControlName="itemId"
+                (itemSelectedEmitter)="onItemSelectedInRow($event, i)"
+              ></custom-select>
+              @if (validField('invoiceItems.' + i + '.itemId')) {
+              <small class="text-danger"> item es requerido </small>
+              }
+            </td>
+            <td>
+              <textarea formControlName="description" rows="1"></textarea>
+              <!-- <input type="text" formControlName="description" /> -->
+            </td>
+            <td>
+              <input type="number" formControlName="quantity" />
+              @if (validField('invoiceItems.' + i + '.quantity')) {
+              <small class="text-danger"> cantidad debe ser > 0 </small>
+              }
+            </td>
+            <td>
+              <input type="number" formControlName="price" />
+              @if (validField('invoiceItems.' + i + '.price')) {
+              <small class="text-danger"> precio incorrecto </small>
+              }
+            </td>
+            <td>
+              <input type="number" formControlName="discount" placeholder="%" />
+            </td>
+            <td>
+              <select formControlName="accountId">
+                <option value="">--Seleccione--</option>
+                @for (account of accounts(); track account.id) {
+                <option [value]="account.id">
+                  {{`${account.code} - ${account.name}`}}
+                </option>
+                }
+              </select>
+              @if (validField('invoiceItems.' + i + '.accountId')) {
+              <small class="text-danger"> contabilidad es requerido </small>
+              }
+            </td>
+            <td>
+              <select formControlName="taxRate">
+                @for (tax of taxRates; track tax.code) {
+                <option [value]="tax.code">{{ tax.label }}</option>
+                }
+              </select>
+              @if (validField('invoiceItems.' + i + '.taxRate')) {
+              <small class="text-danger"> impuesto es requerido </small>
+              }
+            </td>
+            <!-- <td>
+              <ng-select
+                [items]="sellers()"
+                bindLabel="name"
+                bindValue="uid"
+                placeholder="--Seleccione--"
+                formControlName="sellerUid"
+                [searchable]="true"
+              >
+              </ng-select>
+            </td> -->
+            <td>
+              <button
+                class="btn btn-danger btn-sm"
+                type="button"
+                (click)="removeInvoiceItem(i)"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+          @if (!invoiceItems.value.length) {
+          <tr class="no-elements">
+            <td colspan="4">
+              <small>
+                No se ha añadido fila, presione "Agregar fila" para incluir
+                algunos.
+              </small>
+            </td>
+          </tr>
+          }
+          <!-- } @empty {
+            <tr class="no-elements">
+              <td colspan="4">
+                <small>
+                  No se ha añadido fila, presione "Agregar fila" para incluir
+                  algunos.
+                </small>
+              </td>
+            </tr>
+            } -->
+        </tbody>
+      </table>
+      <button
+        class="btn btn-sm btn-outline-primary mt-2"
+        type="button"
+        (click)="addInvoiceItem()"
+      >
+        <i class="fa fa-plus"></i> Agregar fila
+      </button>
+      <!-- End Invoice Items as Rows -->
+
+      <div class="row mt-4">
+        <div class="col-md-6 offset-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="total_price d-flex justify-content-between">
+              <span>Subtotal</span>
+              <span>{{ subtotal() | number : "1.2-2" }}</span>
+            </li>
+            <li class="total_price d-flex justify-content-between">
+              <span>Descuento total</span>
+              <span class="text-danger">
+                - {{ totalDiscount() | number : "1.2-2" }}
+              </span>
+            </li>
+            <li class="total_price d-flex justify-content-between">
+              <span>Impuesto total</span>
+              <span>{{ totalTax() | number : "1.2-2" }}</span>
+            </li>
+            <div class="line_divider"></div>
+            <li class="total_price d-flex justify-content-between mt-3">
+              <span><span>Total</span></span>
+              <strong>
+                {{ totalAmount() | number : "1.2-2" }}
+              </strong>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Missing action buttons -->
+      <div class="d-flex align-items-center mt-4">
+        <submit-button
+          (btnWasClicked)="onCustomSubmitBtnClicked($event)"
+          [isFormSubmitting]="isFormSubmitting()"
+          [buttonAction]="formInvoiceService.editAction"
+          primaryText="Editar"
+          secondaryText="Editando"
+        ></submit-button>
+        <!-- <div class="input-group ms-3">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="callToAction(formInvoiceService.editAndSendAction)"
+          >
+            @if (formInvoiceService.isFormInvoiceAndEmailSubmitting()) {
+            <div class="d-flex align-items-center">
+              Editando y enviando
+              <div class="spinner ms-2"></div>
+            </div>
+            } @else { Editar y enviar }
+          </button>
+        </div> -->
+      </div>
+    </form>
+    }
+  </div>
+</div>

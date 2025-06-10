@@ -223,13 +223,13 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
   },
-  // {
-  //   path: 'edit-invoice/:id',
-  //   loadComponent: () =>
-  //     import('./modules/business/invoices/'),
-  //   canActivate: [AuthGuard],
-  //   canLoad: [AuthGuard],
-  // },
+  {
+    path: 'edit-invoice/:id',
+    loadComponent: () =>
+      import('./modules/business/invoices/edit-invoice/edit-invoice.component'),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
   // END INVOICES
 
   // PURCHASE ORDERS

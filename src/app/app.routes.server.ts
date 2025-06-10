@@ -99,14 +99,14 @@ export const serverRoutes: ServerRoute[] = [
     path: 'new-invoice',
     renderMode: RenderMode.Prerender,
   },
-  // {
-  //   path: 'detail-invoice/:id',
-  //   renderMode: RenderMode.Client,
-  // },
-  // {
-  //   path: 'edit-invoice/:id',
-  //   renderMode: RenderMode.Client,
-  // },
+  {
+    path: 'detail-invoice/:id',
+    renderMode: RenderMode.Client,
+  },
+  {
+    path: 'edit-invoice/:id',
+    renderMode: RenderMode.Client,
+  },
   // END INVOICES
 
   {

@@ -229,7 +229,7 @@ export class FormInvoiceService {
     // this.invoiceService.update(invoiceId, data).subscribe((resp) => {
     //   if (resp && resp.id) {
     //     this.customToastService.add({
-    //       message: `Cotización actualizada correctamente.`,
+    //       message: `Factura actualizada correctamente.`,
     //       type: TypeMessageToast.SUCCESS,
     //       duration: 8000,
     //     });
