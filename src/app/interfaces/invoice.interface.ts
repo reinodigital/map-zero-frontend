@@ -18,6 +18,7 @@ export interface IInvoice {
   status: string;
   invoiceNumber: string;
   total: number;
+  reference?: string;
   initDate?: Date;
   expireDate?: Date;
   currency: string;

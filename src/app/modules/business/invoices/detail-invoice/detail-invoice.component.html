@@ -1,0 +1,274 @@
+<div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de ventas'"
+    [primaryLink]="'/sales-overview'"
+    [secondaryText]="'Listado facturas'"
+    [secondaryLink]="'/list-invoices'"
+  ></breadcrumb>
+
+  <div class="box">
+    <div class="d-flex justify-content-between mb-3">
+      <h3 class="">Detalle factura</h3>
+      <h4 class="cp" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    @if (invoice()) {
+    <div class="d-flex justify-content-between mb-4">
+      <div class="d-flex align-items-center">
+        <span class="me-3">{{ invoice()?.invoiceNumber }}</span>
+        <span
+          [class]="
+            detailInvoiceService.getStatusBadgeFromInvoice(
+              invoice()?.status ?? ''
+            )
+          "
+        >
+          {{ invoice()?.status }}
+        </span>
+      </div>
+      <div class="hstack gap-3">
+        <!-- TODO -->
+        <button class="btn btn-outline-secondary">Imprimir PDF</button>
+        @if (allowedStatusToBeEditedFromDraft.includes(invoice()!.status)) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="'/edit-invoice' + invoiceId"
+        >
+          <i class="fa-solid fa-pen-to-square me-2"></i>
+          Editar
+        </button>
+        }
+        <!-- @if (allowedStatusToBeAccepted.includes(invoice()!.status)) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="detailInvoiceService.markAsAccepted(invoiceId)"
+        >
+          Marcar como aceptada
+        </button>
+        } -->
+        <div class="dropdown">
+          @if (detailInvoiceService.isSendEmailFromDetailComponentSubmitting())
+          {
+          <div class="spinner ms-1"></div>
+          } @else {
+          <i
+            class="fa-solid fa-ellipsis-vertical three_points_dropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ></i>
+          }
+          <ul class="dropdown-menu">
+            <!-- @if (allowedStatusToBeDeclined.includes(invoice()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.markAsDeclined(invoiceId)"
+              >
+                <i class="fa-solid fa-xmark icon_declined me-2"></i>
+                Marcar como rechazada
+              </button>
+            </li>
+            } -->
+            @if (allowedStatusToBeEdited.includes(invoice()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                [routerLink]="'/edit-invoice' + invoiceId"
+              >
+                <i class="fa-solid fa-pen-to-square icon_pencil me-2"></i>
+                Editar
+              </button>
+            </li>
+            } @if (invoice()!.status !== 'removida') {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.removeInvoice(invoice()!)"
+              >
+                <i class="fa-solid fa-trash icon_trash me-2"></i>
+                Remover
+              </button>
+            </li>
+            }
+            <li>
+              <div class="line_divider mt-3 mb-2"></div>
+              <small class="ms-3 fs-4">Acciones</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Cliente</label>
+        <span>{{ invoice()?.client?.name }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Fecha inicio</label>
+        <span>{{ invoice()!.initDate | readableDate }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Fecha expira</label>
+        <span>
+          {{
+            invoice()!.expireDate ? (invoice()!.expireDate | readableDate) : "_"
+          }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Número factura</label>
+        <span>
+          {{ invoice()!.invoiceNumber }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Moneda</label>
+        <span>
+          {{ invoice()!.currency }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Estado</label>
+        <span
+          [class]="
+            detailInvoiceService.getStatusBadgeFromInvoice(
+              invoice()?.status ?? ''
+            )
+          "
+        >
+          {{ invoice()?.status }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Referencia</label>
+        <span>
+          {{ invoice()!.reference ?? "_" }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row table_items">
+      <table class="table table-sm mb-3">
+        <thead>
+          <tr>
+            <th class="col-2">
+              <span>Item</span>
+            </th>
+            <th class="col-3">
+              <span>Descripción</span>
+            </th>
+            <th class="col-1">
+              <span> Cantidad </span>
+            </th>
+            <th class="col-1">
+              <span>Precio</span>
+            </th>
+            <th class="col-1">
+              <span>Descuento</span>
+            </th>
+            <th class="col-1">
+              <span>Cuenta</span>
+            </th>
+            <th class="col-1">
+              <span>Impuesto</span>
+            </th>
+            <!-- <th class="col-1">
+              <span>Vendedor</span>
+            </th> -->
+            <th class="col-1 text-end">
+              <span>Monto</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (invoiceItem of invoice()?.invoiceItems; track invoiceItem.id) {
+          <tr>
+            <td>
+              <span>{{ invoiceItem.item.name }}</span>
+            </td>
+            <td>
+              <span>{{ invoiceItem.description }}</span>
+            </td>
+            <td>
+              <span>{{ invoiceItem.quantity }}</span>
+            </td>
+            <td>
+              <span>{{ invoiceItem.price }}</span>
+            </td>
+            <td>
+              <span>{{ invoiceItem.discount }}</span>
+            </td>
+            <td>
+              <span>{{ invoiceItem.account?.name ?? "_" }}</span>
+            </td>
+            <td>
+              <span>
+                {{
+                  detailInvoiceService.getTaxRateLabel(
+                    invoiceItem.taxRate ?? ""
+                  )
+                }}
+              </span>
+            </td>
+            <!-- <td>
+              <span>{{ invoiceItem.seller?.name ?? "_" }}</span>
+            </td> -->
+            <td class="text-end">
+              <span>{{ invoiceItem.amount }}</span>
+            </td>
+          </tr>
+          } @empty {
+          <tr class="no-elements">
+            <td colspan="12">
+              No existen Artículos ni servicios en esta factura.
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Totals values -->
+    <div class="row mt-4">
+      <div class="col-md-6 col-lg-4 offset-md-6 offset-lg-8">
+        <ul class="list-group list-group-flush">
+          <li class="total_price d-flex justify-content-between">
+            <span>Subtotal</span>
+            <span>{{ subtotal() | number : "1.2-2" }}</span>
+          </li>
+          <li class="total_price d-flex justify-content-between">
+            <span>Descuento total</span>
+            <span class="text-danger">
+              - {{ totalDiscount() | number : "1.2-2" }}
+            </span>
+          </li>
+          <li class="total_price d-flex justify-content-between">
+            <span>Impuesto total</span>
+            <span>{{ totalTax() | number : "1.2-2" }}</span>
+          </li>
+          <div class="line_divider"></div>
+          <li class="total_price d-flex justify-content-between mt-3">
+            <span>Total</span>
+            <strong>
+              {{ totalAmount() | number : "1.2-2" }}
+            </strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- History tracking changes-->
+@if (invoice()) {
+<tracking-entity [tracking]="invoice()!.tracking"></tracking-entity>
+}

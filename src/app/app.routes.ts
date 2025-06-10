@@ -214,22 +214,22 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
   },
-  // {
-  //   path: 'detail-invoice/:id',
-  //   loadComponent: () =>
-  //     import(
-  //       './modules/business/invoices/'
-  //     ),
-  //   canActivate: [AuthGuard],
-  //   canLoad: [AuthGuard],
-  // },
   {
-    path: 'edit-invoice/:id',
+    path: 'detail-invoice/:id',
     loadComponent: () =>
-      import('./modules/business/quotes/edit-quote/edit-quote.component'),
+      import(
+        './modules/business/invoices/detail-invoice/detail-invoice.component'
+      ),
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
   },
+  // {
+  //   path: 'edit-invoice/:id',
+  //   loadComponent: () =>
+  //     import('./modules/business/invoices/'),
+  //   canActivate: [AuthGuard],
+  //   canLoad: [AuthGuard],
+  // },
   // END INVOICES
 
   // PURCHASE ORDERS
