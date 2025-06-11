@@ -265,5 +265,8 @@
 
 <!-- History tracking changes-->
 @if (client()) {
-<tracking-entity [tracking]="client()!.tracking"></tracking-entity>
+<tracking-entity
+  [tracking]="client()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
 }

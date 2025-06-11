@@ -18,8 +18,8 @@ import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
-import { StatusInvoice } from '../../../../enums';
-import { IInvoice } from '../../../../interfaces';
+import { NameEntities, StatusInvoice } from '../../../../enums';
+import { IDataEntity, IInvoice } from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,6 +43,7 @@ export default class DetailInvoiceComponent {
 
   private invoiceService = inject(InvoiceService);
   public detailInvoiceService = inject(DetailInvoiceService);
+  public entityData = signal<IDataEntity | null>(null);
 
   // STATUS GATEWAY
   public allowedStatusToBeEditedFromDraft = [StatusInvoice.DRAFT as String];
@@ -78,6 +79,10 @@ export default class DetailInvoiceComponent {
 
   constructor() {
     this.invoiceId = this.activatedRoute.snapshot.params['id'];
+    this.entityData.set({
+      refEntity: NameEntities.INVOICE,
+      refEntityId: this.invoiceId,
+    });
   }
 
   ngOnInit(): void {

@@ -154,5 +154,8 @@
 
 <!-- History tracking changes-->
 @if (item()) {
-<tracking-entity [tracking]="item()!.tracking"></tracking-entity>
+<tracking-entity
+  [tracking]="item()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
 }

@@ -1,15 +1,22 @@
-<ul
-  class="list-group cp mt-5"
-  data-bs-toggle="collapse"
-  data-bs-target="#collapseExample"
-  aria-expanded="false"
-  aria-controls="collapseExample"
->
+<ul class="list-group cp mt-5">
   <li class="list-group-item list-group-item-secondary">
-    <span class="fw-bold">
-      <i class="fa-regular fa-square-caret-down fs-4 ms-3"></i>
-      Historial de cambios
-    </span>
+    <div class="div_collapse_btn">
+      <div
+        class="div_collapse"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      >
+        <span class="fw-bold">
+          <i class="fa-regular fa-square-caret-down fs-4 ms-3"></i>
+          Historial de cambios
+        </span>
+      </div>
+      <button class="btn btn-outline-secondary div_btn" (click)="addNote()">
+        + Agregar nota
+      </button>
+    </div>
   </li>
 </ul>
 
@@ -23,7 +30,7 @@
       <div class="col-12 col-md-6 col-lg-5">Detalle</div>
     </div>
     <div class="line_row_tracking"></div>
-    @for (line of tracking(); track $index) {
+    @for (line of trackingList(); track $index) {
     <div class="row row_tracking">
       <div class="col-12 col-md-6 col-lg-2">
         <span class="tracking_info">{{

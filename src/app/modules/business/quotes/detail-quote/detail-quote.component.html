@@ -334,5 +334,8 @@
 
 <!-- History tracking changes-->
 @if (quote()) {
-<tracking-entity [tracking]="quote()!.tracking"></tracking-entity>
+<tracking-entity
+  [tracking]="quote()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
 }

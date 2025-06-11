@@ -17,7 +17,8 @@ import { ListClientsService } from '../list-clients.service';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
-import { IClient } from '../../../../interfaces';
+import { IClient, IDataEntity } from '../../../../interfaces';
+import { NameEntities } from '../../../../enums';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -34,6 +35,7 @@ export default class DetailClientComponent {
   private destroyRef = inject(DestroyRef);
   private clientService = inject(ClientService);
 
+  public entityData = signal<IDataEntity | null>(null);
   public listClientsService = inject(ListClientsService);
   public detailClientService = inject(DetailClientService);
 
@@ -47,6 +49,10 @@ export default class DetailClientComponent {
 
   constructor() {
     this.clientId = this.activatedRoute.snapshot.params['id'];
+    this.entityData.set({
+      refEntity: NameEntities.CLIENT,
+      refEntityId: this.clientId,
+    });
   }
 
   ngOnInit(): void {

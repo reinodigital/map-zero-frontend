@@ -1,0 +1,29 @@
+<div class="square">
+  <div class="d-flex justify-content-between align-items-start">
+    <h3>Agregar nota</h3>
+    <i
+      (click)="closePopUp('cancel')"
+      class="fa-solid fa-circle-xmark btn_close"
+    >
+    </i>
+  </div>
+  <div class="note">
+    <form class="note_form">
+      <textarea
+        [formControl]="note"
+        class="w-100"
+        rows="3"
+        placeholder="escriba la nota"
+      ></textarea>
+    </form>
+
+    <div class="hstack gap-3 buttons">
+      <button (click)="closePopUp('cancel')" class="btn btn-light">
+        Cancelar
+      </button>
+      <button (click)="closePopUp('continue')" class="btn btn-success ms-2">
+        Agregar
+      </button>
+    </div>
+  </div>
+</div>

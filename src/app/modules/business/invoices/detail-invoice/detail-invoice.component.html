@@ -270,5 +270,8 @@
 
 <!-- History tracking changes-->
 @if (invoice()) {
-<tracking-entity [tracking]="invoice()!.tracking"></tracking-entity>
+<tracking-entity
+  [tracking]="invoice()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
 }

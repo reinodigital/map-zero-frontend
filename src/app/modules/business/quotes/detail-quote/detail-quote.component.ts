@@ -18,8 +18,8 @@ import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
-import { StatusQuote } from '../../../../enums';
-import { IQuote } from '../../../../interfaces';
+import { NameEntities, StatusQuote } from '../../../../enums';
+import { IDataEntity, IQuote } from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +42,7 @@ export default class DetailQuoteComponent {
   private destroyRef = inject(DestroyRef);
 
   private quoteService = inject(QuoteService);
+  public entityData = signal<IDataEntity | null>(null);
   public detailQuoteService = inject(DetailQuoteService);
 
   // STATUS GATEWAY
@@ -79,6 +80,10 @@ export default class DetailQuoteComponent {
 
   constructor() {
     this.quoteId = this.activatedRoute.snapshot.params['id'];
+    this.entityData.set({
+      refEntity: NameEntities.QUOTE,
+      refEntityId: this.quoteId,
+    });
   }
 
   ngOnInit(): void {

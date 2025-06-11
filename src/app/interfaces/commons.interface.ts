@@ -23,3 +23,16 @@ export interface ITotals {
   subtotal: number;
   total: number;
 }
+
+/* Tracking */
+export interface IAddTrackingNote {
+  createdAt: string;
+  note: string;
+  refEntity: string;
+  refEntityId: number;
+}
+
+export interface IDataEntity {
+  refEntity: string;
+  refEntityId: number;
+}

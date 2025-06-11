@@ -1,0 +1,25 @@
+.square {
+  border-radius: 0.5rem;
+  padding: 2rem;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.btn_close {
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 2.2rem;
+}
+
+.note {
+  .note_form {
+    margin-top: 2rem;
+  }
+
+  .buttons {
+    position: absolute;
+    right: 2rem;
+    bottom: 1rem;
+  }
+}

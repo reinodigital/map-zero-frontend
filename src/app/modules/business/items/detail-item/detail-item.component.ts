@@ -10,13 +10,14 @@ import {
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
+import { ItemService } from '../../../../api';
 import { ListItemsService } from '../list-items.service';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 
-import { ItemService } from '../../../../api';
-import { IItem } from '../../../../interfaces';
+import { IDataEntity, IItem } from '../../../../interfaces';
+import { NameEntities } from '../../../../enums';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,6 +34,7 @@ export default class DetailItemComponent {
   private destroyRef = inject(DestroyRef);
 
   private itemService = inject(ItemService);
+  public entityData = signal<IDataEntity | null>(null);
   public listItemsService = inject(ListItemsService);
 
   get isBrowser(): boolean {
@@ -45,6 +47,10 @@ export default class DetailItemComponent {
 
   constructor() {
     this.itemId = this.activatedRoute.snapshot.params['id'];
+    this.entityData.set({
+      refEntity: NameEntities.ITEM,
+      refEntityId: this.itemId,
+    });
   }
 
   ngOnInit(): void {
