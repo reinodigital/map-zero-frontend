@@ -77,12 +77,39 @@
           class="mt-4 mb-3"
           (selectedTabChange)="onTabChange($event)"
         >
-          <mat-tab [label]="'Todas ' + totalAll()"></mat-tab>
-          <mat-tab [label]="'Borrador ' + totalDraft()"></mat-tab>
-          <mat-tab [label]="'Enviadas ' + totalSent()"></mat-tab>
-          <mat-tab [label]="'Rechazadas ' + totalDeclined()"></mat-tab>
-          <mat-tab [label]="'Aceptadas ' + totalAccepted()"></mat-tab>
-          <mat-tab [label]="'Facturadas ' + totalInvoiced()"></mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Todas <span class="text-primary ms-2">{{ totalAll() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Borrador <span class="text-primary ms-2">{{ totalDraft() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Enviadas <span class="text-primary ms-2">{{ totalSent() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Rechazadas
+              <span class="text-primary ms-2">{{ totalDeclined() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Aceptadas
+              <span class="text-primary ms-2">{{ totalAccepted() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Facturadas
+              <span class="text-primary ms-2">{{ totalInvoiced() }}</span>
+            </ng-template>
+          </mat-tab>
         </mat-tab-group>
 
         <div class="table-responsive">

@@ -77,8 +77,16 @@
           class="mt-4 mb-3"
           (selectedTabChange)="onTabChange($event)"
         >
-          <mat-tab [label]="'Todas ' + totalAll()"></mat-tab>
-          <mat-tab [label]="'Borrador ' + totalDraft()"></mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Todas <span class="text-primary ms-2">{{ totalAll() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Borrador <span class="text-primary ms-2">{{ totalDraft() }}</span>
+            </ng-template>
+          </mat-tab>
           <!-- <mat-tab [label]="'Enviadas ' + totalSent()"></mat-tab>
           <mat-tab [label]="'Rechazadas ' + totalDeclined()"></mat-tab>
           <mat-tab [label]="'Aceptadas ' + totalAccepted()"></mat-tab>
