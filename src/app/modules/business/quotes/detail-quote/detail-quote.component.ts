@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { QuoteService } from '../../../../api';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { DetailQuoteService } from '../detail-quote.service';
+import { DetailCopyQuoteToService } from '../detail-copy-quote-to.service';
 
 import { ReadableDatePipe } from '../../../../pipes/readable-date.pipe';
 import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
@@ -44,6 +45,7 @@ export default class DetailQuoteComponent {
   private quoteService = inject(QuoteService);
   public entityData = signal<IDataEntity | null>(null);
   public detailQuoteService = inject(DetailQuoteService);
+  public detailCopyQuoteToService = inject(DetailCopyQuoteToService);
 
   // STATUS GATEWAY
   public allowedStatusToBeEditedFromDraft = [StatusQuote.DRAFT as String];

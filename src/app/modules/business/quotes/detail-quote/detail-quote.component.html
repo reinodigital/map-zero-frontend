@@ -82,7 +82,19 @@
                 Enviar
               </button>
             </li>
-            } @if (allowedStatusToMarkAsSent.includes(quote()!.status)) {
+            }
+            <!-- COPY TO -->
+            <button
+              type="button"
+              class="dropdown-item"
+              (click)="
+                detailCopyQuoteToService.displayModalCopyQuoteTo(quoteId)
+              "
+            >
+              <i class="fa-solid fa-clone icon_copy_to me-2"></i>
+              Copiar a
+            </button>
+            @if (allowedStatusToMarkAsSent.includes(quote()!.status)) {
             <li>
               <button
                 class="dropdown-item"

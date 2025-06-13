@@ -28,6 +28,10 @@
   background-color: var(--background) !important;
 }
 
+.bg_blue {
+  background-color: var(--primary_blue) !important;
+}
+
 .bg_white {
   background-color: var(--white);
 }
@@ -77,6 +81,16 @@
   width: 100%;
 }
 
+.circle_check {
+  border: 1.6px solid var(--black);
+  border-radius: 50%;
+  color: transparent;
+  padding: 0 0.3rem;
+  display: flex;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
 // Icons
 .icon_trash {
   color: var(--red);
@@ -92,6 +106,9 @@
 }
 .icon_sent {
   color: var(--primary_blue);
+}
+.icon_copy_to {
+  color: var(--primary_orange);
 }
 .icon_mark_as_sent {
   color: var(--letter);

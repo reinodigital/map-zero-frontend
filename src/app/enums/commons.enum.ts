@@ -12,4 +12,5 @@ export enum NameEntities {
   ITEM = 'Item',
   QUOTE = 'Quote',
   INVOICE = 'Invoice',
+  PURCHASE_ORDER = 'PurchaseOrder',
 }
