@@ -1,14 +1,22 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   Inject,
   inject,
   signal,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-import { NameEntities } from '../../../enums';
+import { QuoteService } from '../../../api';
+import { CustomToastService } from '../../services/custom-toast.service';
+import { DetailCopyQuoteToService } from '../../../modules/business/quotes/detail-copy-quote-to.service';
+
+import { NameEntities, TypeMessageToast } from '../../../enums';
+import { formatDateToString } from '../../helpers';
 
 interface ICopyToOption {
   entity: string;
@@ -25,9 +33,14 @@ interface ICopyToOption {
   imports: [ReactiveFormsModule],
 })
 export class ModalCopyQuoteToComponent {
-  public dialogRef = inject(MatDialogRef<ModalCopyQuoteToComponent>);
+  private dialogRef = inject(MatDialogRef<ModalCopyQuoteToComponent>);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
+  private quoteService = inject(QuoteService);
+  private detailCopyQuoteToService = inject(DetailCopyQuoteToService);
+  private customToastService = inject(CustomToastService);
 
-  public branchId = signal<number | null>(null);
+  public quoteId = signal<number | null>(null);
   public selectedOption = signal<string | null>(null);
 
   public arrCopyToOptions: ICopyToOption[] = [
@@ -52,7 +65,7 @@ export class ModalCopyQuoteToComponent {
     @Inject(MAT_DIALOG_DATA)
     public data: { quoteId: number }
   ) {
-    this.branchId.set(data.quoteId);
+    this.quoteId.set(data.quoteId);
   }
 
   onSelectOption(option: string): void {
@@ -66,7 +79,51 @@ export class ModalCopyQuoteToComponent {
   executeCopy(): void {
     if (!this.selectedOption()) return;
 
-    // TODO: make a switch and apply option copy
-    console.log(this.selectedOption());
+    switch (this.selectedOption()) {
+      case NameEntities.QUOTE:
+        this.generateCopyToQuote();
+        break;
+      case NameEntities.INVOICE:
+        this.generateCopyToInvoice();
+        break;
+      case NameEntities.PURCHASE_ORDER:
+        // TODO: generate copy To Purchase order
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  generateCopyToQuote(): void {
+    const createdAt = formatDateToString(new Date());
+    this.quoteService
+      .copyToDraft(this.quoteId()!, createdAt)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resp) => {
+        if (resp && resp.id) {
+          this.customToastService.add({
+            message: `Cotización como borrador generada correctamente.`,
+            type: TypeMessageToast.SUCCESS,
+            duration: 5000,
+          });
+
+          this.closePopUp();
+          this.router.navigateByUrl(`/detail-quote/${resp.id}`);
+          this.detailCopyQuoteToService.triggerCurrentQuoteHasBeenCopied(
+            resp.id
+          );
+        } else {
+          this.customToastService.add({
+            message: resp.message,
+            type: TypeMessageToast.ERROR,
+            duration: 5000,
+          });
+        }
+      });
+  }
+
+  generateCopyToInvoice(): void {
+    // TODO: generateCopyToInvoice
   }
 }

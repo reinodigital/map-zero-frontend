@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Subject } from 'rxjs';
 
 import { ModalCopyQuoteToComponent } from '../../../shared/modals/modal-copy-quote-to/modal-copy-quote-to.component';
 
@@ -8,6 +9,8 @@ import { ModalCopyQuoteToComponent } from '../../../shared/modals/modal-copy-quo
 })
 export class DetailCopyQuoteToService {
   private dialog = inject(MatDialog);
+  private _currentQuoteCopied$ = new Subject<number>();
+  public currentQuoteCopied$ = this._currentQuoteCopied$.asObservable();
 
   displayModalCopyQuoteTo(quoteId: number): void {
     // Mat Dialog solution
@@ -19,5 +22,9 @@ export class DetailCopyQuoteToService {
     });
 
     dialogRef.updatePosition({ top: '100px' });
+  }
+
+  triggerCurrentQuoteHasBeenCopied(redirectToQuoteId: number): void {
+    this._currentQuoteCopied$.next(redirectToQuoteId);
   }
 }

@@ -46,6 +46,17 @@ export class QuoteService {
     );
   }
 
+  copyToDraft(quoteId: number, createdAt: string): Observable<IQuote | any> {
+    const url = `${this._baseUrl}/quote/copy-to-draft/${quoteId}`;
+
+    return this.http
+      .post<IMessage>(url, { createdAt }, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
   sendEmail(
     quoteId: number,
     data: IDataEmailForSendQuote

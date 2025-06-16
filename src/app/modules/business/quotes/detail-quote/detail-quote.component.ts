@@ -97,6 +97,20 @@ export default class DetailQuoteComponent {
       .subscribe(() => {
         this.fetchQuote();
       });
+
+    // LISTEN WHEN CURRENT QUOTE HAS BEEN COPIED
+    this.listenWhenCurrentQuoteHasBeenCopied();
+  }
+
+  listenWhenCurrentQuoteHasBeenCopied(): void {
+    this.detailCopyQuoteToService.currentQuoteCopied$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((quoteId: number) => {
+        if (quoteId) {
+          this.quoteId = quoteId;
+          this.fetchQuote();
+        }
+      });
   }
 
   private fetchQuote(): void {
