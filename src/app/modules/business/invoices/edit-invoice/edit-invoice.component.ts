@@ -21,17 +21,14 @@ import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import {
-  AuthService,
-  ClientService,
-  AccountService,
-  InvoiceService,
-} from '../../../../api';
+import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
+import { ClientService, AccountService, InvoiceService } from '../../../../api';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormInvoiceService } from '../form-invoice.service';
 
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import { CustomSelectComponent } from '../../../../shared/components/custom-select/custom-select.component';
 import { QuickDatePickerComponent } from '../../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../../shared/components/submit-button/submit-button.component';
@@ -46,6 +43,7 @@ import {
   TypeMessageToast,
   EditInvoiceFormAction,
   StatusInvoice,
+  NameEntities,
 } from '../../../../enums';
 import {
   ShortAuth,
@@ -54,6 +52,7 @@ import {
   IAccount,
   IInvoice,
   IDataToUpdateInvoice,
+  IDataEntity,
 } from '../../../../interfaces';
 
 @Component({
@@ -62,11 +61,13 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    BreadcrumbComponent,
     CustomSelectComponent,
     ReactiveFormsModule,
     NgSelectModule,
     QuickDatePickerComponent,
     SubmitButtonComponent,
+    TrackingEntityComponent,
   ],
   templateUrl: './edit-invoice.component.html',
   styleUrl: './edit-invoice.component.scss',
@@ -77,13 +78,14 @@ export default class EditInvoiceComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private activatedRoute = inject(ActivatedRoute);
 
-  private authService = inject(AuthService);
   private accountService = inject(AccountService);
   private commonAdminService = inject(CommonAdminService);
   private invoiceService = inject(InvoiceService);
   private clientService = inject(ClientService);
   private formErrorService = inject(FormErrorService);
   private customToastService = inject(CustomToastService);
+
+  public entityData = signal<IDataEntity | null>(null);
 
   // SELLERS
   public sellers = signal<ShortAuth[]>([]);
@@ -126,6 +128,10 @@ export default class EditInvoiceComponent implements OnInit {
 
   constructor() {
     this.invoiceId.set(this.activatedRoute.snapshot.params['id']);
+    this.entityData.set({
+      refEntity: NameEntities.QUOTE,
+      refEntityId: this.invoiceId()!,
+    });
   }
 
   ngOnInit(): void {

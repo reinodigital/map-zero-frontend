@@ -17,6 +17,7 @@ import { DetailCopyQuoteToService } from '../../../modules/business/quotes/detai
 
 import { NameEntities, TypeMessageToast } from '../../../enums';
 import { formatDateToString } from '../../helpers';
+import { ICreateInvoiceFromAcceptedQuote } from '../../../interfaces';
 
 interface ICopyToOption {
   entity: string;
@@ -124,6 +125,31 @@ export class ModalCopyQuoteToComponent {
   }
 
   generateCopyToInvoice(): void {
-    // TODO: generateCopyToInvoice
+    const data: ICreateInvoiceFromAcceptedQuote = {
+      createdAt: formatDateToString(new Date()),
+      markAsInvoiced: null,
+    };
+
+    this.quoteService
+      .copyToInvoice(this.quoteId()!, data)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((resp) => {
+        if (resp && resp.id) {
+          this.customToastService.add({
+            message: `Factura como borrador generada correctamente.`,
+            type: TypeMessageToast.SUCCESS,
+            duration: 5000,
+          });
+
+          this.closePopUp();
+          this.router.navigateByUrl(`/edit-invoice/${resp.id}`);
+        } else {
+          this.customToastService.add({
+            message: resp.message,
+            type: TypeMessageToast.ERROR,
+            duration: 5000,
+          });
+        }
+      });
   }
 }

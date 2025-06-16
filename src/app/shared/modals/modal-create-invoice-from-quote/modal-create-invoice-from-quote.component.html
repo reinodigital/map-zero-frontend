@@ -1,0 +1,33 @@
+<div class="modal_create_invoice p-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Crear factura por {{ quote()?.quoteNumber }}</h3>
+    <i class="fa-solid fa-xmark fs-3" (click)="closePopUp()"></i>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12">
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input cp"
+          type="checkbox"
+          id="flexSwitchCheckDefault"
+          (change)="onChangeMark()"
+        />
+        <span>Marcar como facturada</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-end w_100 gap-3 mt-5">
+    <button
+      class="btn btn-outline-secondary"
+      type="button"
+      (click)="closePopUp()"
+    >
+      Cancelar
+    </button>
+    <button class="btn btn-primary" type="button" (click)="createInvoice()">
+      Crear
+    </button>
+  </div>
+</div>

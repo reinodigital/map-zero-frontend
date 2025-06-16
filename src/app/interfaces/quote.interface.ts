@@ -101,3 +101,8 @@ export interface IDataEmailForSendQuote {
 export interface IMarkAndChangeStatus {
   updatedAt: string;
 }
+
+export interface ICreateInvoiceFromAcceptedQuote {
+  createdAt: string;
+  markAsInvoiced: boolean | null;
+}

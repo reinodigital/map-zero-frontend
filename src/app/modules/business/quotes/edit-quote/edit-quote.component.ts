@@ -21,6 +21,7 @@ import { filter } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgSelectModule } from '@ng-select/ng-select';
 
+import { TrackingEntityComponent } from '../../../../shared/components/tracking-entity/tracking-entity.component';
 import {
   AuthService,
   ClientService,
@@ -35,6 +36,7 @@ import { FormNewQuoteService } from '../form-new-quote.service';
 import { CustomSelectComponent } from '../../../../shared/components/custom-select/custom-select.component';
 import { QuickDatePickerComponent } from '../../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../../shared/components/submit-button/submit-button.component';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import {
   taxRateArray,
   formatDateForInput,
@@ -45,15 +47,16 @@ import {
   TypeMessageToast,
   EditQuoteFormAction,
   StatusQuote,
+  NameEntities,
 } from '../../../../enums';
 import {
   ShortAuth,
   ICodeLabel,
   ICommonSelect,
-  IDataToCreateQuote,
   IAccount,
   IQuote,
   IDataToUpdateQuote,
+  IDataEntity,
 } from '../../../../interfaces';
 
 @Component({
@@ -67,6 +70,8 @@ import {
     NgSelectModule,
     QuickDatePickerComponent,
     SubmitButtonComponent,
+    BreadcrumbComponent,
+    TrackingEntityComponent,
   ],
   templateUrl: './edit-quote.component.html',
   styleUrl: './edit-quote.component.scss',
@@ -89,6 +94,8 @@ export default class EditQuoteComponent implements OnInit {
 
   // ACCOUNTS
   public accounts = signal<IAccount[]>([]);
+
+  public entityData = signal<IDataEntity | null>(null);
 
   // FORM
   public quoteId = signal<number | null>(null);
@@ -125,6 +132,10 @@ export default class EditQuoteComponent implements OnInit {
 
   constructor() {
     this.quoteId.set(this.activatedRoute.snapshot.params['id']);
+    this.entityData.set({
+      refEntity: NameEntities.QUOTE,
+      refEntityId: this.quoteId()!,
+    });
   }
 
   ngOnInit(): void {

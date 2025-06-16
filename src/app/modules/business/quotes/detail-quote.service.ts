@@ -12,6 +12,7 @@ import {
 } from '../../../shared/helpers';
 import { CustomModalSendQuoteEmailRecipientComponent } from '../../../shared/modals/custom-modal-send-quote-email-recipient/custom-modal-send-quote-email-recipient.component';
 import { ModalConfirmComponent } from '../../../shared/modals/modal-confirm/modal-confirm.component';
+import { ModalCreateInvoiceFromQuoteComponent } from '../../../shared/modals/modal-create-invoice-from-quote/modal-create-invoice-from-quote.component';
 
 import {
   ICustomDataToModalEmailSendQuote,
@@ -37,6 +38,10 @@ export class DetailQuoteService {
 
   // LOADING
   public isSendEmailFromDetailComponentSubmitting = signal<boolean>(false);
+
+  public triggerStatusChange(): void {
+    this._statusChange$.next();
+  }
 
   calculateTotalsOnDetail(quoteItems: IQuoteItem[]): ITotals {
     const { subtotal, discounts, iva }: any = quoteItems.reduce(
@@ -191,7 +196,7 @@ export class DetailQuoteService {
       });
 
       // Emit an event when status changed
-      this._statusChange$.next();
+      this.triggerStatusChange();
     } else {
       this.customToastService.add({
         message: resp.message,
@@ -203,6 +208,19 @@ export class DetailQuoteService {
     this.isSendEmailFromDetailComponentSubmitting.set(false);
   }
   /* END MARK AND CHANGE QUOTE STATUS */
+
+  createInvoiceFromQuote(quote: IQuote): void {
+    if (quote.status !== StatusQuote.ACCEPTED) return;
+
+    // Mat Dialog solution
+    let dialogRef = this.dialog.open(ModalCreateInvoiceFromQuoteComponent, {
+      width: '32rem',
+      autoFocus: false,
+      data: quote,
+    });
+
+    dialogRef.updatePosition({ top: '100px' });
+  }
 
   removeQuote(quote: IQuote): void {
     // Mat Dialog solution

@@ -13,6 +13,8 @@ import {
   IDataEmailForSendQuote,
   IMarkAndChangeStatus,
   IDataToUpdateQuote,
+  IInvoice,
+  ICreateInvoiceFromAcceptedQuote,
 } from '../interfaces/index';
 import { LS } from '../enums';
 
@@ -50,11 +52,23 @@ export class QuoteService {
     const url = `${this._baseUrl}/quote/copy-to-draft/${quoteId}`;
 
     return this.http
-      .post<IMessage>(url, { createdAt }, { headers: this.getToken })
+      .post<IQuote>(url, { createdAt }, { headers: this.getToken })
       .pipe(
         map((resp) => resp),
         catchError((err) => of(err.error))
       );
+  }
+
+  copyToInvoice(
+    quoteId: number,
+    data: ICreateInvoiceFromAcceptedQuote
+  ): Observable<IInvoice | any> {
+    const url = `${this._baseUrl}/quote/copy-to-invoice/${quoteId}`;
+
+    return this.http.post<IInvoice>(url, data, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
   }
 
   sendEmail(

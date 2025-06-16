@@ -26,6 +26,7 @@ import { CommonAdminService } from '../../../../shared/services/common-admin.ser
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { FormInvoiceService } from '../form-invoice.service';
 
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import { CustomSelectComponent } from '../../../../shared/components/custom-select/custom-select.component';
 import { QuickDatePickerComponent } from '../../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../../shared/components/submit-button/submit-button.component';
@@ -53,6 +54,7 @@ import {
   standalone: true,
   imports: [
     CommonModule,
+    BreadcrumbComponent,
     CustomSelectComponent,
     ReactiveFormsModule,
     NgSelectModule,

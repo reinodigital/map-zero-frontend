@@ -1,4 +1,11 @@
 <div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de ventas'"
+    [primaryLink]="'/sales-overview'"
+    [secondaryText]="'Listado cotizaciones'"
+    [secondaryLink]="'/list-quotes'"
+  ></breadcrumb>
+
   <div class="box">
     <div class="d-flex justify-content-between">
       <h3 class="">Nueva cotización</h3>
@@ -9,7 +16,7 @@
 
     <form class="form" [formGroup]="newQuoteForm">
       <div class="row">
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label for="defaultSeller">
             Cliente <span class="asterisk">*</span>
           </label>
@@ -25,7 +32,7 @@
           <small class="text-danger"> cliente es requerido </small>
           }
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="initDate">
             Fecha inicio
             <span class="asterisk">*</span>
@@ -35,7 +42,7 @@
           <small class="text-danger"> fecha inicio es requerida </small>
           }
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="expireDate">
             Fecha expira
             <span class="muted">opcional</span>
@@ -44,7 +51,7 @@
             (dateChanged)="onExpireDateChange($event)"
           ></quick-date-picker>
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="expireDate">
             Moneda
             <span class="asterisk">*</span>

@@ -1,4 +1,11 @@
 <div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de ventas'"
+    [primaryLink]="'/sales-overview'"
+    [secondaryText]="'Listado cotizaciones'"
+    [secondaryLink]="'/list-quotes'"
+  ></breadcrumb>
+
   <div class="box">
     <div class="d-flex justify-content-between">
       <h3 class="">Editar cotización</h3>
@@ -10,7 +17,7 @@
     @if (editQuoteForm()) {
     <form class="form" [formGroup]="editQuoteForm()!">
       <div class="row">
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label for="defaultSeller">
             Cliente <span class="asterisk">*</span>
           </label>
@@ -26,7 +33,7 @@
           <small class="text-danger"> cliente es requerido </small>
           }
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="initDate">
             Fecha inicio
             <span class="asterisk">*</span>
@@ -36,7 +43,7 @@
           <small class="text-danger"> fecha inicio es requerida </small>
           }
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="expireDate">
             Fecha expira
             <span class="muted">opcional</span>
@@ -45,7 +52,7 @@
             (dateChanged)="onExpireDateChange($event)"
           ></quick-date-picker>
         </div>
-        <div class="col-12 col-sm-6 col-lg-4">
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
           <label class="w_100" for="expireDate">
             Moneda
             <span class="asterisk">*</span>
@@ -53,6 +60,13 @@
           <select formControlName="currency">
             <option value="USD">USD</option>
           </select>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 mb-3">
+          <div class="d-flex justify-content-between align-items-end">
+            <label class="w_100" for="quoteNumber"> Número cotización </label>
+            <span>#</span>
+          </div>
+          <input type="text" [value]="quote()?.quoteNumber" disabled />
         </div>
       </div>
 
@@ -262,3 +276,11 @@
     }
   </div>
 </div>
+
+<!-- History tracking changes-->
+@if (quote()) {
+<tracking-entity
+  [tracking]="quote()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
+}

@@ -47,7 +47,13 @@
           Marcar como aceptada
         </button>
         } @if (allowedStatusToBeInvoiced.includes(quote()!.status)) {
-        <button class="btn btn-primary">Crear factura</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="detailQuoteService.createInvoiceFromQuote(quote()!)"
+        >
+          Crear factura
+        </button>
         }
         <div class="dropdown">
           @if (detailQuoteService.isSendEmailFromDetailComponentSubmitting()) {
