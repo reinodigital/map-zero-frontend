@@ -5,3 +5,4 @@ export * from './commons.enum';
 export * from './toast.enum';
 export * from './quote.enum';
 export * from './invoice.enum';
+export * from './item.enum';

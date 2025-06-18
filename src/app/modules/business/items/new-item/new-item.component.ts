@@ -26,7 +26,7 @@ import { CabysSelectComponent } from '../../../../shared/components/cabys-select
 import { CustomCheckboxComponent } from '../../../../shared/components/custom-checkbox/custom-checkbox.component';
 import { formatDateToString, taxRateArray } from '../../../../shared/helpers';
 
-import { TypeMessageToast } from '../../../../enums';
+import { TypeMessageToast, TypeItem } from '../../../../enums';
 import { IAccount } from '../../../../interfaces';
 
 @Component({
@@ -56,6 +56,7 @@ export default class NewItemComponent implements OnInit {
   public newItemForm = signal<FormGroup>(
     this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
+      type: [TypeItem.PRODUCT, [Validators.required]],
       cabys: [null, [Validators.required]],
       costPrice: [null, []],
       purchaseAccountId: ['', []],
@@ -86,6 +87,12 @@ export default class NewItemComponent implements OnInit {
           this.accounts.set(resp.accounts);
         }
       });
+  }
+
+  onTypeItemChange(isProduct: any): void {
+    isProduct
+      ? this.newItemForm().controls['type'].patchValue(TypeItem.PRODUCT)
+      : this.newItemForm().controls['type'].patchValue(TypeItem.SERVICE);
   }
 
   validField(field: string): boolean {

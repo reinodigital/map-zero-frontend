@@ -1,16 +1,16 @@
 <div class="custom_checkbox">
   <div
-    class="custom_checkbox_false"
-    [class.checked]="!checkboxValue()"
-    (click)="toggleCheckbox(false)"
-  >
-    {{ negativeLabel() }}
-  </div>
-  <div
     class="custom_checkbox_true"
     [class.checked]="checkboxValue()"
     (click)="toggleCheckbox(true)"
   >
     {{ affirmativeLabel() }}
+  </div>
+  <div
+    class="custom_checkbox_false"
+    [class.checked]="!checkboxValue()"
+    (click)="toggleCheckbox(false)"
+  >
+    {{ negativeLabel() }}
   </div>
 </div>

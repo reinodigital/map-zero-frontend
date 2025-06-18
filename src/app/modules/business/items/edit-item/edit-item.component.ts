@@ -22,16 +22,17 @@ import { CommonAdminService } from '../../../../shared/services/common-admin.ser
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
 import { CabysSelectComponent } from '../../../../shared/components/cabys-select/cabys-select.component';
+import { CustomCheckboxComponent } from '../../../../shared/components/custom-checkbox/custom-checkbox.component';
 import { formatDateToString, taxRateArray } from '../../../../shared/helpers';
 
-import { TypeMessageToast } from '../../../../enums';
+import { TypeMessageToast, TypeItem } from '../../../../enums';
 import { IAccount, IItem } from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'edit-item',
   standalone: true,
-  imports: [ReactiveFormsModule, CabysSelectComponent],
+  imports: [ReactiveFormsModule, CabysSelectComponent, CustomCheckboxComponent],
   templateUrl: './edit-item.component.html',
   styleUrl: './edit-item.component.scss',
 })
@@ -99,6 +100,7 @@ export default class EditItemComponent {
           this.item()?.name ?? '',
           [Validators.required, Validators.minLength(2)],
         ],
+        type: [this.item()?.type, [Validators.required]],
         cabys: [this.item()?.cabys?.code ?? null, [Validators.required]],
         costPrice: [this.item()?.costPrice ?? null, []],
         purchaseAccountId: [this.item()?.purchaseAccount?.id ?? '', []],
@@ -110,6 +112,12 @@ export default class EditItemComponent {
         saleDescription: [this.item()?.saleDescription ?? '', []],
       })
     );
+  }
+
+  onTypeItemChange(isProduct: any): void {
+    isProduct
+      ? this.editItemForm()?.controls['type'].patchValue(TypeItem.PRODUCT)
+      : this.editItemForm()?.controls['type'].patchValue(TypeItem.SERVICE);
   }
 
   validField(field: string): boolean {

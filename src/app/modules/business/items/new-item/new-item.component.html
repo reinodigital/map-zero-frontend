@@ -61,6 +61,18 @@
               </small>
               }
             </div>
+            <div class="col-12 col-sm-6 col-lg-4">
+              <label for="type">Tipo <span class="asterisk">*</span></label>
+              <custom-checkbox
+                [affirmativeLabel]="'Producto'"
+                [negativeLabel]="'Servicio'"
+                [checkboxDefaultValue]="true"
+                [hostCheckboxDefaultClass]="
+                  'd-flex align-items-end justify-content-start cp w-100'
+                "
+                (checkboxEmitter)="onTypeItemChange($event)"
+              ></custom-checkbox>
+            </div>
           </div>
 
           <!-- Purchase fields -->

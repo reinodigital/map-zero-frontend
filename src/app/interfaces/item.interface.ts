@@ -9,6 +9,7 @@ export interface IItemAndCount {
 export interface IItem {
   id: number;
   name: string;
+  type: string;
   cabys: ICabys;
   costPrice?: number;
   purchaseAccount?: IAccount;
