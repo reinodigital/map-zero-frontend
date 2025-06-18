@@ -17,19 +17,29 @@ import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 import { AuthService, ClientService } from '../../../../api';
-import { formatDateToString } from '../../../../shared/helpers';
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
+import { formatDateToString } from '../../../../shared/helpers';
+import { EconomicActivitySelectComponent } from '../../../../shared/components/economic-activity-select/economic-activity-select.component';
+
 import { IdentityType, TypeClient, TypeMessageToast } from '../../../../enums';
-import { ShortAuth, IClientToUpdate } from '../../../../interfaces';
+import {
+  ShortAuth,
+  IClientToUpdate,
+  ISelectedActivity,
+} from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'new-client',
-  imports: [ReactiveFormsModule, NgSelectModule],
+  imports: [
+    ReactiveFormsModule,
+    NgSelectModule,
+    EconomicActivitySelectComponent,
+  ],
   templateUrl: './new-client.component.html',
   styleUrl: './new-client.component.scss',
 })
@@ -70,6 +80,7 @@ export default class NewClientComponent implements OnInit {
       currency: ['USD', [Validators.required]],
       notes: ['', []],
       defaultSeller: [null, []],
+      activities: [[], []],
     })
   );
 
@@ -94,6 +105,10 @@ export default class NewClientComponent implements OnInit {
       this.newClientForm().controls[field].touched &&
       this.newClientForm().controls[field].invalid
     );
+  }
+
+  onEconomicActivityChange(event: ISelectedActivity[]): void {
+    this.newClientForm().controls['activities'].patchValue(event);
   }
 
   onSubmit(): void {

@@ -5,6 +5,7 @@ export * from './cabys.service';
 export * from './client.service';
 export * from './client-address.service';
 export * from './client-contact.service';
+export * from './economic-activity.service';
 export * from './territory.service';
 export * from './item.service';
 export * from './invoice.service';

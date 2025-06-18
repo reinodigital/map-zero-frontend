@@ -20,15 +20,25 @@ import { CustomToastService } from '../../../../shared/services/custom-toast.ser
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { formatDateToString } from '../../../../shared/helpers';
+import { EconomicActivitySelectComponent } from '../../../../shared/components/economic-activity-select/economic-activity-select.component';
 
 import { TypeMessageToast } from '../../../../enums';
-import { IClient, ShortAuth, IClientToUpdate } from '../../../../interfaces';
+import {
+  IClient,
+  ShortAuth,
+  IClientToUpdate,
+  ISelectedActivity,
+} from '../../../../interfaces';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: true,
   selector: 'edit-client',
-  imports: [ReactiveFormsModule, NgSelectModule],
+  imports: [
+    ReactiveFormsModule,
+    NgSelectModule,
+    EconomicActivitySelectComponent,
+  ],
   templateUrl: './edit-client.component.html',
   styleUrl: './edit-client.component.scss',
 })
@@ -76,6 +86,10 @@ export default class EditClientComponent {
     });
   }
 
+  onEconomicActivityChange(event: ISelectedActivity[]): void {
+    this.editClientForm()?.controls['activities'].patchValue(event);
+  }
+
   fetchSellers(): void {
     this.authService.fetchAllSellers().subscribe((resp) => {
       if (resp && resp.length) {
@@ -121,7 +135,17 @@ export default class EditClientComponent {
         currency: [this.client()?.currency ?? 'USD', [Validators.required]],
         notes: [this.client()?.notes ?? '', []],
         defaultSeller: [defaultSellerObject, []],
+        activities: [this.createActivitiesObjectWhenInit(), []],
       })
+    );
+  }
+
+  createActivitiesObjectWhenInit(): ISelectedActivity[] {
+    return (
+      this.client()?.activities.map((activity) => ({
+        code: activity.code,
+        name: activity.name,
+      })) ?? []
     );
   }
 

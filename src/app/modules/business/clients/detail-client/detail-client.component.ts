@@ -93,6 +93,10 @@ export default class DetailClientComponent {
     this.detailClientService.removeContact(contactId);
   }
 
+  removeActivity(activityId: number): void {
+    // TODO: remove activity id
+  }
+
   comeBackToList(): void {
     this.commonAdminService.comeBackToList('/list-clients');
   }

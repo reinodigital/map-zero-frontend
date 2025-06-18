@@ -52,6 +52,18 @@
           >
             Personas
           </button>
+          <button
+            class="nav-link"
+            id="pills-activities-tab"
+            data-bs-toggle="pill"
+            type="button"
+            data-bs-target="#pills-activities"
+            role="tab"
+            aria-controls="pills-activities"
+            aria-selected="false"
+          >
+            Actividades económicas
+          </button>
         </li>
       </ul>
       <!-- End Pills -->
@@ -221,7 +233,7 @@
         <table class="table">
           <thead>
             <tr>
-              <th scope="col"><i class="fa-solid fa-location-dot"></i></th>
+              <th scope="col"><i class="fa-solid fa-user"></i></th>
               <th scope="col">Nombre</th>
               <th scope="col">Apellidos</th>
               <th scope="col">Correo</th>
@@ -256,17 +268,57 @@
         </table>
         <!-- END Contacts -->
       </div>
-
-      <!-- History -->
+      <!-- Economic Activities -->
+      <div
+        class="tab-pane fade"
+        id="pills-activities"
+        role="tabpanel"
+        aria-labelledby="pills-activities-tab"
+        tabindex="0"
+      >
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col"><i class="fa-solid fa-gear"></i></th>
+              <th scope="col">Código</th>
+              <th scope="col">Nombre</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (activity of client()?.activities || []; track $index) {
+            <tr>
+              <td>{{ $index + 1 }}</td>
+              <td>{{ activity.code }}</td>
+              <td>{{ activity.name }}</td>
+              <td>
+                <div (click)="removeActivity(activity.id)">
+                  <i class="fa-solid fa-trash icon_trash" title="Eliminar"></i>
+                </div>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <div class="d-flex justify-content-start">
+                <div class="alert alert-warning">
+                  Sin actividades económicas por el momento.
+                </div>
+              </div>
+            </tr>
+            }
+          </tbody>
+        </table>
+        <!-- END Economic Activities -->
+      </div>
       <!-- End Data Pills -->
     </div>
   </div>
-</div>
 
-<!-- History tracking changes-->
-@if (client()) {
-<tracking-entity
-  [tracking]="client()!.tracking"
-  [entity]="entityData()!"
-></tracking-entity>
-}
+  <!-- History tracking changes-->
+  @if (client()) {
+  <tracking-entity
+    [tracking]="client()!.tracking"
+    [entity]="entityData()!"
+  ></tracking-entity>
+  }
+</div>

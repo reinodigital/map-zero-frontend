@@ -13,6 +13,7 @@ export interface IClient {
   currency: string;
   addresses: IClientAddress[];
   contacts: IClientContact[];
+  activities: IClientActivity[];
   notes?: string;
   defaultSeller?: string;
   tracking: ITracking[];
@@ -79,3 +80,10 @@ export interface IDataToCreateNewClientContact {
   mobile: string | null;
 }
 // ========= Client contact
+
+export interface IClientActivity {
+  id: number;
+  code: string;
+  name: string;
+  description: string;
+}
