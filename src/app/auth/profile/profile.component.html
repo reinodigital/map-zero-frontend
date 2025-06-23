@@ -4,8 +4,9 @@
     <div
       class="square_pill"
       (click)="selectPill($index)"
+      [style.color]="'var(--white)'"
       [style.backgroundColor]="
-        $index === currentPillSelected() ? 'var(--primary)' : 'unset'
+        $index === currentPillSelected() ? 'var(--primary_orange)' : 'unset'
       "
     >
       <div class="d-flex justify-content-center">
@@ -35,18 +36,6 @@
       >
         Mi perfil
       </button>
-      <button
-        class="nav-link"
-        id="pills-maintenance-tab"
-        data-bs-toggle="pill"
-        type="button"
-        data-bs-target="#pills-maintenance"
-        role="tab"
-        aria-controls="pills-maintenance"
-        aria-selected="false"
-      >
-        Mantenimientos
-      </button>
     </li>
   </ul>
   <!-- End Pills -->
@@ -63,14 +52,20 @@
     >
       <div class="profile_content">
         <div class="box">
-          <div class="header">
-            <h2 class="mb-4">Perfil</h2>
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="profile_content_title">Perfil</h2>
+            <!-- <a
+              class="profile_content_title"
+              [routerLink]="'/admin/list-clients'"
+            >
+              SISTEMA
+            </a> -->
           </div>
 
           <section class="info_user">
             <div class="single_info">
               <p class="mb-3">
-                Bienvenido
+                Bienvenido/a
                 <span class="user_name">{{ currentUser()?.name }}</span>
               </p>
             </div>
@@ -87,35 +82,138 @@
             <div class="single_info">
               <i class="fa-solid fa-dice-five me-3"></i>
               <p class="mb-0 text_light">
-                ROLE::{{ currentUser()!.roles[0] || currentUser()!.roles[1] }}
+                <!-- ROLE::{{ currentUser()!.roles[0] || currentUser()!.roles[1] }} -->
+                <span>
+                  @for (role of currentUser()!.roles; track $index) {
+                  <div id="{{ $index }}">{{ role }}</div>
+                  }
+                </span>
               </p>
             </div>
           </section>
 
           <section class="info_actions mt-4 mb-4">
-            <a class="go_out" (click)="logout()" title="logout">
+            <button
+              class="btn btn-primary me-2"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#changePassword"
+              aria-expanded="false"
+              aria-controls="myCollapse"
+              title="Cambiar contraseña"
+            >
+              Cambiar contraseña
+            </button>
+
+            <button
+              class="btn btn-danger"
+              type="button"
+              (click)="logout()"
+              title="logout"
+            >
               Cerrar sesión
-            </a>
-            <!-- <a class="add_address_link" title="direcciones"
-                            role="button" routerLink="/address"
-                        >Agregar dirección <span><i class="fa-solid fa-truck-fast"></i></span></a>      -->
+            </button>
+          </section>
+          <section class="info_change_password">
+            <div class="collapse mt-3" id="changePassword">
+              <form
+                class="form"
+                [formGroup]="formChangePassword()!"
+                (ngSubmit)="onSubmit()"
+              >
+                <div class="row">
+                  <div class="col-12 col-sm-6 col-lg-4">
+                    <label for="newPassword" class="label_password"
+                      ><div>
+                        Contraseña nueva <span class="asterisk">*</span>
+                      </div>
+                      <i
+                        class="fa-solid"
+                        [class.fa-eye]="hiddenNewPassword()"
+                        [class.fa-eye-slash]="!hiddenNewPassword()"
+                        (click)="toggleVisibilityNewPassword()"
+                      ></i>
+                    </label>
+                    <input
+                      [type]="hiddenNewPassword() ? 'password' : 'text'"
+                      formControlName="newPassword"
+                    />
+                    @if (isInvalidField('newPassword')) { @if
+                    (formErrors('newPassword') &&
+                    formErrors('newPassword')!['required']){
+                    <small class="text-danger">
+                      Debe proporcionar la nueva contraseña
+                    </small>
+                    } @else if (formErrors('newPassword') &&
+                    formErrors('newPassword')!['minlength']){
+                    <small class="text-danger">
+                      La nueva contraseña debe tener al menos
+                      {{
+                        formErrors("newPassword")!["minlength"].requiredLength
+                      }}
+                      caracteres
+                    </small>
+                    } }
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12 col-sm-6 col-lg-4">
+                    <label for="confirmNewPassword" class="label_password">
+                      <div>
+                        Confirme la nueva contraseña
+                        <span class="asterisk">*</span>
+                      </div>
+                      <i
+                        class="fa-solid"
+                        [class.fa-eye]="hiddenConfirmNewPassword()"
+                        [class.fa-eye-slash]="!hiddenConfirmNewPassword()"
+                        (click)="toggleVisibilityConfirmNewPassword()"
+                      ></i>
+                    </label>
+                    <input
+                      [type]="hiddenConfirmNewPassword() ? 'password' : 'text'"
+                      formControlName="confirmNewPassword"
+                    />
+                    @if (isInvalidField('confirmNewPassword')) { @if
+                    (formErrors('confirmNewPassword') &&
+                    formErrors('confirmNewPassword')!['required']){
+                    <small class="text-danger">
+                      Debe confirmar la nueva contraseña
+                    </small>
+                    } @else if (formErrors('confirmNewPassword') &&
+                    formErrors('confirmNewPassword')!['minlength']){
+                    <small class="text-danger">
+                      La contraseña debe tener al menos
+                      {{
+                        formErrors("confirmNewPassword")!["minlength"]
+                          .requiredLength
+                      }}
+                      caracteres
+                    </small>
+                    } } @else if (formChangePassword().errors &&
+                    formChangePassword().errors!['passwordsMismatch'] &&
+                    formChangePassword().touched){
+                    <small class="text-danger">
+                      Las contraseñas no coinciden
+                    </small>
+                    }
+                  </div>
+                </div>
+
+                <div class="row mt-2">
+                  <div class="col-12 col-sm-6 col-lg-4">
+                    <button type="submit" class="btn btn-primary">
+                      Enviar
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </section>
         </div>
       </div>
     </div>
     <!-- End My Profile -->
-
-    <!-- Second Pill -->
-    <div
-      class="tab-pane fade"
-      id="pills-maintenance"
-      role="tabpanel"
-      aria-labelledby="pills-maintenance-tab"
-      tabindex="0"
-    >
-      <!-- Second pill content -->
-    </div>
-    <!-- End Second Pill -->
   </div>
   <!-- End Data Pills -->
 </div>

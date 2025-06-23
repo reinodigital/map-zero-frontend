@@ -38,11 +38,13 @@ p {
 // FORM Elements
 input {
   border-radius: 0.3rem;
+  border: 1px solid var(--light);
   padding: 0.3rem;
   width: 100%;
 }
 textarea {
   border-radius: 0.3rem;
+  border: 1px solid var(--light);
   width: 100%;
 }
 label {
@@ -53,6 +55,7 @@ label {
 }
 select {
   border-radius: 0.3rem;
+  border: 1px solid var(--light);
   height: 2.8rem;
   width: 100%;
 }

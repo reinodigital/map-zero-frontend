@@ -1,0 +1,30 @@
+.profile {
+  margin-bottom: 5rem;
+
+  .label_password {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.profile_content {
+  width: 100%;
+
+  .profile_content_title {
+    color: var(--primary_orange);
+    cursor: pointer;
+    font-size: 2rem;
+  }
+}
+
+.info_user {
+  .single_info {
+    display: flex;
+    align-items: center;
+
+    i {
+      color: var(--primary_orange);
+    }
+  }
+}
