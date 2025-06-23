@@ -32,7 +32,7 @@ export class SellerGuard {
             !user()?.roles.includes(SecurityRoles.SELLER) &&
             !user()?.roles.includes(SecurityRoles.SUPER_ADMIN)
           ) {
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigateByUrl('/');
           }
         }
       })
@@ -53,7 +53,7 @@ export class SellerGuard {
             !user()?.roles.includes(SecurityRoles.SELLER) &&
             !user()?.roles.includes(SecurityRoles.SUPER_ADMIN)
           ) {
-            this.router.navigateByUrl('/dashboard');
+            this.router.navigateByUrl('/');
           }
         }
       })

@@ -1,5 +1,6 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../../api';
 
 export interface SubMenuItem {
   label: string;
@@ -22,10 +23,11 @@ export interface MenuItem {
 })
 export class CustomMenuService {
   private router = inject(Router);
+  private authService = inject(AuthService);
   public openMenuIndex = signal<number | null>(null);
   public lastMenuItemActiveId = signal<string>('collapseAccounting');
 
-  public menu = signal<MenuItem[]>([
+  public fullMenu = signal<MenuItem[]>([
     {
       label: 'Contabilidad',
       icon: 'fa-solid fa-calculator me-2',
@@ -138,8 +140,27 @@ export class CustomMenuService {
     },
   ]);
 
+  public menu = computed(() => {
+    const isAuthenticated = this.authService.userProps;
+    const isAdmin = this.authService.isAdmin; // Access computed signal for reactivity
+    const isAccountant = this.authService.isAccountant; // Access computed signal for reactivity
+
+    return this.fullMenu().filter((menuItem) => {
+      if (!isAuthenticated) return false;
+
+      if (menuItem.id === 'collapseAdministration') {
+        return isAdmin;
+      }
+      if (menuItem.id === 'collapseAccounting') {
+        return isAdmin || isAccountant;
+      }
+
+      return true;
+    });
+  });
+
   toggleMenuParent(id: string): void {
-    const menuToUpdate = this.menu().map((menuItem) => {
+    const menuToUpdate = this.fullMenu().map((menuItem) => {
       if (menuItem.id === id) {
         // This is the clicked menu item, toggle its active state
         return { ...menuItem, isActive: !menuItem.isActive };
@@ -149,7 +170,7 @@ export class CustomMenuService {
       }
     });
 
-    this.menu.set(menuToUpdate);
+    this.fullMenu.set(menuToUpdate);
 
     // Find if any menu is active after the update
     const activeMenu = menuToUpdate.find((menu) => menu.isActive);

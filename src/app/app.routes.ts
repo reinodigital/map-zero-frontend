@@ -89,15 +89,15 @@ export const routes: Routes = [
     path: 'list-clients',
     loadComponent: () =>
       import('./modules/business/clients/list-clients/list-clients.component'),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'new-client',
     loadComponent: () =>
       import('./modules/business/clients/new-client/new-client.component'),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'detail-client/:id',
@@ -105,15 +105,15 @@ export const routes: Routes = [
       import(
         './modules/business/clients/detail-client/detail-client.component'
       ),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   {
     path: 'edit-client/:id',
     loadComponent: () =>
       import('./modules/business/clients/edit-client/edit-client.component'),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
   },
   // END CLIENTS
 
