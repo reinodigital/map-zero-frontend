@@ -23,6 +23,8 @@ export interface IInvoice {
   expireDate?: Date;
   currency: string;
   client: IClient;
+  receptorActivities?: string[];
+  emisorActivities?: string[];
   invoiceItems: IInvoiceItem[];
   tracking: ITracking[];
 }

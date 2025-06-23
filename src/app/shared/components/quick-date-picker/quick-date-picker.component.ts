@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
+  ElementRef,
   inject,
   OnInit,
   output,
@@ -20,9 +21,13 @@ import { formatDateForInput } from '../../helpers';
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './quick-date-picker.component.html',
   styleUrl: './quick-date-picker.component.scss',
+  host: {
+    '(document:click)': 'onOutsideClick($event)',
+  },
 })
 export class QuickDatePickerComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
+  private elementRef = inject(ElementRef<HTMLUListElement>);
 
   public dateControl: FormControl = new FormControl(this.dateInSevenDay, []);
   public optionsAreOpen = signal<boolean>(false);
@@ -41,6 +46,13 @@ export class QuickDatePickerComponent implements OnInit {
       .subscribe((value) => {
         this.dateChanged.emit(value);
       });
+  }
+
+  onOutsideClick(event: any): void {
+    const clickedInside = this.elementRef.nativeElement.contains(event.target);
+    if (!clickedInside) {
+      this.optionsAreOpen.set(false);
+    }
   }
 
   setDate(value: number): void {

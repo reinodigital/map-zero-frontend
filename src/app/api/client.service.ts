@@ -1,5 +1,6 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { catchError, map, Observable, of } from 'rxjs';
 
 import { environment } from '../../environments/environment';
@@ -10,8 +11,8 @@ import {
   IClientToUpdate,
   IClient,
   ICommonSelect,
-} from '../interfaces/index';
-import { isPlatformBrowser } from '@angular/common';
+  IClientEconomicActivity,
+} from '../interfaces';
 import { LS } from '../enums';
 
 @Injectable({
@@ -72,6 +73,19 @@ export class ClientService {
       map((resp) => resp),
       catchError((err) => of(err.error))
     );
+  }
+
+  findEconomicActivities(
+    clientId: number
+  ): Observable<IClientEconomicActivity[]> {
+    const url = `${this._baseUrl}/client/find-economic-activities/${clientId}`;
+
+    return this.http
+      .get<IClientEconomicActivity[]>(url, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
   }
 
   fetchAll(

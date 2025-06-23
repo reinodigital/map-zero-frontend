@@ -53,6 +53,7 @@ import {
   IInvoice,
   IDataToUpdateInvoice,
   IDataEntity,
+  IClientEconomicActivity,
 } from '../../../../interfaces';
 
 @Component({
@@ -92,6 +93,9 @@ export default class EditInvoiceComponent implements OnInit {
 
   // ACCOUNTS
   public accounts = signal<IAccount[]>([]);
+
+  // ECONOMIC ACTIVITIES
+  public economicActivities = signal<IClientEconomicActivity[]>([]);
 
   // FORM
   public invoiceId = signal<number | null>(null);
@@ -141,6 +145,34 @@ export default class EditInvoiceComponent implements OnInit {
     this.fetchInvoiceById();
   }
 
+  setUpListenerClientField(): void {
+    this.editInvoiceForm()
+      ?.get('client')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((selectedClient) => {
+        if (selectedClient) {
+          this.fetchEconomicActivities(selectedClient.id);
+        } else {
+          this.economicActivities.set([]);
+          this.editInvoiceForm()?.controls['receptorActivities'].patchValue('');
+        }
+      });
+  }
+
+  fetchEconomicActivities(clientId: number): void {
+    this.clientService
+      .findEconomicActivities(clientId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((activities) => {
+        if (activities && activities.length > 0) {
+          this.economicActivities.set(activities);
+        } else {
+          this.economicActivities.set([]);
+          this.editInvoiceForm()?.controls['receptorActivities'].patchValue('');
+        }
+      });
+  }
+
   fetchAccounts() {
     this.accountService
       .fetchAll(999, 0, {})
@@ -186,6 +218,8 @@ export default class EditInvoiceComponent implements OnInit {
   fillOutInvoiceForm(): void {
     const invoiceData = this.invoice()!; // Get the fetched invoice
 
+    this.fetchEconomicActivities(invoiceData.client.id);
+
     const invoiceItemsFormArray = this.fb.array(
       invoiceData.invoiceItems.map((item) => {
         // Map the backend InvoiceItem object to the form group's expected structure
@@ -222,6 +256,7 @@ export default class EditInvoiceComponent implements OnInit {
           [],
         ],
         currency: [invoiceData.currency ?? 'USD', [Validators.required]],
+        receptorActivities: [invoiceData.receptorActivities, []],
         reference: [invoiceData.reference ?? '', []],
         invoiceItems: invoiceItemsFormArray,
       })
@@ -236,6 +271,8 @@ export default class EditInvoiceComponent implements OnInit {
     if (this.invoiceItems && this.invoiceItems.controls) {
       this.formInvoiceService.calculateTotals(this.invoiceItems);
     }
+
+    this.setUpListenerClientField();
   }
 
   validField(controlPath: string): boolean {

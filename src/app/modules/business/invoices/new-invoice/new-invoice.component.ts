@@ -46,6 +46,7 @@ import {
   ICommonSelect,
   IAccount,
   IDataToCreateInvoice,
+  IClientEconomicActivity,
 } from '../../../../interfaces';
 
 @Component({
@@ -68,7 +69,6 @@ export default class NewInvoiceComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private fb = inject(FormBuilder);
   private destroyRef = inject(DestroyRef);
-  private authService = inject(AuthService);
   private accountService = inject(AccountService);
   private commonAdminService = inject(CommonAdminService);
   // private itemService = inject(ItemService);
@@ -81,6 +81,9 @@ export default class NewInvoiceComponent implements OnInit {
 
   // ACCOUNTS
   public accounts = signal<IAccount[]>([]);
+
+  // ECONOMIC ACTIVITIES
+  public economicActivities = signal<IClientEconomicActivity[]>([]);
 
   // FORM
   public formInvoiceService = inject(FormInvoiceService);
@@ -95,6 +98,7 @@ export default class NewInvoiceComponent implements OnInit {
     expireDate: [this.dateInSevenDay, []],
     currency: ['USD', [Validators.required]],
     reference: ['', []],
+    receptorActivities: ['', []],
     invoiceItems: this.fb.array([
       this.createInvoiceItemFormGroup(),
       this.createInvoiceItemFormGroup(),
@@ -133,6 +137,33 @@ export default class NewInvoiceComponent implements OnInit {
     this.invoiceItems.controls.forEach((control) => {
       this.setupItemGroupValueChangeListener(control as FormGroup);
     });
+
+    // Set up listener for client
+    this.newInvoiceForm
+      .get('client')
+      ?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((selectedClient) => {
+        if (selectedClient) {
+          this.fetchEconomicActivities(selectedClient.id);
+        } else {
+          this.economicActivities.set([]);
+          this.newInvoiceForm.controls['receptorActivities'].patchValue('');
+        }
+      });
+  }
+
+  fetchEconomicActivities(clientId: number): void {
+    this.clientService
+      .findEconomicActivities(clientId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((activities) => {
+        if (activities && activities.length > 0) {
+          this.economicActivities.set(activities);
+        } else {
+          this.economicActivities.set([]);
+          this.newInvoiceForm.controls['receptorActivities'].patchValue('');
+        }
+      });
   }
 
   fetchAccounts() {

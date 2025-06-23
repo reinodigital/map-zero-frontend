@@ -148,9 +148,22 @@
         </span>
       </div>
       <div class="col-12 col-md-3 col-lg-2">
+        <label>Actividades económicas</label>
+        <div class="d-flex flex-column mt-1">
+          @for (activity of invoice()?.receptorActivities ?? []; track $index) {
+          <span>
+            <i class="fa-solid fa-check"></i>
+            {{ activity }}
+          </span>
+          } @empty {
+          <span>_</span>
+          }
+        </div>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
         <label>Referencia</label>
         <span>
-          {{ invoice()!.reference ?? "_" }}
+          {{ invoice()!.reference ? invoice()!.reference : "_" }}
         </span>
       </div>
     </div>

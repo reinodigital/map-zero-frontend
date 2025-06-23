@@ -14,3 +14,8 @@ export interface ISelectedActivity {
   code: string;
   name: string;
 }
+
+export interface IClientEconomicActivity {
+  label: string;
+  code: string;
+}
