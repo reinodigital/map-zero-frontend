@@ -13,12 +13,14 @@ import { CustomToastService } from '../../../../shared/services/custom-toast.ser
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
+
 import { SecurityRoles, TypeMessageToast } from '../../../../enums';
 import { IAuth, IAuthToUpdate } from '../../../../interfaces';
 
 @Component({
   selector: 'edit-employee',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './edit-employee.component.html',
   styleUrl: './edit-employee.component.scss',
 })

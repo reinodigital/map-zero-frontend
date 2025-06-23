@@ -1,4 +1,9 @@
 <div class="main_content">
+  <breadcrumb
+    [primaryText]="'Listado de contactos'"
+    [primaryLink]="'/list-clients'"
+  ></breadcrumb>
+
   <div class="box">
     <div class="d-flex justify-content-between mb-4">
       <h3 class="">Editar contacto</h3>
@@ -40,7 +45,6 @@
       <!-- End Pills -->
     </div>
 
-    @if (editClientForm()) {
     <div class="tab-content" id="pills-tabContent">
       <!-- Fields -->
       <div
@@ -50,6 +54,7 @@
         aria-labelledby="pills-fields-tab"
         tabindex="0"
       >
+        @if (editClientForm()) {
         <form
           class="form"
           [formGroup]="editClientForm()!"
@@ -156,6 +161,7 @@
             <button class="btn btn-success" type="submit">Editar</button>
           </div>
         </form>
+        }
       </div>
 
       <!-- Economic Activities -->
@@ -166,12 +172,13 @@
         aria-labelledby="pills-activities-tab"
         tabindex="0"
       >
+        @if (editClientForm()) {
         <economic-activity-select
           [activityInput]="editClientForm()!.controls['activities'].value"
           (activityChange)="onEconomicActivityChange($event)"
         ></economic-activity-select>
+        }
       </div>
     </div>
-    }
   </div>
 </div>

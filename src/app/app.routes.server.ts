@@ -36,7 +36,7 @@ export const serverRoutes: ServerRoute[] = [
   // CLIENTS
   {
     path: 'list-clients',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Client,
   },
   {
     path: 'detail-client/:id',
@@ -44,7 +44,7 @@ export const serverRoutes: ServerRoute[] = [
   },
   {
     path: 'new-client',
-    renderMode: RenderMode.Prerender,
+    renderMode: RenderMode.Client,
   },
   {
     path: 'edit-client/:id',

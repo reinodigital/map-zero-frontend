@@ -22,6 +22,7 @@ import { CommonAdminService } from '../../../../shared/services/common-admin.ser
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
 import { formatDateToString } from '../../../../shared/helpers';
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import { EconomicActivitySelectComponent } from '../../../../shared/components/economic-activity-select/economic-activity-select.component';
 
 import { IdentityType, TypeClient, TypeMessageToast } from '../../../../enums';
@@ -39,6 +40,7 @@ import {
     ReactiveFormsModule,
     NgSelectModule,
     EconomicActivitySelectComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './new-client.component.html',
   styleUrl: './new-client.component.scss',

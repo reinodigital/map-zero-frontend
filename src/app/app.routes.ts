@@ -1,8 +1,11 @@
 import { Routes } from '@angular/router';
+
 import { AuthGuard } from './guards/auth.guard';
 import { AdminGuard } from './guards/admin.guard';
 import { AccountantGuard } from './guards/accountant.guard';
 import { SellerGuard } from './guards/seller.guard';
+
+import LoginComponent from './auth/login/login.component';
 
 export const routes: Routes = [
   {
@@ -14,7 +17,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./auth/login/login.component'),
+    component: LoginComponent,
   },
   {
     path: 'profile',
@@ -90,18 +93,18 @@ export const routes: Routes = [
     canLoad: [SellerGuard],
   },
   {
+    path: 'new-client',
+    loadComponent: () =>
+      import('./modules/business/clients/new-client/new-client.component'),
+    canActivate: [SellerGuard],
+    canLoad: [SellerGuard],
+  },
+  {
     path: 'detail-client/:id',
     loadComponent: () =>
       import(
         './modules/business/clients/detail-client/detail-client.component'
       ),
-    canActivate: [SellerGuard],
-    canLoad: [SellerGuard],
-  },
-  {
-    path: 'new-client',
-    loadComponent: () =>
-      import('./modules/business/clients/new-client/new-client.component'),
     canActivate: [SellerGuard],
     canLoad: [SellerGuard],
   },

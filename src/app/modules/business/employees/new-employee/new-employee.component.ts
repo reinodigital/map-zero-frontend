@@ -19,6 +19,8 @@ import { CommonAdminService } from '../../../../shared/services/common-admin.ser
 import { CustomToastService } from '../../../../shared/services/custom-toast.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
+
 import { SecurityRoles, TypeMessageToast } from '../../../../enums';
 import { IAuthToSignUp } from '../../../../interfaces';
 
@@ -26,7 +28,7 @@ import { IAuthToSignUp } from '../../../../interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'new-employee',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, BreadcrumbComponent],
   templateUrl: './new-employee.component.html',
   styleUrl: './new-employee.component.scss',
 })

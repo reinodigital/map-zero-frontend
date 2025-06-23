@@ -20,6 +20,8 @@ import { CustomToastService } from '../../../../shared/services/custom-toast.ser
 import { CommonAdminService } from '../../../../shared/services/common-admin.service';
 import { FormErrorService } from '../../../../shared/services/form-error.service';
 import { formatDateToString } from '../../../../shared/helpers';
+
+import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import { EconomicActivitySelectComponent } from '../../../../shared/components/economic-activity-select/economic-activity-select.component';
 
 import { TypeMessageToast } from '../../../../enums';
@@ -38,6 +40,7 @@ import {
     ReactiveFormsModule,
     NgSelectModule,
     EconomicActivitySelectComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './edit-client.component.html',
   styleUrl: './edit-client.component.scss',
