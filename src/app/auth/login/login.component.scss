@@ -1,5 +1,42 @@
-.label_password {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.login-page {
+  // min-height: 800px;
+  margin-top: 3rem;
+}
+
+.login-content-title {
+  color: var(--primary_orange);
+}
+
+.glass-card {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: var(--title);
+  width: 100%;
+  max-width: 420px;
+}
+
+input.form-control {
+  background-color: var(--white);
+  color: var(--title);
+  border: 1px solid var(--light);
+  font-size: 1.4rem;
+}
+
+input.form-control::placeholder {
+  color: var(--gray);
+}
+
+input.form-control:focus {
+  background-color: var(--white);
+  color: var(--title);
+  // border-color: var(--primary_orange);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.input-group-icon {
+  background-color: transparent;
+  border: none;
+  color: var(--gray);
+  padding-right: 1rem;
 }

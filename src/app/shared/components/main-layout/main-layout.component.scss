@@ -92,8 +92,9 @@
   background-color: var(--secondary);
   display: flex;
   align-items: center;
-  padding: 1.4rem;
-  height: 6dvh;
+  padding-left: 1.4rem;
+  padding-right: 1.4rem;
+  height: 8dvh;
 
   .main_content_header_title {
     margin-bottom: 0;
@@ -107,7 +108,7 @@
 // Router outlet
 .content {
   padding: 1rem;
-  height: 94dvh;
+  height: 92dvh;
   overflow-y: scroll;
 
   @media (min-width: 768px) {

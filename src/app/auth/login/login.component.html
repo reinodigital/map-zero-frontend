@@ -1,40 +1,77 @@
-<div class="login">
-  <h1>Iniciar sesión</h1>
+<div class="login-page container">
+  <div class="glass-card login-content card p-5 shadow rounded-4">
+    <div class="text-center mb-4">
+      <h2 class="login-content-title fw-bold">Iniciar sesión</h2>
+      <p class="text-muted">Accede con sus credenciales</p>
+    </div>
 
-  <div class="login_content">
-    <form
-      class="login_form"
-      autocomplete="off"
-      [formGroup]="loginForm()"
-      (ngSubmit)="login()"
-    >
-      <div class="row">
-        <div class="col-12 col-lg-5">
-          <label for="email"> Correo <span class="asterisk">*</span> </label>
-          <input type="email" formControlName="email" placeholder="su correo" />
-          @if (validField('email')) {
-          <small class="text-danger"> formato de correo inválido </small>
-          }
+    <form [formGroup]="loginForm()" (ngSubmit)="login()">
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">
+          Email
+          <span class="text-danger">*</span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-icon bg-transparent border-end-0">
+            <i class="fa-solid fa-envelope"></i>
+          </span>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Su correo electrónico"
+          />
         </div>
+        @if (isInvalidField('email')) { @if (formErrors('email') &&
+        formErrors('email')!['required']) {
+        <small class="text-danger">El correo es obligatorio</small>
+        } @if (formErrors('email') && formErrors('email')!['email']) {
+        <small class="text-danger">El formato del correo no es válido</small>
+        } }
       </div>
-      <div class="row">
-        <div class="col-12 col-lg-5">
-          <label class="label_password" for="password">
-            <div>Contraseña <span class="asterisk">*</span></div>
-            <i class="fa-solid fa-eye" (click)="displayPassword()"></i>
-          </label>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label
+          for="password"
+          class="form-label d-flex justify-content-between align-items-center"
+        >
+          <span>Contraseña <span class="text-danger">*</span></span>
+          <span
+            class="bg-transparent"
+            style="cursor: pointer"
+            (click)="displayPassword()"
+          >
+            <i
+              class="fa-solid"
+              [class]="
+                passwordType() === 'password' ? 'fa-eye' : 'fa-eye-slash'
+              "
+            ></i>
+          </span>
+        </label>
+        <div class="input-group">
+          <span class="input-group-icon bg-transparent border-end-0">
+            <i class="fa-solid fa-lock"></i>
+          </span>
           <input
             [type]="passwordType()"
+            id="password"
+            class="form-control"
             formControlName="password"
-            placeholder="su contraseña"
+            placeholder="Su contraseña"
           />
-          @if (validField('password')) {
-          <small class="text-danger"> contraseña inválida </small>
-          }
         </div>
+        @if (isInvalidField('password')) {
+        <small class="text-danger">Formato de contraseña inválido</small>
+        }
       </div>
 
-      <button class="btn btn-primary mt-4" type="submit">Iniciar Sesión</button>
+      <button type="submit" class="btn btn-success w-100">
+        Iniciar Sesión
+      </button>
     </form>
   </div>
 </div>

@@ -43,11 +43,15 @@ export default class LoginComponent {
   // Placeholder
   public sub: Subscription = new Subscription();
 
-  validField(field: string) {
+  isInvalidField(field: string) {
     return (
       this.loginForm().controls[field].touched &&
       this.loginForm().controls[field].invalid
     );
+  }
+
+  formErrors(field: string) {
+    return this.loginForm().get(field)?.errors;
   }
 
   displayPassword(): void {
@@ -57,23 +61,25 @@ export default class LoginComponent {
   }
 
   login(): void {
-    if (this.loginForm().invalid) return;
-
-    this.authService.login(this.loginForm().value).subscribe((resp) => {
-      if (resp && resp.uid) {
-        this.customToastService.add({
-          message: `Bienvenido/a a Map Zero ${resp.name}`,
-          type: TypeMessageToast.SUCCESS,
-          duration: 3000,
-        });
-        this.router.navigateByUrl('/');
-      } else {
-        this.customToastService.add({
-          message: resp.message,
-          type: TypeMessageToast.ERROR,
-          duration: 10000,
-        });
-      }
-    });
+    if (this.loginForm().valid) {
+      this.authService.login(this.loginForm().value).subscribe((resp) => {
+        if (resp && resp.uid) {
+          this.customToastService.add({
+            message: `Bienvenido/a a Map Zero ${resp.name}`,
+            type: TypeMessageToast.SUCCESS,
+            duration: 3000,
+          });
+          this.router.navigateByUrl('/');
+        } else {
+          this.customToastService.add({
+            message: resp.message,
+            type: TypeMessageToast.ERROR,
+            duration: 10000,
+          });
+        }
+      });
+    } else {
+      this.loginForm().markAllAsTouched();
+    }
   }
 }
