@@ -114,7 +114,7 @@ export class DetailPurchaseOrderService {
     const data: ICustomDataToModalEmailSendPurchaseOrder = {
       clientName: purchaseOrder.client.name,
       currency: purchaseOrder.currency,
-      terms: purchaseOrder.terms,
+      deliveryInstructions: purchaseOrder.deliveryInstructions,
       total: purchaseOrder.total,
     };
 

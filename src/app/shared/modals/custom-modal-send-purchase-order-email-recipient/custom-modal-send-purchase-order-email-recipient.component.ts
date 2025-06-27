@@ -60,7 +60,7 @@ export class CustomModalSendPurchaseOrderEmailRecipientComponent {
   buildEmail(): void {
     const message = `Hola ${
       this.data()?.clientName
-    },\n\nOrden de compra correspondiente a su pedido por ${
+    },\n\nOrden de compra correspondiente por ${
       this.data()?.currency
     } ${this.data()?.total.toFixed(
       2

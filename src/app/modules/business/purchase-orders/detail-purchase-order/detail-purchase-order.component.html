@@ -234,15 +234,15 @@
         <span>{{ purchaseOrder()?.client?.name }}</span>
       </div>
       <div class="col-12 col-md-3 col-lg-2">
-        <label>Fecha inicio</label>
+        <label>Fecha</label>
         <span>{{ purchaseOrder()!.initDate | readableDate }}</span>
       </div>
       <div class="col-12 col-md-3 col-lg-2">
-        <label>Fecha expira</label>
+        <label>Fecha entrega</label>
         <span>
           {{
-            purchaseOrder()!.expireDate
-              ? (purchaseOrder()!.expireDate | readableDate)
+            purchaseOrder()!.deliveryDate
+              ? (purchaseOrder()!.deliveryDate | readableDate)
               : "_"
           }}
         </span>

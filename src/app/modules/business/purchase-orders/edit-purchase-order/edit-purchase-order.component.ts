@@ -34,7 +34,6 @@ import { FormErrorService } from '../../../../shared/services/form-error.service
 import { FormNewPurchaseOrderService } from '../form-new-purchase-order.service';
 
 import { CustomSelectComponent } from '../../../../shared/components/custom-select/custom-select.component';
-import { QuickDatePickerComponent } from '../../../../shared/components/quick-date-picker/quick-date-picker.component';
 import { SubmitButtonComponent } from '../../../../shared/components/submit-button/submit-button.component';
 import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/breadcrumb.component';
 import {
@@ -68,7 +67,6 @@ import {
     CustomSelectComponent,
     ReactiveFormsModule,
     NgSelectModule,
-    QuickDatePickerComponent,
     SubmitButtonComponent,
     BreadcrumbComponent,
     TrackingEntityComponent,
@@ -255,10 +253,6 @@ export default class EditPurchaseOrderComponent implements OnInit {
     const control = this.editPurchaseOrderForm()?.get(controlPath);
     if (!control) return false;
     return control.touched && control.invalid;
-  }
-
-  onDeliveryDateChange(value: any): void {
-    this.editPurchaseOrderForm()?.controls['deliveryDate'].patchValue(value);
   }
 
   // ==== PURCHASE-ORDER ITEMS =====
