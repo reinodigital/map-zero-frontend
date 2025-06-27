@@ -6,3 +6,4 @@ export * from './toast.enum';
 export * from './quote.enum';
 export * from './invoice.enum';
 export * from './item.enum';
+export * from './purchase-order.enum';

@@ -10,3 +10,4 @@ export * from './territory.interface';
 export * from './toast.interface';
 export * from './tracking.interface';
 export * from './quote.interface';
+export * from './purchase-order.interface';

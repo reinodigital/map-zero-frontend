@@ -1,0 +1,183 @@
+<div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de compras'"
+    [primaryLink]="'/purchases-overview'"
+  ></breadcrumb>
+
+  <div class="filters mb-4">
+    <div class="box">
+      <div
+        class="d-flex justify-content-between align-items-center cp mb-2"
+        (click)="openCloseFilters()"
+        data-bs-toggle="collapse"
+        data-bs-target="#collapseFilters"
+        aria-expanded="false"
+        aria-controls="collapseFilters"
+      >
+        <h3 class="mb-0">Filtrar órdenes de compra</h3>
+        @if (filtersOpen()) {
+        <i class="fa-solid fa-window-minimize"> </i>
+        } @else {
+        <i class="fa-solid fa-window-maximize"> </i>
+        }
+      </div>
+      <div class="collapse" id="collapseFilters">
+        <div class="card card-body">
+          <form
+            class="search_form"
+            [formGroup]="searchForm()"
+            autocomplete="off"
+            (ngSubmit)="searchFormSubmit()"
+          >
+            <div class="row">
+              <div class="col-12 col-sm-6 col-lg-4">
+                <label for="name">Número</label>
+                <input type="text" formControlName="purchaseOrderNumber" />
+              </div>
+            </div>
+
+            <div class="d-flex justify-content-start mt-4">
+              <button class="btn btn-success" type="submit">Filtrar</button>
+              <button
+                class="btn btn-light ms-2"
+                type="button"
+                (click)="restartFilters()"
+              >
+                Restablecer filtros
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+  <div class="row animate__animated animate__fadeIn">
+    <div class="col-12">
+      <div class="alert alert-info text-center" role="alert">
+        <h4 class="alert-heading">Loading</h4>
+        <i class="fa fa-spin fa-refresh fa-2x"></i>
+        <p class="mb-o">Cargando...</p>
+      </div>
+    </div>
+  </div>
+  } @if (!isLoading()) {
+  <div class="table_clients">
+    <div class="box">
+      <div class="row">
+        <div class="d-flex justify-content-between mb-3">
+          <h3>Órdenes de compra</h3>
+          <button class="btn btn-primary mb-2" routerLink="/new-purchase-order">
+            + Nueva orden de compra
+          </button>
+        </div>
+
+        <mat-tab-group
+          class="mt-4 mb-3"
+          (selectedTabChange)="onTabChange($event)"
+        >
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Todas <span class="text-primary ms-2">{{ totalAll() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Borrador <span class="text-primary ms-2">{{ totalDraft() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Enviadas <span class="text-primary ms-2">{{ totalSent() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Rechazadas
+              <span class="text-primary ms-2">{{ totalDeclined() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Aceptadas
+              <span class="text-primary ms-2">{{ totalAccepted() }}</span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Facturadas
+              <span class="text-primary ms-2">{{ totalInvoiced() }}</span>
+            </ng-template>
+          </mat-tab>
+        </mat-tab-group>
+
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Número</th>
+                <th>Cliente</th>
+                <th>Fecha inicio</th>
+                <th>Estado</th>
+                <th>Monto</th>
+              </tr>
+            </thead>
+            <tbody class="animate__animated animate__fadeIn">
+              @for (purchaseOrder of purchaseOrders(); track purchaseOrder.id) {
+              <tr
+                class="admin_tr"
+                [routerLink]="'/detail-purchase-order/' + purchaseOrder.id"
+              >
+                <td>{{ purchaseOrder.purchaseOrderNumber }}</td>
+                <td>{{ purchaseOrder.client.name }}</td>
+                <td>{{ purchaseOrder.initDate | readableDate }}</td>
+                <td>
+                  <span
+                    [class]="
+                      detailPurchaseOrderService.getStatusBadgeFromPurchaseOrder(
+                        purchaseOrder?.status ?? ''
+                      )
+                    "
+                  >
+                    {{ purchaseOrder?.status }}
+                  </span>
+                </td>
+                <td>{{ purchaseOrder.total }}</td>
+              </tr>
+              } @empty {
+              <tr>
+                <div class="w-100 d-flex justify-content-start">
+                  <div class="alert alert-warning">
+                    {{
+                      isActiveFilters()
+                        ? "Sin resultados para esa búsqueda"
+                        : "No existen órdenes de compra por el momento en el sistema"
+                    }}
+                  </div>
+                </div>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- END TABLE -->
+      </div>
+      <!-- END ROW -->
+    </div>
+    <!-- End BOX -->
+  </div>
+  }
+
+  <!-- Pagination -->
+  @if (total()) {
+  <div class="d-flex justify-content-center w_100 mt-4">
+    <app-pagination
+      [total]="total()"
+      [factor]="limit"
+      [initialOffset]="offset()"
+      (offsetEmitter)="detectChangeOffset($event)"
+    ></app-pagination>
+  </div>
+  }
+</div>

@@ -1,1 +1,396 @@
-<p>detail-purchase-order works!</p>
+<div class="main_content">
+  <breadcrumb
+    [primaryText]="'Vista de compras'"
+    [primaryLink]="'/purchases-overview'"
+    [secondaryText]="'Listado órdenes de compra'"
+    [secondaryLink]="'/list-purchase-orders'"
+  ></breadcrumb>
+
+  <div class="box">
+    <div class="d-flex justify-content-between mb-3">
+      <h3 class="">Detalle cotización</h3>
+      <h4 class="cp" (click)="comeBackToList()">
+        <i class="fa-solid fa-angles-left"></i> Regresar
+      </h4>
+    </div>
+
+    @if (purchaseOrder()) {
+    <div class="d-flex justify-content-between mb-4">
+      <div class="d-flex align-items-center">
+        <span class="me-3">{{ purchaseOrder()?.purchaseOrderNumber }}</span>
+        <span
+          [class]="
+            detailPurchaseOrderService.getStatusBadgeFromPurchaseOrder(
+              purchaseOrder()?.status ?? ''
+            )
+          "
+        >
+          {{ purchaseOrder()?.status }}
+        </span>
+      </div>
+      <div class="hstack gap-3">
+        <!-- TODO -->
+        <button class="btn btn-outline-secondary">Imprimir PDF</button>
+        @if (allowedStatusToBeEditedFromDraft.includes(purchaseOrder()!.status))
+        {
+        <button
+          type="button"
+          class="btn btn-primary"
+          [routerLink]="'/edit-purchase-order/' + purchaseOrderId"
+        >
+          <i class="fa-solid fa-pen-to-square me-2"></i>
+          Editar
+        </button>
+        } @if (allowedStatusToBeAccepted.includes(purchaseOrder()!.status)) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="detailPurchaseOrderService.markAsAccepted(purchaseOrderId)"
+        >
+          Marcar como aceptada
+        </button>
+        }
+
+        <div class="dropdown">
+          @if
+          (detailPurchaseOrderService.isSendEmailFromDetailComponentSubmitting())
+          {
+          <div class="spinner ms-1"></div>
+          } @else {
+          <i
+            class="fa-solid fa-ellipsis-vertical three_points_dropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          ></i>
+          }
+          <ul class="dropdown-menu">
+            @if (allowedStatusToBeAccepted.includes(purchaseOrder()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.markAsAccepted(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como aceptada
+              </button>
+            </li>
+            } @if (allowedStatusToBeSent.includes(purchaseOrder()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.displayModalPurchaseOrderEmail(
+                    purchaseOrder()!
+                  )
+                "
+              >
+                <i class="fa-solid fa-paper-plane icon_sent me-2"></i>
+                Enviar
+              </button>
+            </li>
+            }
+            <!-- COPY TO -->
+            <button
+              type="button"
+              class="dropdown-item"
+              (click)="
+                detailCopyPurchaseOrderToService.displayModalCopyPurchaseOrderTo(
+                  purchaseOrderId
+                )
+              "
+            >
+              <i class="fa-solid fa-clone icon_copy_to me-2"></i>
+              Copiar a
+            </button>
+            @if (allowedStatusToMarkAsSent.includes(purchaseOrder()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailPurchaseOrderService.markAsSent(purchaseOrderId)"
+              >
+                <i class="fa-solid fa-marker icon_mark_as_sent me-2"></i>
+                Marcar como enviada
+              </button>
+            </li>
+            } @if
+            (allowedStatusToUnMarkAsAccepted.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.undoMarkAsAccepted(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como aceptada
+              </button>
+            </li>
+            } @if
+            (allowedStatusToUnMarkAsDeclined.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.undoMarkAsDeclined(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como rechazada
+              </button>
+            </li>
+            } @if
+            (allowedStatusToUnMarkAsInvoiced.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.undoMarkAsInvoiced(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-repeat icon_trash me-2"></i>
+                Desmarcar como facturada
+              </button>
+            </li>
+            } @if (allowedStatusToBeDeclined.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.markAsDeclined(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-xmark icon_declined me-2"></i>
+                Marcar como rechazada
+              </button>
+            </li>
+            } @if (allowedStatusToBeInvoiced.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.markAsInvoiced(purchaseOrderId)
+                "
+              >
+                <i
+                  class="fa-solid fa-file-invoice-dollar icon_accepted me-2"
+                ></i>
+                Marcar como facturada
+              </button>
+            </li>
+            } @if (allowedStatusToBeEdited.includes(purchaseOrder()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                [routerLink]="'/edit-purchase-order/' + purchaseOrderId"
+              >
+                <i class="fa-solid fa-pen-to-square icon_pencil me-2"></i>
+                Editar
+              </button>
+            </li>
+            } @if (purchaseOrder()!.status !== 'removida') {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.removePurchaseOrder(
+                    purchaseOrder()!
+                  )
+                "
+              >
+                <i class="fa-solid fa-trash icon_trash me-2"></i>
+                Remover
+              </button>
+            </li>
+            }
+            <li>
+              <div class="line_divider mt-3 mb-2"></div>
+              <small class="ms-3 fs-4">Acciones</small>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Cliente</label>
+        <span>{{ purchaseOrder()?.client?.name }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Fecha inicio</label>
+        <span>{{ purchaseOrder()!.initDate | readableDate }}</span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Fecha expira</label>
+        <span>
+          {{
+            purchaseOrder()!.expireDate
+              ? (purchaseOrder()!.expireDate | readableDate)
+              : "_"
+          }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Número cotización</label>
+        <span>
+          {{ purchaseOrder()!.purchaseOrderNumber }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Moneda</label>
+        <span>
+          {{ purchaseOrder()!.currency }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Estado</label>
+        <span
+          [class]="
+            detailPurchaseOrderService.getStatusBadgeFromPurchaseOrder(
+              purchaseOrder()?.status ?? ''
+            )
+          "
+        >
+          {{ purchaseOrder()?.status }}
+        </span>
+      </div>
+    </div>
+
+    <div class="row table_items">
+      <table class="table table-sm mb-3">
+        <thead>
+          <tr>
+            <th class="col-2">
+              <span>Item</span>
+            </th>
+            <th class="col-3">
+              <span>Descripción</span>
+            </th>
+            <th class="col-1">
+              <span> Cantidad </span>
+            </th>
+            <th class="col-1">
+              <span>Precio</span>
+            </th>
+            <th class="col-1">
+              <span>Descuento</span>
+            </th>
+            <th class="col-1">
+              <span>Cuenta</span>
+            </th>
+            <th class="col-1">
+              <span>Impuesto</span>
+            </th>
+            <th class="col-1">
+              <span>Vendedor</span>
+            </th>
+            <th class="col-1 text-end">
+              <span>Monto</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (purchaseOrderItem of purchaseOrder()?.purchaseOrderItems; track
+          purchaseOrderItem.id) {
+          <tr>
+            <td>
+              <span>{{ purchaseOrderItem.item.name }}</span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.description }}</span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.quantity }}</span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.price }}</span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.discount }}</span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.account?.name ?? "_" }}</span>
+            </td>
+            <td>
+              <span>
+                {{
+                  detailPurchaseOrderService.getTaxRateLabel(
+                    purchaseOrderItem.taxRate ?? ""
+                  )
+                }}
+              </span>
+            </td>
+            <td>
+              <span>{{ purchaseOrderItem.seller?.name ?? "_" }}</span>
+            </td>
+            <td class="text-end">
+              <span>{{ purchaseOrderItem.amount }}</span>
+            </td>
+          </tr>
+          } @empty {
+          <tr class="no-elements">
+            <td colspan="12">
+              No existen Artículos ni servicios en esta cotización.
+            </td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Totals values -->
+    <div class="row mt-4">
+      <div class="col-md-6 col-lg-4 offset-md-6 offset-lg-8">
+        <ul class="list-group list-group-flush">
+          <li class="total_price d-flex justify-content-between">
+            <span>Subtotal</span>
+            <span>{{ subtotal() | number : "1.2-2" }}</span>
+          </li>
+          <li class="total_price d-flex justify-content-between">
+            <span>Descuento total</span>
+            <span class="text-danger">
+              - {{ totalDiscount() | number : "1.2-2" }}
+            </span>
+          </li>
+          <li class="total_price d-flex justify-content-between">
+            <span>Impuesto total</span>
+            <span>{{ totalTax() | number : "1.2-2" }}</span>
+          </li>
+          <div class="line_divider"></div>
+          <li class="total_price d-flex justify-content-between mt-3">
+            <span>Total</span>
+            <strong>
+              {{ totalAmount() | number : "1.2-2" }}
+            </strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<!-- History tracking changes-->
+@if (purchaseOrder()) {
+<tracking-entity
+  [tracking]="purchaseOrder()!.tracking"
+  [entity]="entityData()!"
+></tracking-entity>
+}

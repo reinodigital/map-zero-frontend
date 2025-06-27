@@ -10,4 +10,5 @@ export * from './territory.service';
 export * from './item.service';
 export * from './invoice.service';
 export * from './quote.service';
+export * from './purchase-order.service';
 export * from './shared.service';

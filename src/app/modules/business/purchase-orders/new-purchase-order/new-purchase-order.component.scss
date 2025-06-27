@@ -1,0 +1,59 @@
+/* Global styles */
+
+table {
+  width: 100%; /* Ensure table takes full width */
+  border-collapse: collapse; /* Collapse borders for a cleaner look */
+}
+
+th,
+td {
+  padding: 0.5rem; /* Adjust padding as needed */
+  text-align: left;
+  border: 1px solid #ddd; /* Add borders for visual separation (optional) */
+}
+
+td input,
+td select,
+td textarea,
+td ng-select {
+  display: block; /* Make the input/select take up the full block width */
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem; /* Add some padding inside the input/select */
+  margin: 0; /* Remove default margins */
+  border: none; /* Remove default input/select borders */
+  background-color: transparent; /* Make the input background transparent */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  font-size: inherit; /* Inherit font size from the table cell */
+}
+
+/* Style for ng-select to fill the cell */
+td ng-select .ng-select-container {
+  border: none !important;
+  background-color: transparent !important;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+td ng-select .ng-value-wrapper {
+  padding: 0.5rem 0; /* Adjust padding */
+}
+
+td ng-select .ng-input {
+  padding: 0.5rem 0; /* Adjust padding */
+}
+
+/* Remove the default focus outline */
+td input:focus,
+td textarea:focus,
+td select:focus,
+td ng-select:focus-within {
+  /* Use :focus-within for ng-select for better accessibility */
+  outline: none;
+}
+
+.total_price {
+  font-size: 1.4rem;
+  margin-bottom: 0.4rem;
+}

@@ -240,7 +240,25 @@ export const routes: Routes = [
     path: 'list-purchase-orders',
     loadComponent: () =>
       import(
-        './modules/business/purchase-orders/list-purchase-orders/list-purchase-orders.component'
+        './modules/business/purchase-orders/list-purchase-order/list-purchase-orders.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'new-purchase-order',
+    loadComponent: () =>
+      import(
+        './modules/business/purchase-orders/new-purchase-order/new-purchase-order.component'
+      ),
+    canActivate: [AuthGuard],
+    canLoad: [AuthGuard],
+  },
+  {
+    path: 'edit-purchase-order/:id',
+    loadComponent: () =>
+      import(
+        './modules/business/purchase-orders/edit-purchase-order/edit-purchase-order.component'
       ),
     canActivate: [AuthGuard],
     canLoad: [AuthGuard],
