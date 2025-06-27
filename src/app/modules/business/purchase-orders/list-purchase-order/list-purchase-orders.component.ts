@@ -59,9 +59,9 @@ export default class ListPurchaseOrdersComponent {
   public totalAll = signal<number>(0);
   public totalDraft = signal<number>(0);
   public totalSent = signal<number>(0);
-  public totalAccepted = signal<number>(0);
-  public totalDeclined = signal<number>(0);
-  public totalInvoiced = signal<number>(0);
+  public totalAwaitingApproval = signal<number>(0);
+  public totalApproved = signal<number>(0);
+  public totalBilled = signal<number>(0);
 
   // FILTERS
   public purchaseOrderStatusFilter = signal<string>('');
@@ -109,9 +109,11 @@ export default class ListPurchaseOrdersComponent {
 
     this.totalDraft.set(statusCounts[StatusPurchaseOrder.DRAFT] ?? 0);
     this.totalSent.set(statusCounts[StatusPurchaseOrder.SENT] ?? 0);
-    this.totalAccepted.set(statusCounts[StatusPurchaseOrder.ACCEPTED] ?? 0);
-    this.totalDeclined.set(statusCounts[StatusPurchaseOrder.DECLINED] ?? 0);
-    this.totalInvoiced.set(statusCounts[StatusPurchaseOrder.INVOICED] ?? 0);
+    this.totalAwaitingApproval.set(
+      statusCounts[StatusPurchaseOrder.AWAITING_APPROVAL] ?? 0
+    );
+    this.totalApproved.set(statusCounts[StatusPurchaseOrder.APPROVED] ?? 0);
+    this.totalBilled.set(statusCounts[StatusPurchaseOrder.BILLED] ?? 0);
   }
 
   // FILTERS
@@ -124,9 +126,9 @@ export default class ListPurchaseOrdersComponent {
       '',
       StatusPurchaseOrder.DRAFT,
       StatusPurchaseOrder.SENT,
-      StatusPurchaseOrder.DECLINED,
-      StatusPurchaseOrder.ACCEPTED,
-      StatusPurchaseOrder.INVOICED,
+      StatusPurchaseOrder.AWAITING_APPROVAL,
+      StatusPurchaseOrder.APPROVED,
+      StatusPurchaseOrder.BILLED,
     ];
     this.purchaseOrderStatusFilter.set(statusByIndex[event.index]);
 

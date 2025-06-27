@@ -94,20 +94,22 @@
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label>
-              Rechazadas
-              <span class="text-primary ms-2">{{ totalDeclined() }}</span>
+              Esperando aprobación
+              <span class="text-primary ms-2">{{
+                totalAwaitingApproval()
+              }}</span>
             </ng-template>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label>
-              Aceptadas
-              <span class="text-primary ms-2">{{ totalAccepted() }}</span>
+              Aprobadas
+              <span class="text-primary ms-2">{{ totalApproved() }}</span>
             </ng-template>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label>
-              Facturadas
-              <span class="text-primary ms-2">{{ totalInvoiced() }}</span>
+              Pagadas
+              <span class="text-primary ms-2">{{ totalBilled() }}</span>
             </ng-template>
           </mat-tab>
         </mat-tab-group>
@@ -152,7 +154,7 @@
                     {{
                       isActiveFilters()
                         ? "Sin resultados para esa búsqueda"
-                        : "No existen órdenes de compra por el momento en el sistema"
+                        : "Sin resultados en órdenes de compra"
                     }}
                   </div>
                 </div>

@@ -89,13 +89,13 @@ export class DetailPurchaseOrderService {
       case StatusPurchaseOrder.SENT:
         result = 'badge bg-label-primary';
         break;
-      case StatusPurchaseOrder.ACCEPTED:
+      case StatusPurchaseOrder.AWAITING_APPROVAL:
+        result = 'badge bg-label-orange';
+        break;
+      case StatusPurchaseOrder.APPROVED:
         result = 'badge bg-label-success';
         break;
-      case StatusPurchaseOrder.DECLINED:
-        result = 'badge bg-label-danger';
-        break;
-      case StatusPurchaseOrder.INVOICED:
+      case StatusPurchaseOrder.BILLED:
         result = 'badge bg-label-warning';
         break;
       case StatusPurchaseOrder.REMOVED:
@@ -148,35 +148,38 @@ export class DetailPurchaseOrderService {
       .markAsSent(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
-  markAsAccepted(purchaseOrderId: number): void {
+  markAsAwaitingApproval(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .markAsAccepted(purchaseOrderId, this.generateUpdatedAtProperty())
+      .markAsAwaitingApproval(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
-  markAsDeclined(purchaseOrderId: number): void {
+  markAsApproved(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .markAsDeclined(purchaseOrderId, this.generateUpdatedAtProperty())
+      .markAsApproved(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
-  markAsInvoiced(purchaseOrderId: number): void {
+  markAsBilled(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .markAsInvoiced(purchaseOrderId, this.generateUpdatedAtProperty())
+      .markAsBilled(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
 
-  undoMarkAsAccepted(purchaseOrderId: number): void {
+  undoMarkAsAwaitingApproval(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .undoMarkAsAccepted(purchaseOrderId, this.generateUpdatedAtProperty())
+      .undoMarkAsAwaitingApproval(
+        purchaseOrderId,
+        this.generateUpdatedAtProperty()
+      )
       .subscribe((resp) => this.processResponse(resp));
   }
-  undoMarkAsDeclined(purchaseOrderId: number): void {
+  undoMarkAsApproved(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .undoMarkAsDeclined(purchaseOrderId, this.generateUpdatedAtProperty())
+      .undoMarkAsApproved(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
-  undoMarkAsInvoiced(purchaseOrderId: number): void {
+  undoMarkAsBilled(purchaseOrderId: number): void {
     this.purchaseOrderService
-      .undoMarkAsInvoiced(purchaseOrderId, this.generateUpdatedAtProperty())
+      .undoMarkAsBilled(purchaseOrderId, this.generateUpdatedAtProperty())
       .subscribe((resp) => this.processResponse(resp));
   }
 

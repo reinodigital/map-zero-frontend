@@ -160,11 +160,11 @@ export class PurchaseOrderService {
       );
   }
 
-  markAsAccepted(
+  markAsAwaitingApproval(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/mark-as-accepted/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/mark-as-awaiting-approval/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })
@@ -174,11 +174,11 @@ export class PurchaseOrderService {
       );
   }
 
-  markAsDeclined(
+  markAsApproved(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/mark-as-declined/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/mark-as-approved/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })
@@ -188,11 +188,11 @@ export class PurchaseOrderService {
       );
   }
 
-  markAsInvoiced(
+  markAsBilled(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/mark-as-invoiced/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/mark-as-billed/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })
@@ -204,11 +204,11 @@ export class PurchaseOrderService {
   /* ========= END MARK && CHANGE STATUS ========== */
 
   /* ========= UNDO MARK && COME BACK STATUS ========== */
-  undoMarkAsAccepted(
+  undoMarkAsAwaitingApproval(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/undo-mark-as-accepted/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/undo-mark-as-awaiting-approval/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })
@@ -218,11 +218,11 @@ export class PurchaseOrderService {
       );
   }
 
-  undoMarkAsDeclined(
+  undoMarkAsApproved(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/undo-mark-as-declined/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/undo-mark-as-approved/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })
@@ -232,11 +232,11 @@ export class PurchaseOrderService {
       );
   }
 
-  undoMarkAsInvoiced(
+  undoMarkAsBilled(
     purchaseOrderId: number,
     data: IMarkAndChangeStatusPurchaseOrder
   ): Observable<IMessage | any> {
-    const url = `${this._baseUrl}/purchase-order/undo-mark-as-invoiced/${purchaseOrderId}`;
+    const url = `${this._baseUrl}/purchase-order/undo-mark-as-billed/${purchaseOrderId}`;
 
     return this.http
       .patch<IMessage>(url, data, { headers: this.getToken })

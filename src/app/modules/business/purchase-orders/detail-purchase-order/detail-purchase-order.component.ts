@@ -56,25 +56,33 @@ export default class DetailPurchaseOrderComponent {
   public allowedStatusToBeSent = [
     StatusPurchaseOrder.DRAFT as String,
     StatusPurchaseOrder.SENT as String,
+    StatusPurchaseOrder.AWAITING_APPROVAL as String,
+    StatusPurchaseOrder.APPROVED as String,
   ];
   public allowedStatusToMarkAsSent = [StatusPurchaseOrder.DRAFT as String];
-  public allowedStatusToBeAccepted = [StatusPurchaseOrder.SENT as String];
-  public allowedStatusToBeInvoiced = [StatusPurchaseOrder.ACCEPTED as String];
-  public allowedStatusToBeDeclined = [StatusPurchaseOrder.SENT as String];
+  public allowedStatusToBeAwaitingApproval = [
+    StatusPurchaseOrder.DRAFT as String,
+    StatusPurchaseOrder.SENT as String,
+  ];
+  public allowedStatusToBeApproved = [
+    StatusPurchaseOrder.DRAFT as String,
+    StatusPurchaseOrder.SENT as String,
+    StatusPurchaseOrder.AWAITING_APPROVAL as String,
+  ];
+  public allowedStatusToBeBilled = [StatusPurchaseOrder.APPROVED as String];
   public allowedStatusToBeEdited = [
     StatusPurchaseOrder.DRAFT as String,
     StatusPurchaseOrder.SENT as String,
   ];
 
-  public allowedStatusToUnMarkAsAccepted = [
-    StatusPurchaseOrder.ACCEPTED as String,
+  public allowedStatusToUnMarkAsSent = [StatusPurchaseOrder.SENT as String];
+  public allowedStatusToUnMarkAsApproved = [
+    StatusPurchaseOrder.APPROVED as String,
   ];
-  public allowedStatusToUnMarkAsDeclined = [
-    StatusPurchaseOrder.DECLINED as String,
+  public allowedStatusToUnMarkAsAwaitingApproval = [
+    StatusPurchaseOrder.AWAITING_APPROVAL as String,
   ];
-  public allowedStatusToUnMarkAsInvoiced = [
-    StatusPurchaseOrder.INVOICED as String,
-  ];
+  public allowedStatusToUnMarkAsBilled = [StatusPurchaseOrder.BILLED as String];
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);

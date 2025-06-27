@@ -8,7 +8,7 @@
 
   <div class="box">
     <div class="d-flex justify-content-between mb-3">
-      <h3 class="">Detalle cotización</h3>
+      <h3 class="">Detalle orden de compra</h3>
       <h4 class="cp" (click)="comeBackToList()">
         <i class="fa-solid fa-angles-left"></i> Regresar
       </h4>
@@ -41,13 +41,21 @@
           <i class="fa-solid fa-pen-to-square me-2"></i>
           Editar
         </button>
-        } @if (allowedStatusToBeAccepted.includes(purchaseOrder()!.status)) {
+        } @if (allowedStatusToBeApproved.includes(purchaseOrder()!.status)) {
         <button
           type="button"
           class="btn btn-primary"
-          (click)="detailPurchaseOrderService.markAsAccepted(purchaseOrderId)"
+          (click)="detailPurchaseOrderService.markAsApproved(purchaseOrderId)"
         >
-          Marcar como aceptada
+          Marcar como aprobada
+        </button>
+        } @if (allowedStatusToBeBilled.includes(purchaseOrder()!.status)) {
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="detailPurchaseOrderService.markAsBilled(purchaseOrderId)"
+        >
+          Marcar como pagada
         </button>
         }
 
@@ -64,17 +72,23 @@
           ></i>
           }
           <ul class="dropdown-menu">
-            @if (allowedStatusToBeAccepted.includes(purchaseOrder()!.status)) {
+            @if
+            (allowedStatusToBeAwaitingApproval.includes(purchaseOrder()!.status))
+            {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
                 (click)="
-                  detailPurchaseOrderService.markAsAccepted(purchaseOrderId)
+                  detailPurchaseOrderService.markAsAwaitingApproval(
+                    purchaseOrderId
+                  )
                 "
               >
-                <i class="fa-solid fa-check icon_accepted me-2"></i>
-                Marcar como aceptada
+                <i
+                  class="fa-solid fa-file-invoice-dollar icon_accepted me-2"
+                ></i>
+                Marcar como esperando por ser aprobada
               </button>
             </li>
             } @if (allowedStatusToBeSent.includes(purchaseOrder()!.status)) {
@@ -90,6 +104,20 @@
               >
                 <i class="fa-solid fa-paper-plane icon_sent me-2"></i>
                 Enviar
+              </button>
+            </li>
+            } @if (allowedStatusToBeApproved.includes(purchaseOrder()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="
+                  detailPurchaseOrderService.markAsApproved(purchaseOrderId)
+                "
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como aprobada
               </button>
             </li>
             }
@@ -118,78 +146,62 @@
               </button>
             </li>
             } @if
-            (allowedStatusToUnMarkAsAccepted.includes(purchaseOrder()!.status))
+            (allowedStatusToUnMarkAsAwaitingApproval.includes(purchaseOrder()!.status))
             {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
                 (click)="
-                  detailPurchaseOrderService.undoMarkAsAccepted(purchaseOrderId)
+                  detailPurchaseOrderService.undoMarkAsAwaitingApproval(
+                    purchaseOrderId
+                  )
                 "
               >
                 <i class="fa-solid fa-repeat icon_trash me-2"></i>
-                Desmarcar como aceptada
+                Desmarcar como esperando a ser aprobada
               </button>
             </li>
             } @if
-            (allowedStatusToUnMarkAsDeclined.includes(purchaseOrder()!.status))
+            (allowedStatusToUnMarkAsApproved.includes(purchaseOrder()!.status))
             {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
                 (click)="
-                  detailPurchaseOrderService.undoMarkAsDeclined(purchaseOrderId)
+                  detailPurchaseOrderService.undoMarkAsApproved(purchaseOrderId)
                 "
               >
                 <i class="fa-solid fa-repeat icon_trash me-2"></i>
-                Desmarcar como rechazada
+                Desmarcar como aprobada
               </button>
             </li>
             } @if
-            (allowedStatusToUnMarkAsInvoiced.includes(purchaseOrder()!.status))
-            {
+            (allowedStatusToUnMarkAsBilled.includes(purchaseOrder()!.status)) {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
                 (click)="
-                  detailPurchaseOrderService.undoMarkAsInvoiced(purchaseOrderId)
+                  detailPurchaseOrderService.undoMarkAsBilled(purchaseOrderId)
                 "
               >
                 <i class="fa-solid fa-repeat icon_trash me-2"></i>
-                Desmarcar como facturada
+                Desmarcar como pagada
               </button>
             </li>
-            } @if (allowedStatusToBeDeclined.includes(purchaseOrder()!.status))
-            {
+            } @if (allowedStatusToBeBilled.includes(purchaseOrder()!.status)) {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
                 (click)="
-                  detailPurchaseOrderService.markAsDeclined(purchaseOrderId)
+                  detailPurchaseOrderService.markAsBilled(purchaseOrderId)
                 "
               >
                 <i class="fa-solid fa-xmark icon_declined me-2"></i>
-                Marcar como rechazada
-              </button>
-            </li>
-            } @if (allowedStatusToBeInvoiced.includes(purchaseOrder()!.status))
-            {
-            <li>
-              <button
-                class="dropdown-item"
-                type="button"
-                (click)="
-                  detailPurchaseOrderService.markAsInvoiced(purchaseOrderId)
-                "
-              >
-                <i
-                  class="fa-solid fa-file-invoice-dollar icon_accepted me-2"
-                ></i>
-                Marcar como facturada
+                Marcar como pagada
               </button>
             </li>
             } @if (allowedStatusToBeEdited.includes(purchaseOrder()!.status)) {
@@ -248,18 +260,12 @@
         </span>
       </div>
       <div class="col-12 col-md-3 col-lg-2">
-        <label>Número cotización</label>
+        <label>Número orden de compra</label>
         <span>
           {{ purchaseOrder()!.purchaseOrderNumber }}
         </span>
       </div>
-      <div class="col-12 col-md-3 col-lg-2">
-        <label>Moneda</label>
-        <span>
-          {{ purchaseOrder()!.currency }}
-        </span>
-      </div>
-      <div class="col-12 col-md-3 col-lg-2">
+      <div class="col-12 col-md-4 col-lg-3">
         <label>Estado</label>
         <span
           [class]="
@@ -269,6 +275,12 @@
           "
         >
           {{ purchaseOrder()?.status }}
+        </span>
+      </div>
+      <div class="col-12 col-md-3 col-lg-2">
+        <label>Moneda</label>
+        <span>
+          {{ purchaseOrder()!.currency }}
         </span>
       </div>
     </div>
@@ -347,7 +359,7 @@
           } @empty {
           <tr class="no-elements">
             <td colspan="12">
-              No existen Artículos ni servicios en esta cotización.
+              No existen Artículos ni servicios en esta orden de compra.
             </td>
           </tr>
           }
