@@ -43,16 +43,16 @@
           }
         </div>
         <div class="col-12 col-sm-6 col-lg-4 mb-3">
-          <label class="w_100" for="expireDate">
+          <label class="w_100" for="deliveryDate">
             Fecha entrega
             <span class="muted">opcional</span>
           </label>
           <quick-date-picker
-            (dateChanged)="onExpireDateChange($event)"
+            (dateChanged)="onDeliveryDateChange($event)"
           ></quick-date-picker>
         </div>
         <div class="col-12 col-sm-6 col-lg-4 mb-3">
-          <label class="w_100" for="expireDate">
+          <label class="w_100" for="currency">
             Moneda
             <span class="asterisk">*</span>
           </label>
@@ -234,10 +234,14 @@
 
       <div class="row">
         <div class="col-12">
-          <label for="description">
-            Términos <span class="muted">opcional</span>
+          <label for="deliveryInstructions">
+            Instrucciones de entrega <span class="muted">opcional</span>
           </label>
-          <textarea class="w_100" formControlName="terms" rows="2"></textarea>
+          <textarea
+            class="w_100"
+            formControlName="deliveryInstructions"
+            rows="2"
+          ></textarea>
         </div>
       </div>
 

@@ -225,14 +225,17 @@ export default class EditPurchaseOrderComponent implements OnInit {
           ),
           [Validators.required],
         ],
-        expireDate: [
+        deliveryDate: [
           formatDateForInput(
-            new Date(purchaseOrderData.expireDate ?? new Date())
+            new Date(purchaseOrderData.deliveryDate ?? new Date())
           ),
           [],
         ],
         currency: [purchaseOrderData.currency ?? 'USD', [Validators.required]],
-        terms: [purchaseOrderData.terms ?? '', []],
+        deliveryInstructions: [
+          purchaseOrderData.deliveryInstructions ?? '',
+          [],
+        ],
         purchaseOrderItems: purchaseOrderItemsFormArray,
       })
     );
@@ -254,8 +257,8 @@ export default class EditPurchaseOrderComponent implements OnInit {
     return control.touched && control.invalid;
   }
 
-  onExpireDateChange(value: any): void {
-    this.editPurchaseOrderForm()?.controls['expireDate'].patchValue(value);
+  onDeliveryDateChange(value: any): void {
+    this.editPurchaseOrderForm()?.controls['deliveryDate'].patchValue(value);
   }
 
   // ==== PURCHASE-ORDER ITEMS =====

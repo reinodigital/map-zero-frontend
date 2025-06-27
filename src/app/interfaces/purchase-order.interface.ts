@@ -19,9 +19,9 @@ export interface IPurchaseOrder {
   purchaseOrderNumber: string;
   total: number;
   initDate?: Date;
-  expireDate?: Date;
+  deliveryDate?: Date;
   currency: string;
-  terms?: string; // field to explain some term or condition
+  deliveryInstructions?: string;
   client: IClient;
   purchaseOrderItems: IPurchaseOrderItem[];
   tracking: ITracking[];
@@ -45,9 +45,9 @@ export interface IDataToCreatePurchaseOrder {
   client: IShortSelectClient;
   status: string;
   initDate: string;
-  expireDate?: string;
+  deliveryDate?: string;
   currency: string;
-  terms?: string;
+  deliveryInstructions?: string;
   purchaseOrderItems: IDataToCreatePurchaseOrderItem[];
   // reference properties
   action: string;
@@ -57,9 +57,9 @@ export interface IDataToUpdatePurchaseOrder {
   client: IShortSelectClient;
   status: string;
   initDate: string;
-  expireDate?: string;
+  deliveryDate?: string;
   currency: string;
-  terms?: string;
+  deliveryInstructions?: string;
   purchaseOrderItems: IDataToCreatePurchaseOrderItem[];
   // reference properties
   action: string;
@@ -86,7 +86,7 @@ export interface IDataToModalEmailSendPurchaseOrder {
 export interface ICustomDataToModalEmailSendPurchaseOrder {
   clientName: string;
   currency: string;
-  terms?: string;
+  deliveryInstructions?: string;
   // reference properties
   total: number;
 }

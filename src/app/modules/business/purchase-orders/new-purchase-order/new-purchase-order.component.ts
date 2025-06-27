@@ -93,9 +93,9 @@ export default class NewPurchaseOrderComponent implements OnInit {
   public newPurchaseOrderForm: FormGroup = this.fb.group({
     client: [null, [Validators.required]],
     initDate: [this.currentDate, [Validators.required]],
-    expireDate: ['', []],
+    deliveryDate: ['', []],
     currency: ['USD', [Validators.required]],
-    terms: ['', []],
+    deliveryInstructions: ['', []],
     purchaseOrderItems: this.fb.array([
       this.createPurchaseOrderItemFormGroup(),
       this.createPurchaseOrderItemFormGroup(),
@@ -168,8 +168,8 @@ export default class NewPurchaseOrderComponent implements OnInit {
     return control.touched && control.invalid;
   }
 
-  onExpireDateChange(value: any): void {
-    this.newPurchaseOrderForm.controls['expireDate'].patchValue(value);
+  onDeliveryDateChange(value: any): void {
+    this.newPurchaseOrderForm.controls['deliveryDate'].patchValue(value);
   }
 
   // ==== PURCHASE-ORDER ITEMS =====

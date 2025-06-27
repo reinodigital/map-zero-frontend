@@ -64,8 +64,8 @@ export class CustomModalSendPurchaseOrderEmailRecipientComponent {
       this.data()?.currency
     } ${this.data()?.total.toFixed(
       2
-    )}\n\nSiéntese libre de comunicarse con nosotros si existe alguna duda.\n\nVer pdf de orden de compra adjunto a este correo.\n\nTérminos: ${
-      this.data()?.terms
+    )}\n\nSiéntese libre de comunicarse con nosotros si existe alguna duda.\n\nVer pdf de orden de compra adjunto a este correo.\n\nInstrucciones de entrega: ${
+      this.data()?.deliveryInstructions
     }\n\nSaludos.`;
 
     const subject = `Orden de compra de parte de Map Soluciones`;
