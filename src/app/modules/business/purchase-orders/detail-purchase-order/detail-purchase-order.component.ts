@@ -73,6 +73,9 @@ export default class DetailPurchaseOrderComponent {
   public allowedStatusToBeEdited = [
     StatusPurchaseOrder.DRAFT as String,
     StatusPurchaseOrder.SENT as String,
+    StatusPurchaseOrder.AWAITING_APPROVAL as String,
+    StatusPurchaseOrder.APPROVED as String,
+    StatusPurchaseOrder.BILLED as String,
   ];
 
   public allowedStatusToUnMarkAsSent = [StatusPurchaseOrder.SENT as String];

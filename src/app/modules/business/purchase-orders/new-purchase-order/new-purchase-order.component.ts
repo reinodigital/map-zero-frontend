@@ -226,7 +226,7 @@ export default class NewPurchaseOrderComponent implements OnInit {
       itemGroup.patchValue({
         description: selectedItem.description || '',
         price: selectedItem.salePrice ?? 0,
-        accountId: selectedItem.saleAccountId ?? '',
+        accountId: selectedItem.purchaseAccountId ?? '',
         // You might also want to update taxRate if it's tied to the item
         // taxRate: selectedItem.taxRateCode ?? '08',
       });
