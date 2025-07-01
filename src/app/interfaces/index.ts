@@ -11,3 +11,4 @@ export * from './toast.interface';
 export * from './tracking.interface';
 export * from './quote.interface';
 export * from './purchase-order.interface';
+export * from './overview.interface';

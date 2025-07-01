@@ -1,0 +1,36 @@
+.sales_overview_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.sales_overview_grid_square {
+  border: 1px solid var(--text);
+  background: linear-gradient(#ffffff, #f5f7f8);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.4rem 2.4rem;
+
+  &:hover {
+    background: #e4f1f8;
+  }
+
+  .sales_overview_grid_square_title {
+    color: var(--title);
+    font-size: 1.2rem;
+  }
+
+  .sales_overview_grid_square_amount {
+    color: var(--primary_blue);
+    margin-top: 0.2rem;
+  }
+}

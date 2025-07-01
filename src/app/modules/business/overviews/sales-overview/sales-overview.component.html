@@ -1,1 +1,41 @@
-<h2>Vista Preliminar de Ventas</h2>
+<div class="sales_overview">
+  <h1>Vista preliminar de ventas</h1>
+
+  <!-- Invoices -->
+  @if (sales()?.statusCounts?.Invoice && sales()?.totalsByStatus?.Invoice) {
+  <section class="sales_overview m_small">
+    <h3>Facturas</h3>
+    <div class="sales_overview_grid">
+      @for (key of objectKeys(sales()!.statusCounts.Invoice); track $index) {
+      <div class="sales_overview_grid_square">
+        <span class="sales_overview_grid_square_title">
+          {{ key | titlecase }} ({{ sales()!.statusCounts.Invoice[key] }})
+        </span>
+        <strong class="sales_overview_grid_square_amount">
+          {{ sales()!.totalsByStatus.Invoice[key] | number : "1.2-2" }}
+        </strong>
+      </div>
+      }
+    </div>
+  </section>
+  }
+
+  <!-- Quotes -->
+  @if (sales()?.statusCounts?.Quote && sales()?.totalsByStatus?.Quote) {
+  <section class="sales_overview m_small">
+    <h3>Cotizaciones</h3>
+    <div class="sales_overview_grid">
+      @for (key of objectKeys(sales()!.statusCounts.Quote); track $index) {
+      <div class="sales_overview_grid_square">
+        <span class="sales_overview_grid_square_title">
+          {{ key | titlecase }} ({{ sales()!.statusCounts.Quote[key] }})
+        </span>
+        <strong class="sales_overview_grid_square_amount">
+          {{ sales()!.totalsByStatus.Quote[key] | number : "1.2-2" }}
+        </strong>
+      </div>
+      }
+    </div>
+  </section>
+  }
+</div>
