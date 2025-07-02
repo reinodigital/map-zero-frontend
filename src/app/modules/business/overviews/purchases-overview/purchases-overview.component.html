@@ -1,1 +1,28 @@
-<h2>Vista Preliminar de Compras</h2>
+<div class="purchases_overview">
+  <h1>Vista preliminar de compras</h1>
+
+  <!-- Purchase Orders -->
+  @if (purchases()?.statusCounts?.PurchaseOrder &&
+  purchases()?.totalsByStatus?.PurchaseOrder) {
+  <section class="purchases_overview m_small">
+    <h3>Órdenes de compra</h3>
+    <div class="purchases_overview_grid">
+      @for (key of objectKeys(purchases()!.statusCounts.PurchaseOrder); track
+      $index) {
+      <div class="purchases_overview_grid_square">
+        <span class="purchases_overview_grid_square_title">
+          {{ key | titlecase }} ({{
+            purchases()!.statusCounts.PurchaseOrder[key]
+          }})
+        </span>
+        <strong class="purchases_overview_grid_square_amount">
+          {{
+            purchases()!.totalsByStatus.PurchaseOrder[key] | number : "1.2-2"
+          }}
+        </strong>
+      </div>
+      }
+    </div>
+  </section>
+  }
+</div>
