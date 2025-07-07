@@ -76,6 +76,7 @@
         <mat-tab-group
           class="mt-4 mb-3"
           (selectedTabChange)="onTabChange($event)"
+          [selectedIndex]="selectedTabIndex()"
         >
           <mat-tab>
             <ng-template mat-tab-label>

@@ -58,10 +58,9 @@ export default class ListInvoicesComponent {
   // TOTALS STATUS
   public totalAll = signal<number>(0);
   public totalDraft = signal<number>(0);
-  // public totalSent = signal<number>(0);
-  // public totalAccepted = signal<number>(0);
-  // public totalDeclined = signal<number>(0);
-  // public totalInvoiced = signal<number>(0);
+  public totalAwaitingApproval = signal<number>(0);
+  public totalAwaitingPayment = signal<number>(0);
+  public totalPaid = signal<number>(0);
 
   // FILTERS
   public invoiceStatusFilter = signal<string>('');
@@ -74,12 +73,25 @@ export default class ListInvoicesComponent {
     })
   );
 
+  // TABS
+  public selectedTabIndex = signal<number>(0);
+  private statusByIndexMap: Record<number, string> = {
+    0: '', // 'Todas'
+    1: StatusInvoice.DRAFT,
+    2: StatusInvoice.AWAITING_APPROVAL,
+    3: StatusInvoice.AWAITING_PAYMENT,
+    4: StatusInvoice.PAID,
+  };
+
   ngOnInit(): void {
     this.fetchAllItems();
   }
 
   fetchAllItems(): void {
-    this.filters.set({ ...this.filters(), status: this.invoiceStatusFilter() });
+    this.filters.set({
+      ...this.filters(),
+      status: this.statusByIndexMap[this.selectedTabIndex()],
+    });
 
     this.invoiceService
       .fetchAll(this.limit, this.offset(), this.filters())
@@ -103,10 +115,13 @@ export default class ListInvoicesComponent {
     if (!statusCounts) return;
 
     this.totalDraft.set(statusCounts[StatusInvoice.DRAFT] ?? 0);
-    // this.totalSent.set(statusCounts[StatusInvoice.SENT] ?? 0);
-    // this.totalAccepted.set(statusCounts[StatusInvoice.ACCEPTED] ?? 0);
-    // this.totalDeclined.set(statusCounts[StatusInvoice.DECLINED] ?? 0);
-    // this.totalInvoiced.set(statusCounts[StatusInvoice.INVOICED] ?? 0);
+    this.totalAwaitingApproval.set(
+      statusCounts[StatusInvoice.AWAITING_APPROVAL] ?? 0
+    );
+    this.totalAwaitingPayment.set(
+      statusCounts[StatusInvoice.AWAITING_PAYMENT] ?? 0
+    );
+    this.totalPaid.set(statusCounts[StatusInvoice.PAID] ?? 0);
   }
 
   // FILTERS
@@ -115,16 +130,9 @@ export default class ListInvoicesComponent {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
-    const statusByIndex = [
-      '',
-      StatusInvoice.DRAFT,
-      StatusInvoice.SENT,
-      // StatusInvoice.DECLINED,
-      // StatusInvoice.ACCEPTED,
-      // StatusInvoice.INVOICED,
-    ];
-    this.invoiceStatusFilter.set(statusByIndex[event.index]);
+    this.selectedTabIndex.set(event.index);
 
+    this.listInvoicesService.lastOffsetInvoicesList.set(0);
     this.fetchAllItems();
   }
 
@@ -142,6 +150,7 @@ export default class ListInvoicesComponent {
     this.listInvoicesService.lastOffsetInvoicesList.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
+    this.selectedTabIndex.set(0);
     this.searchForm().reset();
     this.fetchAllItems();
   }

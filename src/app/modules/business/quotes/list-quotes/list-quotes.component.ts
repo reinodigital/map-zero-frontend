@@ -64,7 +64,6 @@ export default class ListQuotesComponent {
   public totalInvoiced = signal<number>(0);
 
   // FILTERS
-  public quoteStatusFilter = signal<string>('');
   public filtersOpen = signal<boolean>(false);
   public filters = signal<any>({});
   public isActiveFilters = signal<boolean>(false);
@@ -74,12 +73,26 @@ export default class ListQuotesComponent {
     })
   );
 
+  // TABS
+  public selectedTabIndex = signal<number>(0);
+  private statusByIndexMap: Record<number, string> = {
+    0: '', // 'Todas'
+    1: StatusQuote.DRAFT,
+    2: StatusQuote.SENT,
+    3: StatusQuote.DECLINED,
+    4: StatusQuote.ACCEPTED,
+    5: StatusQuote.INVOICED,
+  };
+
   ngOnInit(): void {
     this.fetchAllItems();
   }
 
   fetchAllItems(): void {
-    this.filters.set({ ...this.filters(), status: this.quoteStatusFilter() });
+    this.filters.set({
+      ...this.filters(),
+      status: this.statusByIndexMap[this.selectedTabIndex()],
+    });
 
     this.quoteService
       .fetchAll(this.limit, this.offset(), this.filters())
@@ -115,16 +128,9 @@ export default class ListQuotesComponent {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
-    const statusByIndex = [
-      '',
-      StatusQuote.DRAFT,
-      StatusQuote.SENT,
-      StatusQuote.DECLINED,
-      StatusQuote.ACCEPTED,
-      StatusQuote.INVOICED,
-    ];
-    this.quoteStatusFilter.set(statusByIndex[event.index]);
+    this.selectedTabIndex.set(event.index);
 
+    this.listQuotesService.lastOffsetQuotesList.set(0);
     this.fetchAllItems();
   }
 
@@ -142,6 +148,7 @@ export default class ListQuotesComponent {
     this.listQuotesService.lastOffsetQuotesList.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
+    this.selectedTabIndex.set(0);
     this.searchForm().reset();
     this.fetchAllItems();
   }

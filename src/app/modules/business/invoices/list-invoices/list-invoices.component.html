@@ -76,6 +76,7 @@
         <mat-tab-group
           class="mt-4 mb-3"
           (selectedTabChange)="onTabChange($event)"
+          [selectedIndex]="selectedTabIndex()"
         >
           <mat-tab>
             <ng-template mat-tab-label>
@@ -87,10 +88,27 @@
               Borrador <span class="text-primary ms-2">{{ totalDraft() }}</span>
             </ng-template>
           </mat-tab>
-          <!-- <mat-tab [label]="'Enviadas ' + totalSent()"></mat-tab>
-          <mat-tab [label]="'Rechazadas ' + totalDeclined()"></mat-tab>
-          <mat-tab [label]="'Aceptadas ' + totalAccepted()"></mat-tab>
-          <mat-tab [label]="'Facturadas ' + totalInvoiced()"></mat-tab> -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Esperando aprobación
+              <span class="text-primary ms-2">
+                {{ totalAwaitingApproval() }}
+              </span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Esperando pago
+              <span class="text-primary ms-2">
+                {{ totalAwaitingPayment() }}
+              </span>
+            </ng-template>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label>
+              Pagadas <span class="text-primary ms-2">{{ totalPaid() }}</span>
+            </ng-template>
+          </mat-tab>
         </mat-tab-group>
 
         <div class="table-responsive">
