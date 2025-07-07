@@ -87,7 +87,6 @@ export interface IDataToModalEmailSendInvoice {
 export interface ICustomDataToModalEmailSendInvoice {
   clientName: string;
   currency: string;
-  terms?: string;
   // reference properties
   total: number;
 }

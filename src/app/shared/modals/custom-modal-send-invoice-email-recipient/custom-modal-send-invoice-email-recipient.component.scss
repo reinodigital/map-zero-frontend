@@ -1,0 +1,44 @@
+.square {
+  border-radius: 0.5rem;
+  padding: 2rem;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.btn_close {
+  cursor: pointer;
+  color: var(--primary);
+  font-size: 2.2rem;
+}
+
+.info {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.form {
+  margin-bottom: 3rem;
+
+  .form_email_list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .form_email_list_badge {
+      border-radius: 2rem;
+      background-color: var(--primary_orange);
+      color: var(--white);
+      font-size: 1rem;
+      padding: 0.3rem 0.6rem;
+      margin-top: 0.2rem;
+      margin-right: 0.1rem;
+    }
+  }
+
+  .buttons {
+    position: absolute;
+    right: 2rem;
+    bottom: 1rem;
+  }
+}

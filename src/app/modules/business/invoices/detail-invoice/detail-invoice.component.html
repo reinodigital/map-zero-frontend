@@ -31,7 +31,7 @@
       <div class="hstack gap-3">
         <!-- TODO -->
         <button class="btn btn-outline-secondary">Imprimir PDF</button>
-        @if (allowedStatusToBeEditedFromDraft.includes(invoice()!.status)) {
+        @if (allowedStatusToBeEditedFromButton.includes(invoice()!.status)) {
         <button
           type="button"
           class="btn btn-primary"
@@ -40,16 +40,27 @@
           <i class="fa-solid fa-pen-to-square me-2"></i>
           Editar
         </button>
-        }
-        <!-- @if (allowedStatusToBeAccepted.includes(invoice()!.status)) {
+        } @if (allowedStatusToBePaid.includes(invoice()!.status)) {
         <button
+          class="btn btn-success"
           type="button"
-          class="btn btn-primary"
-          (click)="detailInvoiceService.markAsAccepted(invoiceId)"
+          (click)="detailInvoiceService.markAsPaid(invoiceId)"
         >
-          Marcar como aceptada
+          Marcar como Pagada
         </button>
-        } -->
+        } @if (allowedStatusToBeAwaitingPayment.includes(invoice()!.status)) {
+        <li>
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="detailInvoiceService.markAsAwaitingPayment(invoiceId)"
+          >
+            Marcar como Aprobada
+          </button>
+        </li>
+        }
+
+        <!-- DROPDOWN -->
         <div class="dropdown">
           @if (detailInvoiceService.isSendEmailFromDetailComponentSubmitting())
           {
@@ -62,18 +73,70 @@
           ></i>
           }
           <ul class="dropdown-menu">
-            <!-- @if (allowedStatusToBeDeclined.includes(invoice()!.status)) {
+            @if (allowedStatusToBeSent.includes(invoice()!.status)) {
             <li>
               <button
                 class="dropdown-item"
                 type="button"
-                (click)="detailInvoiceService.markAsDeclined(invoiceId)"
+                (click)="
+                  detailInvoiceService.displayModalInvoiceEmail(invoice()!)
+                "
               >
-                <i class="fa-solid fa-xmark icon_declined me-2"></i>
-                Marcar como rechazada
+                <i class="fa-solid fa-paper-plane icon_sent me-2"></i>
+                Enviar
               </button>
             </li>
-            } -->
+            }
+            <!-- Marcar como enviada -->
+            @if (allowedStatusToMarkAsSent.includes(invoice()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.markAsSent(invoiceId)"
+              >
+                <i class="fa-solid fa-marker icon_mark_as_sent me-2"></i>
+                Marcar como Enviada
+              </button>
+            </li>
+            } @if
+            (allowedStatusToBeAwaitingApproval.includes(invoice()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.markAsAwaitingApproval(invoiceId)"
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como Esperando a ser Aprobada
+              </button>
+            </li>
+            } @if (allowedStatusToBeAwaitingPayment.includes(invoice()!.status))
+            {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.markAsAwaitingPayment(invoiceId)"
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como Aprobada
+              </button>
+            </li>
+            } @if (allowedStatusToBePaid.includes(invoice()!.status)) {
+            <li>
+              <button
+                class="dropdown-item"
+                type="button"
+                (click)="detailInvoiceService.markAsPaid(invoiceId)"
+              >
+                <i class="fa-solid fa-check icon_accepted me-2"></i>
+                Marcar como Pagada
+              </button>
+            </li>
+            }
+
+            <!-- Editar action -->
             @if (allowedStatusToBeEdited.includes(invoice()!.status)) {
             <li>
               <button
@@ -85,7 +148,9 @@
                 Editar
               </button>
             </li>
-            } @if (invoice()!.status !== 'removida') {
+            }
+            <!-- remover -->
+            @if (allowedStatusToBeRemoved.includes(invoice()!.status)) {
             <li>
               <button
                 class="dropdown-item"

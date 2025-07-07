@@ -46,22 +46,31 @@ export default class DetailInvoiceComponent {
   public entityData = signal<IDataEntity | null>(null);
 
   // STATUS GATEWAY
-  public allowedStatusToBeEditedFromDraft = [StatusInvoice.DRAFT as String];
+  public allowedStatusToBeEditedFromButton = [StatusInvoice.DRAFT as String];
   public allowedStatusToBeSent = [
     StatusInvoice.DRAFT as String,
     StatusInvoice.SENT as String,
+    StatusInvoice.AWAITING_APPROVAL as String,
+    StatusInvoice.AWAITING_PAYMENT as String,
   ];
   public allowedStatusToMarkAsSent = [StatusInvoice.DRAFT as String];
-  public allowedStatusToBeAccepted = [StatusInvoice.SENT as String];
-  public allowedStatusToBeEdited = [
+  public allowedStatusToBeAwaitingApproval = [
     StatusInvoice.DRAFT as String,
     StatusInvoice.SENT as String,
   ];
-  // public allowedStatusToBeDeclined = [StatusInvoice.SENT as String];
-
-  // public allowedStatusToUnMarkAsAccepted = [StatusInvoice.ACCEPTED as String];
-  // public allowedStatusToUnMarkAsDeclined = [StatusInvoice.DECLINED as String];
-  // public allowedStatusToUnMarkAsInvoiced = [StatusInvoice.INVOICED as String];
+  public allowedStatusToBeAwaitingPayment = [
+    StatusInvoice.AWAITING_APPROVAL as String,
+  ];
+  public allowedStatusToBePaid = [StatusInvoice.AWAITING_PAYMENT as String];
+  public allowedStatusToBeEdited = [
+    StatusInvoice.DRAFT as String,
+    StatusInvoice.SENT as String,
+    StatusInvoice.AWAITING_APPROVAL as String,
+  ];
+  public allowedStatusToBeRemoved = [
+    StatusInvoice.DRAFT as String,
+    StatusInvoice.SENT as String,
+  ];
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);

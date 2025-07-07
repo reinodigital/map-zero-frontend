@@ -1,0 +1,59 @@
+@if (data()) {
+<div class="square">
+  <div class="d-flex justify-content-between align-items-start">
+    <h3>Enviar factura</h3>
+    <i
+      (click)="closePopUp('cancel')"
+      class="fa-solid fa-circle-xmark btn_close"
+    >
+    </i>
+  </div>
+  <form [formGroup]="newSendInvoiceEmailForm()" class="form">
+    <label for="email">Bandeja <span class="asterisk">*</span></label>
+    <input
+      type="email"
+      formControlName="email"
+      placeholder="agregar correo bandeja"
+    />
+    <div class="form_email_list">
+      @for (email of emails(); track $index) {
+      <div class="form_email_list_badge">
+        <span>
+          {{ email }}
+          <i class="fa-solid fa-xmark" (click)="removeEmail($index)"></i
+        ></span>
+      </div>
+      }
+    </div>
+    <button class="btn btn-outline-primary mt-2" (click)="addEmail()">
+      + Agregar email
+    </button>
+
+    <label for="subject" class="mt-4">Encabezado</label>
+    <input type="text" formControlName="subject" placeholder="encabezado" />
+
+    <label for="message" class="mt-4">Mensaje</label>
+    <textarea
+      formControlName="message"
+      rows="12"
+      placeholder="mensaje"
+    ></textarea>
+    <div class="hstack gap-3 buttons">
+      <button
+        type="button"
+        (click)="closePopUp('cancel')"
+        class="btn btn-light"
+      >
+        Cancelar
+      </button>
+      <button
+        type="button"
+        (click)="closePopUp('send')"
+        class="btn btn-success"
+      >
+        Enviar
+      </button>
+    </div>
+  </form>
+</div>
+}

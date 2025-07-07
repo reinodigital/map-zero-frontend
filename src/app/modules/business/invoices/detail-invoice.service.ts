@@ -11,8 +11,11 @@ import {
   formatDateToString,
 } from '../../../shared/helpers';
 import { ModalConfirmComponent } from '../../../shared/modals/modal-confirm/modal-confirm.component';
+import { CustomModalSendInvoiceEmailRecipientComponent } from '../../../shared/modals/custom-modal-send-invoice-email-recipient/custom-modal-send-invoice-email-recipient.component';
 
 import {
+  ICustomDataToModalEmailSendInvoice,
+  IDataEmailForSendInvoice,
   IInvoice,
   IInvoiceItem,
   IMarkAndChangeStatus,
@@ -80,15 +83,15 @@ export class DetailInvoiceService {
       case StatusInvoice.SENT:
         result = 'badge bg-label-primary';
         break;
-      // case StatusInvoice.ACCEPTED:
-      //   result = 'badge bg-label-success';
-      //   break;
-      // case StatusInvoice.DECLINED:
-      //   result = 'badge bg-label-danger';
-      //   break;
-      // case StatusInvoice.INVOICED:
-      //   result = 'badge bg-label-warning';
-      //   break;
+      case StatusInvoice.AWAITING_APPROVAL:
+        result = 'badge bg-label-warning';
+        break;
+      case StatusInvoice.AWAITING_PAYMENT:
+        result = 'badge bg-label-danger';
+        break;
+      case StatusInvoice.PAID:
+        result = 'badge bg-label-success';
+        break;
       case StatusInvoice.REMOVED:
         result = 'badge bg-label-removed';
         break;
@@ -101,37 +104,36 @@ export class DetailInvoiceService {
   }
 
   // DESCRIPTION: user click over "Enviar" button from detail-invoice
-  // displayModalInvoiceEmail(invoice: IQuote): void {
-  //   const data: ICustomDataToModalEmailSendQuote = {
-  //     clientName: invoice.client.name,
-  //     currency: invoice.currency,
-  //     terms: invoice.terms,
-  //     total: invoice.total,
-  //   };
+  displayModalInvoiceEmail(invoice: IInvoice): void {
+    const data: ICustomDataToModalEmailSendInvoice = {
+      clientName: invoice.client.name,
+      currency: invoice.currency,
+      total: invoice.total,
+    };
 
-  //   // Mat Dialog solution
-  //   let dialogRef = this.dialog.open(
-  //     CustomModalSendQuoteEmailRecipientComponent,
-  //     {
-  //       width: '70rem',
-  //       autoFocus: false,
-  //       data: data,
-  //     }
-  //   );
+    // Mat Dialog solution
+    let dialogRef = this.dialog.open(
+      CustomModalSendInvoiceEmailRecipientComponent,
+      {
+        width: '70rem',
+        autoFocus: false,
+        data: data,
+      }
+    );
 
-  //   dialogRef.updatePosition({ top: '100px' });
-  //   dialogRef.afterClosed().subscribe((data) => {
-  //     if (data) {
-  //       this.isSendEmailFromDetailComponentSubmitting.set(true);
+    dialogRef.updatePosition({ top: '100px' });
+    dialogRef.afterClosed().subscribe((data) => {
+      if (data) {
+        this.isSendEmailFromDetailComponentSubmitting.set(true);
 
-  //       // user want to send email
-  //       const dataEmail: IDataEmailForSendInvoice = JSON.parse(data);
-  //       this.invoiceService
-  //         .sendEmail(invoice.id, dataEmail)
-  //         .subscribe((resp) => this.processResponse(resp));
-  //     }
-  //   });
-  // }
+        // user want to send email
+        const dataEmail: IDataEmailForSendInvoice = JSON.parse(data);
+        this.invoiceService
+          .sendEmail(invoice.id, dataEmail)
+          .subscribe((resp) => this.processResponse(resp));
+      }
+    });
+  }
 
   private generateUpdatedAtProperty(): IMarkAndChangeStatus {
     const data: IMarkAndChangeStatus = {
@@ -179,5 +181,27 @@ export class DetailInvoiceService {
           .subscribe((resp) => this.processResponse(resp));
       }
     });
+  }
+
+  /* MARK AND CHANGE INVOICE STATUS */
+  markAsSent(invoiceId: number): void {
+    this.invoiceService
+      .markAsSent(invoiceId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsAwaitingApproval(invoiceId: number): void {
+    this.invoiceService
+      .markAsAwaitingApproval(invoiceId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsAwaitingPayment(invoiceId: number): void {
+    this.invoiceService
+      .markAsAwaitingPayment(invoiceId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
+  }
+  markAsPaid(invoiceId: number): void {
+    this.invoiceService
+      .markAsPaid(invoiceId, this.generateUpdatedAtProperty())
+      .subscribe((resp) => this.processResponse(resp));
   }
 }

@@ -11,6 +11,8 @@ import {
   IDataToCreateInvoice,
   IInvoiceAndCount,
   IDataToUpdateInvoice,
+  IMarkAndChangeStatusInvoice,
+  IDataEmailForSendInvoice,
 } from '../interfaces';
 import { LS } from '../enums';
 
@@ -44,17 +46,17 @@ export class InvoiceService {
     );
   }
 
-  // sendEmail(
-  //   invoiceId: number,
-  //   data: IDataEmailForSendInvoice
-  // ): Observable<IMessage | any> {
-  //   const url = `${this._baseUrl}/invoice/send-email/${invoiceId}`;
+  sendEmail(
+    invoiceId: number,
+    data: IDataEmailForSendInvoice
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/invoice/send-email/${invoiceId}`;
 
-  //   return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(
-  //     map((resp) => resp),
-  //     catchError((err) => of(err.error))
-  //   );
-  // }
+    return this.http.post<IMessage>(url, data, { headers: this.getToken }).pipe(
+      map((resp) => resp),
+      catchError((err) => of(err.error))
+    );
+  }
 
   fetchOne(invoiceId: number): Observable<IInvoice> {
     const url = `${this._baseUrl}/invoice/${invoiceId}`;
@@ -111,4 +113,62 @@ export class InvoiceService {
       catchError((err) => of(err.error))
     );
   }
+
+  /* ========= MARK && CHANGE STATUS ========== */
+  markAsSent(
+    invoiceId: number,
+    data: IMarkAndChangeStatusInvoice
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/invoice-actions/mark-as-sent/${invoiceId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  markAsAwaitingApproval(
+    invoiceId: number,
+    data: IMarkAndChangeStatusInvoice
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/invoice-actions/mark-as-awaiting-approval/${invoiceId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  markAsAwaitingPayment(
+    invoiceId: number,
+    data: IMarkAndChangeStatusInvoice
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/invoice-actions/mark-as-awaiting-payment/${invoiceId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+
+  markAsPaid(
+    invoiceId: number,
+    data: IMarkAndChangeStatusInvoice
+  ): Observable<IMessage | any> {
+    const url = `${this._baseUrl}/invoice-actions/mark-as-paid/${invoiceId}`;
+
+    return this.http
+      .patch<IMessage>(url, data, { headers: this.getToken })
+      .pipe(
+        map((resp) => resp),
+        catchError((err) => of(err.error))
+      );
+  }
+  /* ========= END MARK && CHANGE STATUS ========== */
 }
