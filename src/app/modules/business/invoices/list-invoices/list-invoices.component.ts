@@ -74,14 +74,9 @@ export default class ListInvoicesComponent {
   );
 
   // TABS
-  public selectedTabIndex = signal<number>(0);
-  private statusByIndexMap: Record<number, string> = {
-    0: '', // 'Todas'
-    1: StatusInvoice.DRAFT,
-    2: StatusInvoice.AWAITING_APPROVAL,
-    3: StatusInvoice.AWAITING_PAYMENT,
-    4: StatusInvoice.PAID,
-  };
+  public selectedTabIndex = computed(() =>
+    this.listInvoicesService.selectedTabIndex()
+  );
 
   ngOnInit(): void {
     this.fetchAllItems();
@@ -90,7 +85,8 @@ export default class ListInvoicesComponent {
   fetchAllItems(): void {
     this.filters.set({
       ...this.filters(),
-      status: this.statusByIndexMap[this.selectedTabIndex()],
+      status:
+        this.listInvoicesService.statusByIndexMap[this.selectedTabIndex()],
     });
 
     this.invoiceService
@@ -130,7 +126,7 @@ export default class ListInvoicesComponent {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
-    this.selectedTabIndex.set(event.index);
+    this.listInvoicesService.selectedTabIndex.set(event.index);
 
     this.listInvoicesService.lastOffsetInvoicesList.set(0);
     this.fetchAllItems();
@@ -150,7 +146,7 @@ export default class ListInvoicesComponent {
     this.listInvoicesService.lastOffsetInvoicesList.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
-    this.selectedTabIndex.set(0);
+    this.listInvoicesService.selectedTabIndex.set(0);
     this.searchForm().reset();
     this.fetchAllItems();
   }

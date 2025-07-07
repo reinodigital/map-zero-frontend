@@ -74,15 +74,9 @@ export default class ListPurchaseOrdersComponent {
   );
 
   // TABS
-  public selectedTabIndex = signal<number>(0);
-  private statusByIndexMap: Record<number, string> = {
-    0: '', // 'Todas'
-    1: StatusPurchaseOrder.DRAFT,
-    2: StatusPurchaseOrder.SENT,
-    3: StatusPurchaseOrder.AWAITING_APPROVAL,
-    4: StatusPurchaseOrder.APPROVED,
-    5: StatusPurchaseOrder.BILLED,
-  };
+  public selectedTabIndex = computed(() =>
+    this.listPurchaseOrdersService.selectedTabIndex()
+  );
 
   ngOnInit(): void {
     this.fetchAllItems();
@@ -91,7 +85,10 @@ export default class ListPurchaseOrdersComponent {
   fetchAllItems(): void {
     this.filters.set({
       ...this.filters(),
-      status: this.statusByIndexMap[this.selectedTabIndex()],
+      status:
+        this.listPurchaseOrdersService.statusByIndexMap[
+          this.selectedTabIndex()
+        ],
     });
 
     this.purchaseOrderService
@@ -132,7 +129,7 @@ export default class ListPurchaseOrdersComponent {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
-    this.selectedTabIndex.set(event.index);
+    this.listPurchaseOrdersService.selectedTabIndex.set(event.index);
 
     this.listPurchaseOrdersService.lastOffsetPurchaseOrdersList.set(0);
     this.fetchAllItems();
@@ -152,7 +149,7 @@ export default class ListPurchaseOrdersComponent {
     this.listPurchaseOrdersService.lastOffsetPurchaseOrdersList.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
-    this.selectedTabIndex.set(0);
+    this.listPurchaseOrdersService.selectedTabIndex.set(0);
     this.searchForm().reset();
     this.fetchAllItems();
   }

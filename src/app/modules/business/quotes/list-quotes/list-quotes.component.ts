@@ -74,15 +74,9 @@ export default class ListQuotesComponent {
   );
 
   // TABS
-  public selectedTabIndex = signal<number>(0);
-  private statusByIndexMap: Record<number, string> = {
-    0: '', // 'Todas'
-    1: StatusQuote.DRAFT,
-    2: StatusQuote.SENT,
-    3: StatusQuote.DECLINED,
-    4: StatusQuote.ACCEPTED,
-    5: StatusQuote.INVOICED,
-  };
+  public selectedTabIndex = computed(() =>
+    this.listQuotesService.selectedTabIndex()
+  );
 
   ngOnInit(): void {
     this.fetchAllItems();
@@ -91,7 +85,7 @@ export default class ListQuotesComponent {
   fetchAllItems(): void {
     this.filters.set({
       ...this.filters(),
-      status: this.statusByIndexMap[this.selectedTabIndex()],
+      status: this.listQuotesService.statusByIndexMap[this.selectedTabIndex()],
     });
 
     this.quoteService
@@ -128,7 +122,7 @@ export default class ListQuotesComponent {
   }
 
   onTabChange(event: MatTabChangeEvent): void {
-    this.selectedTabIndex.set(event.index);
+    this.listQuotesService.selectedTabIndex.set(event.index);
 
     this.listQuotesService.lastOffsetQuotesList.set(0);
     this.fetchAllItems();
@@ -148,7 +142,7 @@ export default class ListQuotesComponent {
     this.listQuotesService.lastOffsetQuotesList.set(0);
     this.isActiveFilters.set(false);
     this.filters.set({});
-    this.selectedTabIndex.set(0);
+    this.listQuotesService.selectedTabIndex.set(0);
     this.searchForm().reset();
     this.fetchAllItems();
   }
