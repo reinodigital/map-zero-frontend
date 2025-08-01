@@ -67,6 +67,23 @@ export class InvoiceService {
     );
   }
 
+  downloadPDF(invoiceId: number): Observable<any> {
+    const url = `${this._baseUrl}/invoice/download-pdf/${invoiceId}`;
+
+    return this.http
+      .get(url, {
+        headers: this.getToken,
+        responseType: 'arraybuffer', // Correctly specify arraybuffer for binary data
+      })
+      .pipe(
+        map((arrayBuffer: ArrayBuffer) => {
+          // Convert the ArrayBuffer into a Blob
+          return new Blob([arrayBuffer], { type: 'application/pdf' });
+        }),
+        catchError((err) => of(err.error))
+      );
+  }
+
   update(
     invoiceId: number,
     data: IDataToUpdateInvoice

@@ -113,6 +113,27 @@ export default class DetailQuoteComponent {
       });
   }
 
+  downloadPDF(): void {
+    this.quoteService.downloadPDF(this.quoteId).subscribe((pdfBlob: Blob) => {
+      if (pdfBlob) {
+        // Create a Blob URL for the PDF
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
+        // Create a temporary anchor element to trigger download
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.download = `Cotización-${this.quoteId}.pdf`; // Set filename
+        link.click();
+
+        // Clean up the Blob URL after download
+        setTimeout(() => {
+          URL.revokeObjectURL(blobUrl);
+          link.remove();
+        }, 100);
+      }
+    });
+  }
+
   private fetchQuote(): void {
     this.quoteService
       .fetchOne(this.quoteId)

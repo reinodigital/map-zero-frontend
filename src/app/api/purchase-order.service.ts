@@ -86,6 +86,23 @@ export class PurchaseOrderService {
     );
   }
 
+  downloadPDF(purchaseOrderId: number): Observable<any> {
+    const url = `${this._baseUrl}/purchase-order/generate-pdf/${purchaseOrderId}`;
+
+    return this.http
+      .get(url, {
+        headers: this.getToken,
+        responseType: 'arraybuffer', // Correctly specify arraybuffer for binary data
+      })
+      .pipe(
+        map((arrayBuffer: ArrayBuffer) => {
+          // Convert the ArrayBuffer into a Blob
+          return new Blob([arrayBuffer], { type: 'application/pdf' });
+        }),
+        catchError((err) => of(err.error))
+      );
+  }
+
   fetchOne(purchaseOrderId: number): Observable<IPurchaseOrder> {
     const url = `${this._baseUrl}/purchase-order/${purchaseOrderId}`;
 

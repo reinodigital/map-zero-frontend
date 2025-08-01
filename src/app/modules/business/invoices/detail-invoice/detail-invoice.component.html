@@ -29,8 +29,9 @@
         </span>
       </div>
       <div class="hstack gap-3">
-        <!-- TODO -->
-        <button class="btn btn-outline-secondary">Imprimir PDF</button>
+        <button class="btn btn-outline-secondary" (click)="downloadPDF()">
+          Imprimir PDF
+        </button>
         @if (allowedStatusToBeEditedFromButton.includes(invoice()!.status)) {
         <button
           type="button"

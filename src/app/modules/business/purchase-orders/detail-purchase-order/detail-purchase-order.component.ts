@@ -134,6 +134,29 @@ export default class DetailPurchaseOrderComponent {
       });
   }
 
+  downloadPDF(): void {
+    this.purchaseOrderService
+      .downloadPDF(this.purchaseOrderId)
+      .subscribe((pdfBlob: Blob) => {
+        if (pdfBlob) {
+          // Create a Blob URL for the PDF
+          const blobUrl = URL.createObjectURL(pdfBlob);
+
+          // Create a temporary anchor element to trigger download
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `Orden-de-compra-${this.purchaseOrderId}.pdf`; // Set filename
+          link.click();
+
+          // Clean up the Blob URL after download
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+            link.remove();
+          }, 100);
+        }
+      });
+  }
+
   private fetchPurchaseOrder(): void {
     this.purchaseOrderService
       .fetchOne(this.purchaseOrderId)

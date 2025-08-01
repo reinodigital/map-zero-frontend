@@ -48,6 +48,23 @@ export class QuoteService {
     );
   }
 
+  downloadPDF(quoteId: number): Observable<any> {
+    const url = `${this._baseUrl}/quote/generate-pdf/${quoteId}`;
+
+    return this.http
+      .get(url, {
+        headers: this.getToken,
+        responseType: 'arraybuffer', // Correctly specify arraybuffer for binary data
+      })
+      .pipe(
+        map((arrayBuffer: ArrayBuffer) => {
+          // Convert the ArrayBuffer into a Blob
+          return new Blob([arrayBuffer], { type: 'application/pdf' });
+        }),
+        catchError((err) => of(err.error))
+      );
+  }
+
   copyToDraft(quoteId: number, createdAt: string): Observable<IQuote | any> {
     const url = `${this._baseUrl}/quote/copy-to-draft/${quoteId}`;
 

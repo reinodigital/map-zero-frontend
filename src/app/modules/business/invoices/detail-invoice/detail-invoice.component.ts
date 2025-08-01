@@ -105,6 +105,29 @@ export default class DetailInvoiceComponent {
       });
   }
 
+  downloadPDF(): void {
+    this.invoiceService
+      .downloadPDF(this.invoiceId)
+      .subscribe((pdfBlob: Blob) => {
+        if (pdfBlob) {
+          // Create a Blob URL for the PDF
+          const blobUrl = URL.createObjectURL(pdfBlob);
+
+          // Create a temporary anchor element to trigger download
+          const link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = `Factura-${this.invoiceId}.pdf`; // Set filename
+          link.click();
+
+          // Clean up the Blob URL after download
+          setTimeout(() => {
+            URL.revokeObjectURL(blobUrl);
+            link.remove();
+          }, 100);
+        }
+      });
+  }
+
   private fetchInvoice(): void {
     this.invoiceService
       .fetchOne(this.invoiceId)
